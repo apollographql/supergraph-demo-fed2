@@ -1,0 +1,6 @@
+{
+  products {
+    name
+    price
+  }
+}

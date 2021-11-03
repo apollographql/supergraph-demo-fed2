@@ -1,0 +1,37 @@
+type Query {
+  allProducts: [ProductItf]
+  product(id: ID!): ProductItf
+}
+
+interface ProductItf {
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User
+}
+
+type Product implements ProductItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User
+}
+enum ShippingClass {
+  STANDARD
+  EXPRESS
+}
+type ProductVariation {
+  id: ID!
+}
+type ProductDimension {
+  size: String
+  weight: Float
+}
+type User @key(fields: "email") {
+  email: ID!
+  totalProductsCreated: Int
+}

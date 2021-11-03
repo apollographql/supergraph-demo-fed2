@@ -1,0 +1,23 @@
+type Query {
+  products: [Product]!
+}
+
+interface Product {
+  upc: String!
+  name: String
+  price: String
+}
+
+type Furniture implements Product @key(fields: "upc") {
+  upc: String!
+  name: String
+  price: String
+  brand: String
+}
+
+type Book implements Product @key(fields: "isbn") {
+  isbn: String!
+  upc: String! @external
+  name: String @external
+  price: String #@external # can comment the external
+}

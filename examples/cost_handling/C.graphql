@@ -1,0 +1,5 @@
+type T @key(fields: "k") {
+  k: ID!
+  a: Int
+  b: Int
+}

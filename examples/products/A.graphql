@@ -1,0 +1,17 @@
+extend type Query {
+  topProducts(first: Int = 5): [Product]
+  highestPrice(arg: Int = 2): Price
+}
+
+#type Product {
+type Product @key(fields: "upc") {
+  upc: String!
+  name: String
+  price: Price @deprecated
+  weight: Int
+}
+
+type Price {
+  amount: Int
+  currency: String
+}

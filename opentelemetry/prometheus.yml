@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 1s
+
+scrape_configs:
+  - job_name: 'collector'
+    static_configs:
+      - targets: ['localhost:9464', 'collector:9464']

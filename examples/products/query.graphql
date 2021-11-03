@@ -1,0 +1,8 @@
+{
+  topProducts(first: 10) {
+    price
+    reviews {
+      body
+    }
+  }
+}

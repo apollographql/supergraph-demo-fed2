@@ -1,0 +1,23 @@
+{
+  "name": "supergraph-router",
+  "version": "1.1.18",
+  "description": "",
+  "main": "router.js",
+  "scripts": {
+    "start": "node router.js"
+  },
+  "dependencies": {
+    "apollo-server": "3.3.0",
+    "@apollo/composition": "2.0.0-alpha.1",
+    "@apollo/federation": "2.0.0-alpha.1",
+    "@apollo/federation-internals": "2.0.0-alpha.1",
+    "@apollo/gateway": "2.0.0-alpha.1",
+    "@apollo/query-graphs": "2.0.0-alpha.1",
+    "@apollo/query-planner": "2.0.0-alpha.1",
+    "@apollo/subgraph": "2.0.0-alpha.1",
+    "supergraph-demo-opentelemetry": "0.0.3",
+    "graphql": "15.6.0"
+  },
+  "keywords": [],
+  "author": ""
+}

@@ -1,0 +1,4 @@
+type U @key(fields: "v") {
+  v: Int
+  w: Int
+}

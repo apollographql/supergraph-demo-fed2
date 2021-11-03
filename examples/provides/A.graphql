@@ -1,0 +1,19 @@
+type Query {
+  t1: T
+  t2: T @provides(fields: "a")
+  t3: T @provides(fields: "a b")
+  t4: T @provides(fields: "c { v }")
+}
+
+type T @key(fields: "k") {
+  k: ID!
+  a: Int @external
+  b: Int @external
+  c: X @external
+}
+
+type X @key(fields: "id") {
+  id: Int
+  v: Int @external
+  v2: String
+}

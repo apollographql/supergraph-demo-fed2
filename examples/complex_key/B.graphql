@@ -1,0 +1,9 @@
+type E1 @key(fields: "k1 { v }") {
+  k1: E2
+  b: Int
+}
+
+type E2 @key(fields: "k2") {
+  k2: Int
+  v: String
+}

@@ -1,0 +1,4 @@
+type A @key(fields: "k") {
+  k: Int
+  v3: Int
+}

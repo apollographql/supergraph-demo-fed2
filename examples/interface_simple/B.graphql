@@ -1,0 +1,6 @@
+type Book @key(fields: "isbn") {
+  isbn: String!
+  upc: String!
+  name: String
+  price: String
+}

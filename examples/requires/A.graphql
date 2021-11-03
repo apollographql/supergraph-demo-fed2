@@ -1,0 +1,14 @@
+type Query {
+  t: T
+}
+
+type T @key(fields: "k") {
+  k: ID!
+  a: X @external
+  b: Int
+}
+
+type X @key(fields: "id") {
+  id: Int
+  v: Int
+}

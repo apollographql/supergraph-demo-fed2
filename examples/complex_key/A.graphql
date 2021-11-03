@@ -1,0 +1,13 @@
+type Query {
+  getE1: E1
+}
+
+type E1 @key(fields: "k1 { v }") {
+  k1: E2
+  a: Int
+}
+
+type E2 @key(fields: "k2") {
+  k2: Int
+  v: String @external
+}

@@ -1,0 +1,25 @@
+{
+  "graphName": "supergraph-demo-fed1",
+  "federationVersion": 1,
+  "operations": {},
+  "queryPlans": {},
+  "schemas": {
+    "inventory": {
+      "shouldMock": true,
+      "sdl": "extend type Product @key(fields: \"id\") {\n  id: ID! @external\n  dimensions: ProductDimension @external\n  delivery(zip: String): DeliveryEstimates @requires(fields: \"dimensions { size weight }\")\n}\n\ntype ProductDimension {\n  size: String\n  weight: Float\n}\n\ntype DeliveryEstimates {\n  estimatedDelivery: String\n  fastestDelivery: String\n}\n",
+      "autoUpdateSchemaFromUrl": false
+    },
+    "products": {
+      "shouldMock": true,
+      "sdl": "extend type Query {\n  allProducts: [Product]\n  product(id: ID!): Product\n}\n\ntype Product @key(fields: \"id\"){\n  id: ID!\n  sku: String\n  package: String\n  variation: ProductVariation\n  dimensions: ProductDimension\n  createdBy: User @provides(fields: \"totalProductsCreated\")\n}\n\nextend type User @key(fields: \"email\") {\n  email: ID! @external\n  totalProductsCreated: Int @external\n}\n\ntype ProductVariation {\n  id: ID!\n}\n\ntype ProductDimension {\n  size: String\n  weight: Float\n}",
+      "autoUpdateSchemaFromUrl": false
+    },
+    "users": {
+      "shouldMock": true,
+      "sdl": "type User @key(fields:\"email\") {\n    email:ID!\n    name: String\n    totalProductsCreated: Int\n}",
+      "autoUpdateSchemaFromUrl": false
+    }
+  },
+  "supergraphSdl": "schema\n  @core(feature: \"https://specs.apollo.dev/core/v0.2\")\n  @core(feature: \"https://specs.apollo.dev/join/v0.2\", for: EXECUTION)\n{\n  query: Query\n}\n\ndirective @core(feature: String!, as: String, for: core__Purpose) repeatable on SCHEMA\n\ndirective @join__field(graph: join__Graph!, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION\n\ndirective @join__graph(name: String!, url: String!) on ENUM_VALUE\n\ndirective @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE\n\ndirective @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR\n\nenum core__Purpose {\n  \"\"\"\n  `SECURITY` features provide metadata necessary to securely resolve fields.\n  \"\"\"\n  SECURITY\n\n  \"\"\"\n  `EXECUTION` features provide metadata necessary for operation execution.\n  \"\"\"\n  EXECUTION\n}\n\ntype DeliveryEstimates\n  @join__type(graph: INVENTORY)\n{\n  estimatedDelivery: String\n  fastestDelivery: String\n}\n\nscalar join__FieldSet\n\nenum join__Graph {\n  INVENTORY @join__graph(name: \"inventory\", url: \"http://localhost\")\n  PRODUCTS @join__graph(name: \"products\", url: \"http://localhost\")\n  USERS @join__graph(name: \"users\", url: \"http://localhost\")\n}\n\ntype Product\n  @join__type(graph: INVENTORY, key: \"id\", extension: true)\n  @join__type(graph: PRODUCTS, key: \"id\")\n{\n  id: ID! @join__field(graph: PRODUCTS)\n  dimensions: ProductDimension @join__field(graph: PRODUCTS)\n  delivery(zip: String): DeliveryEstimates @join__field(graph: INVENTORY, requires: \"dimensions { size weight }\")\n  sku: String @join__field(graph: PRODUCTS)\n  package: String @join__field(graph: PRODUCTS)\n  variation: ProductVariation @join__field(graph: PRODUCTS)\n  createdBy: User @join__field(graph: PRODUCTS, provides: \"totalProductsCreated\")\n}\n\ntype ProductDimension\n  @join__type(graph: INVENTORY)\n  @join__type(graph: PRODUCTS)\n{\n  size: String\n  weight: Float\n}\n\ntype ProductVariation\n  @join__type(graph: PRODUCTS)\n{\n  id: ID!\n}\n\ntype Query\n  @join__type(graph: INVENTORY)\n  @join__type(graph: PRODUCTS)\n  @join__type(graph: USERS)\n{\n  allProducts: [Product] @join__field(graph: PRODUCTS)\n  product(id: ID!): Product @join__field(graph: PRODUCTS)\n}\n\ntype User\n  @join__type(graph: PRODUCTS, key: \"email\", extension: true)\n  @join__type(graph: USERS, key: \"email\")\n{\n  email: ID! @join__field(graph: USERS)\n  totalProductsCreated: Int @join__field(graph: USERS)\n  name: String @join__field(graph: USERS)\n}",
+  "ignoreHints": {}
+}

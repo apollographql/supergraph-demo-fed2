@@ -1,0 +1,22 @@
+extend type Query {
+  bestReviewedProduct: Product
+  highestPrice(arg: Int): Price
+}
+
+type Review @key(fields: "id") {
+  id: ID!
+  body: String
+  product: Product
+}
+
+extend type Product @key(fields: "upc") {
+#extend type Product {
+  upc: String! @external
+  reviews: [Review]
+  price: Price @deprecated(reason: "Because!")
+}
+
+type Price {
+  amount: Int!
+  currency: String
+}

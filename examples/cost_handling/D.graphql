@@ -1,0 +1,5 @@
+type T @key(fields: "k2") {
+  k2: Int
+  a: Int
+  c: String
+}
