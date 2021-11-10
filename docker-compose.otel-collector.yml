@@ -1,7 +1,7 @@
 version: '3'
 services:
-  router:
-    container_name: router
+  graph-router:
+    container_name: apollo-gateway
     build: ./gateway
     environment:
       - APOLLO_SCHEMA_CONFIG_EMBEDDED=true

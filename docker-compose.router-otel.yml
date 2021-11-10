@@ -1,0 +1,54 @@
+version: '3'
+services:
+  apollo-router:
+    container_name: apollo-router
+    build: ./router
+    environment:
+      - APOLLO_SCHEMA_CONFIG_EMBEDDED=true
+    volumes:
+      - ./supergraph.graphql:/etc/config/supergraph.graphql
+      - ./router/configuration.yaml:/etc/config/configuration.yaml
+    ports:
+      - "4000:4000"
+  products:
+    container_name: products
+    build: ./subgraphs/products
+    environment:
+      - APOLLO_OTEL_EXPORTER_TYPE=collector
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+  inventory:
+    container_name: inventory
+    build: ./subgraphs/inventory
+    environment:
+      - APOLLO_OTEL_EXPORTER_TYPE=collector
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+  users:
+    container_name: users
+    build: ./subgraphs/users
+    environment:
+      - APOLLO_OTEL_EXPORTER_TYPE=collector
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+  collector:
+    container_name: collector
+    image: otel/opentelemetry-collector:0.35.0
+    command: ["--config=/conf/collector-config.yml"]
+    volumes:
+      - ./opentelemetry/collector-config.yml:/conf/collector-config.yml
+    ports:
+      - "9464:9464"
+      - "4317:4317"
+      - "55681:55681"
+    depends_on:
+      - zipkin
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin:2.23.4
+    ports:
+      - "9411:9411"
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.30.0
+    volumes:
+      - ./opentelemetry/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
