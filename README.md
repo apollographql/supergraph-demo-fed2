@@ -1,5 +1,8 @@
 # Supergraph Demo for Federation 2
 
+![smoke test](https://github.com/apollographql/supergraph-demo-fed2/actions/workflows/main.yml/badge.svg)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
+
 Federation 2 is an evolution of the original Apollo Federation with an improved shared ownership model, enhanced type merging, and cleaner syntax for a smoother developer experience. It’s backwards compatible, requiring no major changes to your subgraphs. Try the alpha today!
 
 * [Welcome](#welcome)
