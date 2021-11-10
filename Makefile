@@ -38,7 +38,7 @@ docker-build-force:
 
 .PHONY: docker-build-router
 docker-build-router:
-	@.scripts/docker-build-router.sh
+	@docker build -t supergraph-demo-fed2_apollo-router router/. --no-cache
 
 .PHONY: docker-up
 docker-up:
