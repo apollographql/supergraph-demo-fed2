@@ -3,7 +3,7 @@ type Query {
   product(id: ID!): ProductItf
 }
 
-interface ProductItf {
+interface ProductItf implements SkuItf {
   id: ID!
   sku: String
   package: String
@@ -12,7 +12,11 @@ interface ProductItf {
   createdBy: User
 }
 
-type Product implements ProductItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
+interface SkuItf {
+  sku: String
+}
+
+type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
   id: ID!
   sku: String
   package: String

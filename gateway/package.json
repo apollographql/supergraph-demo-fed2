@@ -2,9 +2,9 @@
   "name": "supergraph-router",
   "version": "1.1.18",
   "description": "",
-  "main": "router.js",
+  "main": "gateway.js",
   "scripts": {
-    "start": "node router.js"
+    "start": "node gateway.js"
   },
   "dependencies": {
     "apollo-server": "3.4.1",

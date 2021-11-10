@@ -6,6 +6,6 @@ COPY package.json .
 
 RUN npm install
 
-COPY router.js .
+COPY gateway.js .
 
-CMD [ "node", "router.js" ]
+CMD [ "node", "gateway.js" ]

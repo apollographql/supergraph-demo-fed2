@@ -147,7 +147,7 @@ version: '3'
 services:
   router:
     container_name: router
-    build: ./router
+    build: ./gateway
     env_file: # created automatically during `make publish`
       - graph-api.env
     ports:
@@ -461,7 +461,7 @@ service:
 * Docker compose file: [docker-compose.otel-collector.yml](docker-compose.otel-collector.yml)
 * Helper library: [supergraph-demo-opentelemetry](https://github.com/prasek/supergraph-demo-opentelemetry)
   * See usage in:
-    * [router/router.js](router/router.js)
+    * [gateway/gateway.js](gateway/gateway.js)
     * [subgraphs/products/products.js](subgraphs/products/products.js)
 
 ## More on Federation 2
