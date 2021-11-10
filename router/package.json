@@ -7,7 +7,7 @@
     "start": "node router.js"
   },
   "dependencies": {
-    "apollo-server": "3.3.0",
+    "apollo-server": "3.4.1",
     "@apollo/composition": "2.0.0-alpha.1",
     "@apollo/federation": "2.0.0-alpha.1",
     "@apollo/federation-internals": "2.0.0-alpha.1",
