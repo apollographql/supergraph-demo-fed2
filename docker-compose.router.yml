@@ -1,0 +1,21 @@
+version: '3'
+services:
+  apollo-router:
+    container_name: apollo-router
+    build: ./router
+    environment:
+      - APOLLO_SCHEMA_CONFIG_EMBEDDED=true
+    volumes:
+      - ./supergraph.graphql:/etc/config/supergraph.graphql
+      - ./router/configuration.yaml:/etc/config/configuration.yaml
+    ports:
+      - "4000:4000"
+  products:
+    container_name: products
+    build: ./subgraphs/products
+  inventory:
+    container_name: inventory
+    build: ./subgraphs/inventory
+  users:
+    container_name: users
+    build: ./subgraphs/users

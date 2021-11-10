@@ -11,6 +11,7 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Local development](#local-development-with-federation-2)
 * [Composition examples](examples/README.md)
 * [Apollo Workbench](workbench/README.md)
+* [Apollo Router](#apollo-router)
 
 ## Welcome
 
@@ -145,8 +146,8 @@ this uses `docker-compose.managed.yml`:
 ```yaml
 version: '3'
 services:
-  router:
-    container_name: router
+  apollo-gateway:
+    container_name: apollo-gateway
     build: ./gateway
     env_file: # created automatically during `make publish`
       - graph-api.env
@@ -168,7 +169,7 @@ which shows:
 ```
 docker-compose -f docker-compose.managed.yml up -d
 Creating network "supergraph-demo_default" with the default driver
-Creating graph-router ... done
+Creating apollo-gateway ... done
 
 Starting Apollo Gateway in managed mode ...
 Apollo usage reporting starting! See your graph at https://studio.apollographql.com/graph/supergraph-router@dev/
@@ -297,10 +298,10 @@ and then runs:
 ```
 make docker-up-local
 
-Creating router    ... done
-Creating inventory ... done
-Creating users     ... done
-Creating products  ... done
+Creating apollo-gateway ... done
+Creating inventory      ... done
+Creating users          ... done
+Creating products       ... done
 
 Starting Apollo Gateway in local mode ...
 Using local: supergraph.graphql
@@ -463,6 +464,18 @@ service:
   * See usage in:
     * [gateway/gateway.js](gateway/gateway.js)
     * [subgraphs/products/products.js](subgraphs/products/products.js)
+
+## Apollo Router
+
+[The Apollo Router](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust) is our next-generation GraphQL Federation runtime written in Rust, and it is fast.
+
+[Early benchmarks](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust) show that the Router adds less than 10ms of latency to each operation, and it can process 8x the load of the JavaScript Apollo Gateway.
+
+To get started with the Router:
+
+```
+make demo-local-router
+```
 
 ## More on Federation 2
 

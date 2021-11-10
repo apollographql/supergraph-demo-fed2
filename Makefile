@@ -10,14 +10,23 @@ demo: publish take-five docker-up smoke docker-down
 .PHONY: demo-local
 demo-local: supergraph docker-up-local smoke docker-down
 
+.PHONY: demo-local-router
+demo-local-router: supergraph docker-up-local-router query docker-down
+
 .PHONY: demo-rebuild
 demo-rebuild: supergraph docker-build-force docker-up-local smoke docker-down
 
 .PHONY: docker-up-local
 docker-up-local:
-	docker-compose up -d
+	docker-compose -f docker-compose.yml up -d
 	@sleep 2
-	@docker logs router
+	@docker logs apollo-gateway
+
+.PHONY: docker-up-local-router
+docker-up-local-router:
+	docker-compose -f docker-compose.router.yml up -d
+	@sleep 2
+	@docker logs apollo-router
 
 .PHONY: docker-build
 docker-build:
@@ -26,6 +35,10 @@ docker-build:
 .PHONY: docker-build-force
 docker-build-force:
 	docker-compose build --no-cache --pull --parallel --progress plain
+
+.PHONY: docker-build-router
+docker-build-router:
+	@.scripts/docker-build-router.sh
 
 .PHONY: docker-up
 docker-up:
@@ -43,7 +56,11 @@ smoke:
 
 .PHONY: docker-down
 docker-down:
-	docker-compose down
+	docker-compose down --remove-orphans
+
+.PHONY: docker-down-router
+docker-down-router:
+	docker-compose -f docker-compose.router.yml down --remove-orphans
 
 .PHONY: supergraph
 supergraph: config compose
@@ -91,6 +108,12 @@ docker-up-otel-collector:
 	docker-compose -f docker-compose.otel-collector.yml up -d
 	@sleep 2
 	docker-compose -f docker-compose.otel-collector.yml logs
+
+.PHONY: docker-up-router-otel
+docker-up-router-otel:
+	docker-compose -f docker-compose.router-otel.yml up -d
+	@sleep 2
+	docker-compose -f docker-compose.router-otel.yml logs
 
 .PHONY: docker-down-otel-collector
 docker-down-otel-collector:
