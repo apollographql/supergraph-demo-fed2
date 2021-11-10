@@ -2,7 +2,7 @@ version: '3'
 services:
   router:
     container_name: router
-    build: ./router
+    build: ./gateway
     environment:
       - APOLLO_SCHEMA_CONFIG_EMBEDDED=true
       - APOLLO_OTEL_EXPORTER_TYPE=zipkin
