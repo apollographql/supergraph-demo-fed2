@@ -9,6 +9,7 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Prerequisites](#prerequisites)
 * [Build your first graph](#build-your-first-graph-with-federation-2)
 * [Local development](#local-development-with-federation-2)
+* [Open Telemetry](#tracing-with-open-telemetry)
 * [Composition examples](examples/README.md)
 * [Apollo Workbench](workbench/README.md)
 * [Apollo Router](#apollo-router)
@@ -476,6 +477,48 @@ To get started with the Router:
 ```
 make demo-local-router
 ```
+
+this uses a simple [docker-compose.router.yml](docker-compose.router.yml) file:
+```yaml
+version: '3'
+services:
+  apollo-router:
+    container_name: apollo-router
+    build: ./router
+    volumes:
+      - ./supergraph.graphql:/etc/config/supergraph.graphql
+      - ./router/configuration.yaml:/etc/config/configuration.yaml
+    ports:
+      - "4000:4000"
+  products:
+    container_name: products
+    build: ./subgraphs/products
+  inventory:
+    container_name: inventory
+    build: ./subgraphs/inventory
+  users:
+    container_name: users
+    build: ./subgraphs/users
+```
+
+which uses the following [Dockerfile](router/Dockerfile)
+```
+from ubuntu
+
+WORKDIR /usr/src/app
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    curl \
+    jq
+
+COPY install.sh .
+COPY run.sh .
+RUN ./install.sh
+
+CMD [ "/usr/src/app/run.sh" ]
+```
+
+see [./router](router) for more details.
 
 ## More on Federation 2
 

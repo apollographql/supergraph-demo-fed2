@@ -3,8 +3,6 @@ services:
   apollo-router:
     container_name: apollo-router
     build: ./router
-    environment:
-      - APOLLO_SCHEMA_CONFIG_EMBEDDED=true
     volumes:
       - ./supergraph.graphql:/etc/config/supergraph.graphql
       - ./router/configuration.yaml:/etc/config/configuration.yaml
