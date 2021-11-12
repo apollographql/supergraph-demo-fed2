@@ -4,6 +4,9 @@ default: demo
 .PHONY: ci
 ci: supergraph docker-build-force docker-up-local smoke docker-down
 
+.PHONY: ci-router
+ci-router: supergraph docker-build-force docker-up-local-router smoke-router docker-down
+
 .PHONY: demo
 demo: publish take-five docker-up smoke docker-down
 
@@ -53,6 +56,10 @@ query:
 .PHONY: smoke
 smoke:
 	@.scripts/smoke.sh
+
+.PHONY: smoke-router
+smoke-router:
+	@.scripts/smoke-router.sh
 
 .PHONY: docker-down
 docker-down:
@@ -131,6 +138,10 @@ act: act-ci-local
 .PHONY: act-ci-local
 act-ci-local:
 	act -P $(ubuntu-latest) -W .github/workflows/main.yml --detect-event
+
+.PHONY: act-ci-local-router
+act-ci-local-router:
+	act -P $(ubuntu-latest) -W .github/workflows/main-router.yml --detect-event
 
 .PHONY: act-ci-managed
 act-ci-managed:
