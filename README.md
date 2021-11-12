@@ -45,7 +45,7 @@ Federation 2 adds:
 
 Learn more:
 
-* [Blog Post](https://www.apollographql.com/blog/announcement/backend/announcing-apollo-federation-2)
+* [Blog Post](https://www.apollographql.com/blog/announcement/backend/announcing-federation-2/)
 * [Docs](https://www.apollographql.com/docs/federation/v2)
 * [Community Forum](http://community.apollographql.com/)
 
