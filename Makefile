@@ -116,15 +116,19 @@ docker-up-otel-collector:
 	@sleep 2
 	docker-compose -f docker-compose.otel-collector.yml logs
 
+.PHONY: docker-down-otel-collector
+docker-down-otel-collector:
+	docker-compose -f docker-compose.otel-collector.yml down
+
 .PHONY: docker-up-router-otel
 docker-up-router-otel:
 	docker-compose -f docker-compose.router-otel.yml up -d
 	@sleep 2
 	docker-compose -f docker-compose.router-otel.yml logs
 
-.PHONY: docker-down-otel-collector
-docker-down-otel-collector:
-	docker-compose -f docker-compose.otel-collector.yml down
+.PHONY: docker-down-router-otel
+docker-down-router-otel:
+	docker-compose -f docker-compose.router-otel.yml down
 
 .PHONY: dep-act
 dep-act:
