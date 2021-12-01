@@ -1,4 +1,4 @@
 #!/bin/bash
 
 ./router --version
-./router -c /etc/config/configuration.yaml -s /etc/config/supergraph.graphql --log trace
+./router -c /etc/config/configuration.yaml -s /etc/config/supergraph.graphql --log info
