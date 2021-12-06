@@ -57,10 +57,6 @@ query:
 smoke:
 	@.scripts/smoke.sh
 
-.PHONY: smoke-router
-smoke-router:
-	@.scripts/smoke-router.sh
-
 .PHONY: docker-down
 docker-down:
 	docker-compose down --remove-orphans
