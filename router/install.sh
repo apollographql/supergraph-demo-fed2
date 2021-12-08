@@ -127,6 +127,16 @@ get_architecture() {
         local _cputype=x86_64
     fi
 
+
+    # If we are building a linux container on an M1 chip, let's
+    # download a86_64 binaries and assume the docker image is
+    # for amd64. We do this because we don't have router binaries
+    # for aarch64 for any OS right now. If this changes in the
+    # future, we'll need to re-visit this hack.
+    if [ "$_ostype" = "Linux" -a "$_cputype" = "aarch64" ]; then
+        _cputype="x86_64"
+    fi
+
     case "$_ostype" in
         Linux)
             local _ostype=linux
