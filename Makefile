@@ -44,10 +44,7 @@ docker-build-router:
 	@docker build -t supergraph-demo-fed2_apollo-router router/. --no-cache
 
 .PHONY: docker-up
-docker-up:
-	docker-compose -f docker-compose.managed.yml up -d
-	@sleep 2
-	@docker logs router
+docker-up: docker-up-local
 
 .PHONY: query
 query:
