@@ -14,10 +14,13 @@ demo: publish take-five docker-up smoke docker-down
 demo-local: supergraph docker-up-local smoke docker-down
 
 .PHONY: demo-local-router
-demo-local-router: supergraph docker-up-local-router query docker-down
+demo-local-router: supergraph docker-up-local-router smoke docker-down-router
 
 .PHONY: demo-rebuild
 demo-rebuild: supergraph docker-build-force docker-up-local smoke docker-down
+
+.PHONY: docker-up
+docker-up: docker-up-local
 
 .PHONY: docker-up-local
 docker-up-local:
@@ -42,9 +45,6 @@ docker-build-force:
 .PHONY: docker-build-router
 docker-build-router:
 	@docker build -t supergraph-demo-fed2_apollo-router router/. --no-cache
-
-.PHONY: docker-up
-docker-up: docker-up-local
 
 .PHONY: query
 query:
