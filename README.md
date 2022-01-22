@@ -470,9 +470,17 @@ service:
 
 [The Apollo Router](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust) is our next-generation GraphQL Federation runtime written in Rust, and it is fast.
 
+As a Graph Router, the Apollo Router plays the same role as the Apollo Gateway. The same subgraph schemas and composed supergraph schema can be used in both the Router and the Gateway.
+
+This demo shows using the Apollo Router with a Federation 2 supergraph schema, composed using the Fed 2 `rover fed2 supergraph compose` command. To see the Router working with Federation 1 composition, checkout the Apollo Router section of [apollographql/supergraph-demo](https://github.com/apollographql/supergraph-demo/blob/main/README.md#apollo-router).
+
 [Early benchmarks](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust) show that the Router adds less than 10ms of latency to each operation, and it can process 8x the load of the JavaScript Apollo Gateway.
 
 To get started with the Router:
+
+Prerequisites:
+
+* [Local development](#local-development-with-federation-2)
 
 ```
 make demo-local-router
