@@ -5,7 +5,7 @@ default: demo
 ci: supergraph docker-build-force docker-up-local smoke docker-down
 
 .PHONY: ci-router
-ci-router: supergraph docker-build-force docker-up-local-router docker-down
+ci-router: supergraph docker-build-force docker-up-local-router smoke docker-down
 
 .PHONY: demo
 demo: publish take-five docker-up smoke docker-down
