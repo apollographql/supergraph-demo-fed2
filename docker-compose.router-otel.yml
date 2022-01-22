@@ -28,7 +28,7 @@ services:
       - APOLLO_OTEL_EXPORTER_HOST=collector
   collector:
     container_name: collector
-    image: otel/opentelemetry-collector:0.35.0
+    image: otel/opentelemetry-collector:0.42.0
     command: ["--config=/conf/collector-config.yml"]
     volumes:
       - ./opentelemetry/collector-config.yml:/conf/collector-config.yml
