@@ -1,4 +1,4 @@
-from amd64/ubuntu:latest
+FROM amd64/ubuntu:latest
 
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \ 
@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     jq
 
 COPY install.sh .
-COPY run.sh .
 RUN ./install.sh
 
-CMD [ "/usr/src/app/run.sh" ]
+CMD [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "/etc/config/supergraph.graphql", "--log", "info" ]
