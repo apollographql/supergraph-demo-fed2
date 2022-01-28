@@ -9,4 +9,6 @@ RUN apt-get update && apt-get install -y \
 COPY install.sh .
 RUN ./install.sh
 
+STOPSIGNAL SIGINT
+
 CMD [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "/etc/config/supergraph.graphql", "--log", "info" ]
