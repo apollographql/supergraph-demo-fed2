@@ -29,6 +29,9 @@ services:
     environment:
       - APOLLO_OTEL_EXPORTER_TYPE=collector
       - APOLLO_OTEL_EXPORTER_HOST=collector
+  pandas:
+    container_name: pandas
+    build: ./subgraphs/pandas
   collector:
     container_name: collector
     image: otel/opentelemetry-collector:0.42.0

@@ -14,7 +14,7 @@ if (process.env.APOLLO_OTEL_EXPORTER_TYPE) {
 }
 
 const { ApolloServer, gql } = require('apollo-server');
-const { buildSubgraphSchema } = require('@apollo/federation');
+const { buildSubgraphSchema } = require('@apollo/subgraph');
 const { readFileSync } = require('fs');
 
 const port = process.env.APOLLO_PORT || 4000;

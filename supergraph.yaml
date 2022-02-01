@@ -11,3 +11,7 @@ subgraphs:
     routing_url: http://users:4000/graphql
     schema:
       file: ./subgraphs/users/users.graphql
+  pandas:
+    routing_url: http://pandas:4000/graphql
+    schema:
+      file: ./subgraphs/pandas/pandas.graphql
