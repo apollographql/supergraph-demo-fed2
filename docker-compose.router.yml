@@ -17,3 +17,6 @@ services:
   users:
     container_name: users
     build: ./subgraphs/users
+  pandas:
+    container_name: pandas
+    build: ./subgraphs/pandas

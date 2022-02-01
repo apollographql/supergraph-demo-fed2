@@ -39,8 +39,16 @@ scalar join__FieldSet
 
 enum join__Graph {
   INVENTORY @join__graph(name: "inventory", url: "http://inventory:4000/graphql")
+  PANDAS @join__graph(name: "pandas", url: "http://pandas:4000/graphql")
   PRODUCTS @join__graph(name: "products", url: "http://products:4000/graphql")
   USERS @join__graph(name: "users", url: "http://users:4000/graphql")
+}
+
+type Panda
+  @join__type(graph: PANDAS)
+{
+  name: ID!
+  favoriteFood: String
 }
 
 type Product implements ProductItf & SkuItf
@@ -91,9 +99,12 @@ type ProductVariation
 
 type Query
   @join__type(graph: INVENTORY)
+  @join__type(graph: PANDAS)
   @join__type(graph: PRODUCTS)
   @join__type(graph: USERS)
 {
+  allPandas: [Panda] @join__field(graph: PANDAS)
+  panda(name: ID!): Panda @join__field(graph: PANDAS)
   allProducts: [ProductItf] @join__field(graph: PRODUCTS)
   product(id: ID!): ProductItf @join__field(graph: PRODUCTS)
 }
