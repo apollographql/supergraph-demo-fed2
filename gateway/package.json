@@ -9,7 +9,6 @@
   "dependencies": {
     "apollo-server": "3.6.2",
     "@apollo/composition": "2.0.0-alpha.4",
-    "@apollo/federation": "2.0.0-alpha.1",
     "@apollo/federation-internals": "2.0.0-alpha.4",
     "@apollo/gateway": "2.0.0-alpha.4",
     "@apollo/query-graphs": "2.0.0-alpha.4",
