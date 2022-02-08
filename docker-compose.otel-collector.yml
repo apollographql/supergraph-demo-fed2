@@ -34,7 +34,7 @@ services:
     build: ./subgraphs/pandas
   collector:
     container_name: collector
-    image: otel/opentelemetry-collector:0.43.0
+    image: otel/opentelemetry-collector:0.44.0
     command: ["--config=/conf/collector-config.yml"]
     volumes:
       - ./opentelemetry/collector-config.yml:/conf/collector-config.yml
