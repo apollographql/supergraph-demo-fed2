@@ -7,7 +7,7 @@
     "start": "node pandas.js"
   },
   "dependencies": {
-    "apollo-server": "3.6.2",
+    "apollo-server": "3.6.3",
     "graphql": "16.3.0"
   },
   "keywords": [],
