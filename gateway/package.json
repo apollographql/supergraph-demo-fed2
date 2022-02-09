@@ -7,13 +7,13 @@
     "start": "node gateway.js"
   },
   "dependencies": {
-    "apollo-server": "3.6.2",
-    "@apollo/composition": "2.0.0-alpha.4",
-    "@apollo/federation-internals": "2.0.0-alpha.4",
-    "@apollo/gateway": "2.0.0-alpha.4",
-    "@apollo/query-graphs": "2.0.0-alpha.4",
-    "@apollo/query-planner": "2.0.0-alpha.4",
-    "@apollo/subgraph": "2.0.0-alpha.3",
+    "apollo-server": "3.6.3",
+    "@apollo/composition": "2.0.0-alpha.5",
+    "@apollo/federation-internals": "2.0.0-alpha.5",
+    "@apollo/gateway": "2.0.0-alpha.5",
+    "@apollo/query-graphs": "2.0.0-alpha.5",
+    "@apollo/query-planner": "2.0.0-alpha.5",
+    "@apollo/subgraph": "2.0.0-alpha.4",
     "supergraph-demo-opentelemetry": "0.0.3",
     "graphql": "16.3.0"
   },
