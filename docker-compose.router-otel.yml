@@ -31,7 +31,7 @@ services:
     build: ./subgraphs/pandas
   collector:
     container_name: collector
-    image: otel/opentelemetry-collector:0.44.0
+    image: otel/opentelemetry-collector:0.42.0
     command: ["--config=/conf/collector-config.yml"]
     volumes:
       - ./opentelemetry/collector-config.yml:/conf/collector-config.yml
@@ -39,6 +39,7 @@ services:
       - "9464:9464"
       - "4317:4317"
       - "55681:55681"
+      - "55679:55679"
     depends_on:
       - zipkin
   zipkin:
