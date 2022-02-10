@@ -14,7 +14,7 @@
     "@apollo/query-graphs": "2.0.0-alpha.5",
     "@apollo/query-planner": "2.0.0-alpha.5",
     "@apollo/subgraph": "2.0.0-alpha.4",
-    "supergraph-demo-opentelemetry": "0.0.3",
+    "supergraph-demo-opentelemetry": "0.0.4",
     "graphql": "16.3.0"
   },
   "keywords": [],
