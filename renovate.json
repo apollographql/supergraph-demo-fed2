@@ -13,7 +13,6 @@
     "workarounds:all"
   ],
   "packageRules": [
-     {  "automerge": true, "excludePackageNames":"otel/opentelemetry-collector", "matchUpdateTypes": ["minor", "patch", "pin", "digest"]},
-     {  "automerge": false, "matchPackageNames":"otel/opentelemetry-collector", "matchUpdateTypes": ["minor", "patch", "pin", "digest"]}
+     {  "automerge": true, "matchUpdateTypes": ["minor", "patch", "pin", "digest"]}
   ]
 }
