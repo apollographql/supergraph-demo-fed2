@@ -62,7 +62,7 @@ You'll need:
 To install `rover`:
 
 ```sh
-curl -sSL https://rover.apollo.dev/nix/v0.4.0 | sh
+curl -sSL https://rover.apollo.dev/nix/v0.4.4 | sh
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
