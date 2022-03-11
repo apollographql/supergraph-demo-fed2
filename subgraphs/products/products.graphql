@@ -1,3 +1,7 @@
+extend schema
+    @link(url: "https://specs.apollo.dev/federation/v2.0",
+       import: ["@key", "@shareable"])
+
 type Query {
   allProducts: [ProductItf]
   product(id: ID!): ProductItf
@@ -31,11 +35,11 @@ enum ShippingClass {
 type ProductVariation {
   id: ID!
 }
-type ProductDimension {
+type ProductDimension @shareable {
   size: String
   weight: Float
 }
 type User @key(fields: "email") {
   email: ID!
-  totalProductsCreated: Int
+  totalProductsCreated: Int @shareable
 }
