@@ -10,11 +10,13 @@ subgraphs:
     routing_url: http://products:4000/graphql
   inventory:
     routing_url: http://inventory:4000/graphql
-opentelemetry:
-  otlp:
-    tracing:
-      exporter:
-        grpc:
-          endpoint: collector:4317
-          protocol: Grpc
-          timeout: 42
+plugins:
+  com.apollographql.reporting:
+    opentelemetry:
+      otlp:
+        tracing:
+          exporter:
+            grpc:
+              endpoint: collector:4317
+              protocol: Grpc
+              timeout: 42
