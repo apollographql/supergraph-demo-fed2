@@ -62,7 +62,7 @@ You'll need:
 To install `rover`:
 
 ```sh
-curl -sSL https://rover.apollo.dev/nix/v0.4.4 | sh
+curl -sSL https://rover.apollo.dev/nix/v0.4.5 | sh
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
@@ -266,7 +266,7 @@ This section assumes you have `docker`, `docker-compose` and the `rover` core bi
 #### Install the Federation 2 plugin for `rover` for local composition
 
 ```
-curl https://rover.apollo.dev/plugins/rover-fed2/nix/v0.4.4 | sh
+curl https://rover.apollo.dev/plugins/rover-fed2/nix/v0.4.5 | sh
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
