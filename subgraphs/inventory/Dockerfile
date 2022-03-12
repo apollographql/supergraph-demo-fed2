@@ -1,12 +1,7 @@
-from node:17-alpine
+from gradle:7.4.1-jdk11
 
 WORKDIR /usr/src/app
 
-COPY package.json .
+COPY app .
 
-RUN npm install
-
-COPY inventory.js .
-COPY inventory.graphql .
-
-CMD [ "node", "inventory.js" ]
+CMD [ "gradle", "bootRun" ]
