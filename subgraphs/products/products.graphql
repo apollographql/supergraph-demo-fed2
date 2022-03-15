@@ -1,6 +1,6 @@
 extend schema
     @link(url: "https://specs.apollo.dev/federation/v2.0",
-       import: ["@key", "@shareable"])
+       import: ["@key", "@shareable", "@tag"])
 
 type Query {
   allProducts: [ProductItf]
@@ -21,7 +21,7 @@ interface SkuItf {
 }
 
 type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
-  id: ID!
+  id: ID! @tag(name: "hi-from-products")
   sku: String
   package: String
   variation: ProductVariation

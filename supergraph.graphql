@@ -2,6 +2,7 @@
 schema
   @core(feature: "https://specs.apollo.dev/core/v0.2")
   @core(feature: "https://specs.apollo.dev/join/v0.2", for: EXECUTION)
+  @core(feature: "https://specs.apollo.dev/tag/v0.1")
 {
   query: Query
 }
@@ -15,6 +16,8 @@ directive @join__graph(name: String!, url: String!) on ENUM_VALUE
 directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
 
 directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @tag(name: String!) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 enum core__Purpose {
   """
