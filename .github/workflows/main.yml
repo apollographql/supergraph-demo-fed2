@@ -59,7 +59,7 @@ jobs:
       - name: docker-compose up -d
         run: |
           ( set -x; docker-compose up -d )
-          sleep 180
+          sleep 10
           docker-compose logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
