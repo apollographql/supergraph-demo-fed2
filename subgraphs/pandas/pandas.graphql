@@ -1,3 +1,5 @@
+directive @tag(name: String!) repeatable on FIELD_DEFINITION
+
 type Query {
   allPandas: [Panda]
   panda(name: ID!): Panda
@@ -5,5 +7,5 @@ type Query {
 
 type Panda {
     name:ID!
-    favoriteFood: String
+    favoriteFood: String @tag(name: "nom nom nom")
 }
