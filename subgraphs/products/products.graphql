@@ -1,3 +1,5 @@
+directive @tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT
+
 extend schema
     @link(url: "https://specs.apollo.dev/federation/v2.0",
        import: ["@key", "@shareable", "@tag"])
