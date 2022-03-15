@@ -3,15 +3,7 @@ server:
   cors:
     origins:
       - https://studio.apollographql.com
-subgraphs:
-  users:
-    routing_url: http://users:4000/graphql
-  products:
-    routing_url: http://products:4000/graphql
-  inventory:
-    routing_url: http://inventory:4000/graphql
-plugins:
-  com.apollographql.reporting:
+telemetry:
     opentelemetry:
       otlp:
         tracing:
