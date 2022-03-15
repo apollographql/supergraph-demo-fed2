@@ -7,5 +7,5 @@ type Query {
 
 type Panda {
     name:ID!
-    favoriteFood: String @tag(name: "nom nom nom")
+    favoriteFood: String @tag(name: "nom-nom-nom")
 }
