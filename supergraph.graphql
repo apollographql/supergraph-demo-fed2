@@ -17,7 +17,7 @@ directive @join__implements(graph: join__Graph!, interface: String!) repeatable 
 
 directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
 
-directive @tag(name: String!) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+directive @tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 enum core__Purpose {
   """
@@ -51,7 +51,7 @@ type Panda
   @join__type(graph: PANDAS)
 {
   name: ID!
-  favoriteFood: String
+  favoriteFood: String @tag(name: "nom-nom-nom")
 }
 
 type Product implements ProductItf & SkuItf
@@ -63,7 +63,7 @@ type Product implements ProductItf & SkuItf
   @join__type(graph: PRODUCTS, key: "sku package")
   @join__type(graph: PRODUCTS, key: "sku variation { id }")
 {
-  id: ID!
+  id: ID! @tag(name: "hi-from-products")
   dimensions: ProductDimension @join__field(graph: INVENTORY, external: true) @join__field(graph: PRODUCTS)
   delivery(zip: String): DeliveryEstimates @join__field(graph: INVENTORY, requires: "dimensions { size weight }")
   sku: String @join__field(graph: PRODUCTS)
@@ -131,7 +131,7 @@ type User
   @join__type(graph: PRODUCTS, key: "email")
   @join__type(graph: USERS, key: "email")
 {
-  email: ID!
+  email: ID! @tag(name: "test-from-users")
   totalProductsCreated: Int
   name: String @join__field(graph: USERS)
 }
