@@ -1,4 +1,5 @@
-from gradle:7.4.1-jdk11
+# Use a separate layer for the build for better caching
+FROM gradle:7.4.1-jdk11 AS TEMP_BUILD_IMAGE
 
 WORKDIR /usr/src/app
 
@@ -14,4 +15,13 @@ COPY app .
 # Do the actual build
 RUN gradle clean build --no-daemon --parallel
 
-CMD ["java", "-jar", "build/libs/app.jar"]
+
+# Create a new layer with the build output to run the app
+FROM openjdk:11-jre-slim
+ENV ARTIFACT_NAME=app.jar
+
+WORKDIR /usr/src/app
+
+COPY --from=TEMP_BUILD_IMAGE /usr/src/app/build/libs/$ARTIFACT_NAME .
+
+ENTRYPOINT ["java", "-jar", "-noverify", $ARTIFACT_NAME]
