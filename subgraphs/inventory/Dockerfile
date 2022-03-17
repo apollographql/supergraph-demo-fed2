@@ -24,4 +24,4 @@ WORKDIR /usr/src/app
 
 COPY --from=TEMP_BUILD_IMAGE /usr/src/app/build/libs/$ARTIFACT_NAME .
 
-ENTRYPOINT ["java", "-jar", "-noverify", $ARTIFACT_NAME]
+ENTRYPOINT exec "java" "-jar" "-noverify" "${ARTIFACT_NAME}"
