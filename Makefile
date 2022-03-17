@@ -8,7 +8,7 @@ ci: supergraph docker-build-force docker-up-local smoke docker-down
 ci-router: supergraph docker-build-force docker-up-local-router smoke docker-down
 
 .PHONY: demo
-demo: publish take-five docker-up smoke docker-down
+demo: publish take-five docker-up-managed smoke docker-down
 
 .PHONY: demo-local
 demo-local: supergraph docker-up-local smoke docker-down
@@ -25,13 +25,22 @@ docker-up: docker-up-local
 .PHONY: docker-up-local
 docker-up-local:
 	docker-compose -f docker-compose.yml up -d
-	@sleep 5
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
+	@docker logs apollo-gateway
+
+.PHONY: docker-up-managed
+docker-up-managed:
+	docker-compose -f docker-compose.managed.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
 	@docker logs apollo-gateway
 
 .PHONY: docker-up-local-router
 docker-up-local-router:
 	docker-compose -f docker-compose.router.yml up -d
-	@sleep 5
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
 	@docker logs apollo-router
 
 .PHONY: docker-build
@@ -96,7 +105,8 @@ check-all:
 .PHONY: docker-up-zipkin
 docker-up-zipkin:
 	docker-compose -f docker-compose.otel-zipkin.yml up -d
-	@sleep 5
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
 	docker-compose -f docker-compose.otel-zipkin.yml logs
 
 .PHONY: docker-down-zipkin
@@ -106,7 +116,8 @@ docker-down-zipkin:
 .PHONY: docker-up-otel-collector
 docker-up-otel-collector:
 	docker-compose -f docker-compose.otel-collector.yml up -d
-	@sleep 5
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
 	docker-compose -f docker-compose.otel-collector.yml logs
 
 .PHONY: docker-down-otel-collector
@@ -116,7 +127,8 @@ docker-down-otel-collector:
 .PHONY: docker-up-router-otel
 docker-up-router-otel:
 	docker-compose -f docker-compose.router-otel.yml up -d
-	@sleep 5
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
 	docker-compose -f docker-compose.router-otel.yml logs
 
 .PHONY: docker-down-router-otel
