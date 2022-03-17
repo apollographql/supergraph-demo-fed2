@@ -8,7 +8,7 @@ ci: supergraph docker-build-force docker-up-local smoke docker-down
 ci-router: supergraph docker-build-force docker-up-local-router smoke docker-down
 
 .PHONY: demo
-demo: publish take-five docker-up smoke docker-down
+demo: publish take-five docker-up-managed smoke docker-down
 
 .PHONY: demo-local
 demo-local: supergraph docker-up-local smoke docker-down
@@ -25,6 +25,13 @@ docker-up: docker-up-local
 .PHONY: docker-up-local
 docker-up-local:
 	docker-compose -f docker-compose.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 8
+	@docker logs apollo-gateway
+
+.PHONY: docker-up-managed
+docker-up-managed:
+	docker-compose -f docker-compose.managed.yml up -d
 	@echo "waiting for Kotlin inventory subgraph to initialize"
 	@sleep 8
 	@docker logs apollo-gateway

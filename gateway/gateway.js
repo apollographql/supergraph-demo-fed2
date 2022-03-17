@@ -15,6 +15,7 @@ if (process.env.APOLLO_OTEL_EXPORTER_TYPE) {
 
 // Main
 const { ApolloServer } = require('apollo-server');
+const { ApolloServerPluginUsageReporting } = require('apollo-server-core');
 const { ApolloGateway } = require('@apollo/gateway');
 const { readFileSync } = require('fs');
 
@@ -22,6 +23,7 @@ const port = process.env.APOLLO_PORT || 4000;
 const embeddedSchema = process.env.APOLLO_SCHEMA_CONFIG_EMBEDDED == "true" ? true : false;
 
 const config = {};
+const plugins = [];
 
 if (embeddedSchema){
   const supergraph = "/etc/config/supergraph.graphql"
@@ -30,6 +32,10 @@ if (embeddedSchema){
   console.log(`Using local: ${supergraph}`)
 } else {
   console.log('Starting Apollo Gateway in managed mode ...');
+  plugins.push(
+    ApolloServerPluginUsageReporting({
+      fieldLevelInstrumentation: 0.01
+    }));
 }
 
 const gateway = new ApolloGateway(config);
@@ -38,7 +44,8 @@ const server = new ApolloServer({
   gateway,
   debug: true,
   // Subscriptions are unsupported but planned for a future Gateway version.
-  subscriptions: false
+  subscriptions: false,
+  plugins
 });
 
 server.listen( {port: port} ).then(({ url }) => {
