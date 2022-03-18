@@ -11,7 +11,6 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Local development](#local-development-with-federation-2)
 * [Open Telemetry](#tracing-with-open-telemetry)
 * [Composition examples](examples/README.md)
-* [Apollo Workbench](workbench/README.md)
 * [Apollo Router](#apollo-router)
 
 ## Welcome
