@@ -69,9 +69,9 @@ jobs:
       - name: docker-compose -f docker-compose.managed.yml up -d
         run: |
           ( set -x; docker-compose -f docker-compose.managed.yml up -d )
-          sleep 10
+          sleep 8
           docker-compose logs
       - name: smoke test
-        run: .scripts/smoke.sh 4000
+        run: .scripts/smoke.sh 4000 250
       - name: docker-compose down
         run: docker-compose down

@@ -59,7 +59,7 @@ jobs:
       - name: docker-compose up -d
         run: |
           ( set -x; docker-compose -f docker-compose.router.yml  up -d )
-          sleep 10
+          sleep 8
           docker-compose -f docker-compose.router.yml logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
