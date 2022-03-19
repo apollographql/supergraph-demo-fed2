@@ -1,6 +1,7 @@
 package inventory
 
 import com.apollographql.federation.graphqljava.Federation
+import com.apollographql.federation.graphqljava.tracing.FederatedTracingInstrumentation
 import graphql.GraphQL
 import graphql.schema.idl.RuntimeWiring
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -59,7 +60,9 @@ class GraphQLProvider {
         }
       }
       .build()
-    graphQL = GraphQL.newGraphQL(schema).build()
+    graphQL = GraphQL.newGraphQL(schema)
+      .instrumentation(FederatedTracingInstrumentation())
+      .build()
   }
 }
 
