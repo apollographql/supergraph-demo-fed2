@@ -63,8 +63,20 @@ query:
 smoke:
 	@.scripts/smoke.sh
 
-.PHONY: smoke-load
-smoke-load:
+# use with make docker-up-managed and Apollo Studio
+.PHONY: load
+load: load-250
+
+.PHONY: load-10
+load-10:
+	@.scripts/smoke.sh 4000 10
+
+.PHONY: load-100
+load-100:
+	@.scripts/smoke.sh 4000 100
+
+.PHONY: load-250
+load-250:
 	@.scripts/smoke.sh 4000 250
 
 .PHONY: docker-down
