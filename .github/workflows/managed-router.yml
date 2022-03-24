@@ -1,15 +1,19 @@
-name: CI Gateway
+name: CI Router Managed Federation
 on:
-  pull_request:
+  push:
     branches: [ main ]
   schedule:
     - cron: '30 7 * * *'
   workflow_dispatch:
 
 jobs:
-  ci-docker-local:
-    name: CI Gateway
+  ci-docker-managed:
+    name: CI Router Managed Federation
     runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF }}
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -49,19 +53,21 @@ jobs:
           ( set -x; which docker-compose )
           echo "$(docker-compose --version)"
           echo ---------------------------------------------------------------
-      - name: make supergraph
+      - name: unpublish
         run: |
-          make supergraph
-          cat supergraph.graphql
+          make unpublish
+      - name: publish
+        run: |
+          make publish
       - name: docker-compose build
         run: |
-          ( set -x; docker-compose build --no-cache --pull --parallel --progress plain )
+          ( set -x; docker-compose -f docker-compose.router-managed.yml build --no-cache --pull --parallel --progress plain )
       - name: docker-compose up -d
         run: |
-          ( set -x; docker-compose up -d )
+          ( set -x; docker-compose -f docker-compose.router-managed.yml  up -d )
           sleep 8
-          docker-compose logs
+          docker-compose -f docker-compose.router-managed.yml logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
       - name: docker-compose down
-        run: docker-compose down
+        run: docker-compose -f docker-compose.router-managed.yml down

@@ -475,17 +475,16 @@ This demo shows using the Apollo Router with a Federation 2 supergraph schema, c
 
 [Early benchmarks](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust) show that the Router adds less than 10ms of latency to each operation, and it can process 8x the load of the JavaScript Apollo Gateway.
 
-To get started with the Router:
+See the [Apollo Router Docs](https://www.apollographql.com/docs/router/) for details.
 
-Prerequisites:
-
-* [Local development](#local-development-with-federation-2)
+## Router with Managed Federation
 
 ```
-make demo-local-router
+make demo-router
 ```
 
-this uses a simple [docker-compose.router.yml](docker-compose.router.yml) file:
+which uses this [docker-compose.router-managed.yml](docker-compose.router-managed.yml) file:
+
 ```yaml
 version: '3'
 services:
@@ -493,8 +492,9 @@ services:
     container_name: apollo-router
     build: ./router
     volumes:
-      - ./supergraph.graphql:/etc/config/supergraph.graphql
       - ./router/configuration.yaml:/etc/config/configuration.yaml
+    env_file: # create with make graph-api-env
+      - graph-api.env
     ports:
       - "4000:4000"
   products:
@@ -506,11 +506,14 @@ services:
   users:
     container_name: users
     build: ./subgraphs/users
+  pandas:
+    container_name: pandas
+    build: ./subgraphs/pandas
 ```
 
 which uses the following [Dockerfile](router/Dockerfile)
 ```
-from ubuntu
+FROM amd64/ubuntu:latest
 
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
@@ -519,16 +522,64 @@ RUN apt-get update && apt-get install -y \
     jq
 
 COPY install.sh .
-COPY run.sh .
 RUN ./install.sh
 
-CMD [ "/usr/src/app/run.sh" ]
+STOPSIGNAL SIGINT
+
+CMD [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "--log", "info" ]
 ```
 
+## Router with Local Development
+
+Prerequisites: [Local development](#local-development-with-federation-2)
+
+```
+make demo-local-router
+```
+
+which uses this [docker-compose.router.yml](docker-compose.router.yml) file:
+
+```yaml
+version: '3'
+services:
+  apollo-router:
+    container_name: apollo-router
+    build: ./router
+    volumes:
+      - ./supergraph.graphql:/etc/config/supergraph.graphql
+      - ./router/configuration.yaml:/etc/config/configuration.yaml
+    command: [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "/etc/config/supergraph.graphql", "--log", "info" ]
+    ports:
+      - "4000:4000"
+  products:
+    container_name: products
+    build: ./subgraphs/products
+  inventory:
+    container_name: inventory
+    build: ./subgraphs/inventory
+  users:
+    container_name: users
+    build: ./subgraphs/users
+  pandas:
+    container_name: pandas
+    build: ./subgraphs/pandas
+```
+
+which uses the same [Dockerfile](router/Dockerfile) as above.
+
 see [./router](router) for more details.
+
+## More on Apollo Router
+
+* [Blog Post](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust/)
+* [Docs](https://www.apollographql.com/docs/router/)
+* [GitHub](https://github.com/apollographql/router)
+* [Discussions](https://github.com/apollographql/router/discussions) -- we'd love to hear what you think!
+* [Community Forum](http://community.apollographql.com/)
 
 ## More on Federation 2
 
 * [Blog Post](https://www.apollographql.com/blog/announcement/backend/announcing-apollo-federation-2)
 * [Docs](https://www.apollographql.com/docs/federation/v2)
+* [GitHub](https://github.com/apollographql/federation)
 * [Community Forum](http://community.apollographql.com/) -- we'd love to hear what you think!

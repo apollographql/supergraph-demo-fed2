@@ -1,4 +1,4 @@
-name: CI-router
+name: CI Router
 on:
   pull_request:
     branches: [ main ]
@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci-docker-local:
-    name: CI
+    name: CI Router
     runs-on: ubuntu-latest
     steps:
       - name: checkout

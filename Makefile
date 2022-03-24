@@ -10,6 +10,9 @@ ci-router: supergraph docker-build-force docker-up-local-router smoke docker-dow
 .PHONY: demo
 demo: publish take-five docker-up-managed smoke docker-down
 
+.PHONY: demo-router
+demo-router: publish take-five docker-up-managed-router smoke docker-down
+
 .PHONY: demo-local
 demo-local: supergraph docker-up-local smoke docker-down
 
@@ -39,6 +42,13 @@ docker-up-managed:
 .PHONY: docker-up-local-router
 docker-up-local-router:
 	docker-compose -f docker-compose.router.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+	@docker logs apollo-router
+
+.PHONY: docker-up-managed-router
+docker-up-managed-router:
+	docker-compose -f docker-compose.router-managed.yml up -d
 	@echo "waiting for Kotlin inventory subgraph to initialize"
 	@sleep 4
 	@docker logs apollo-router
@@ -171,6 +181,10 @@ act-ci-local-router:
 .PHONY: act-ci-managed
 act-ci-managed:
 	act -P $(ubuntu-latest) -W .github/workflows/managed.yml --secret-file graph-api.env --detect-event -j ci-docker-managed
+
+.PHONY: act-ci-managed-router
+act-ci-managed-router:
+	act -P $(ubuntu-latest) -W .github/workflows/managed-router.yml --secret-file graph-api.env --detect-event -j ci-docker-managed
 
 .PHONY: act-rebase
 act-rebase:
