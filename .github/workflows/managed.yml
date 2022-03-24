@@ -1,4 +1,4 @@
-name: CI Managed Federation
+name: CI Gateway Managed Federation
 on:
   push:
     branches: [ main ]
@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   ci-docker-managed:
-    name: CI Managed Federation
+    name: CI Gateway Managed Federation
     runs-on: ubuntu-latest
     env:
       CI: "true"

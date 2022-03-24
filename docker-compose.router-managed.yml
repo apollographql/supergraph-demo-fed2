@@ -4,9 +4,9 @@ services:
     container_name: apollo-router
     build: ./router
     volumes:
-      - ./supergraph.graphql:/etc/config/supergraph.graphql
       - ./router/configuration.yaml:/etc/config/configuration.yaml
-    command: [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "/etc/config/supergraph.graphql", "--log", "info" ]
+    env_file: # create with make graph-api-env
+      - graph-api.env
     ports:
       - "4000:4000"
   products:
