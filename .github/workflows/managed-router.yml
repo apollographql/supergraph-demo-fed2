@@ -13,7 +13,7 @@ jobs:
     env:
       CI: "true"
       APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
-      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF_ROUTER }}
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -68,6 +68,6 @@ jobs:
           sleep 8
           docker-compose -f docker-compose.router-managed.yml logs
       - name: smoke test
-        run: .scripts/smoke.sh 4000
+        run: .scripts/smoke.sh 4000 250
       - name: docker-compose down
         run: docker-compose -f docker-compose.router-managed.yml down
