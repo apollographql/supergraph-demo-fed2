@@ -1,4 +1,4 @@
-from node:17-alpine
+FROM node:17-bullseye
 
 WORKDIR /usr/src/app
 
