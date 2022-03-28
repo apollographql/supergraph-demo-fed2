@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:bullseye
 
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
