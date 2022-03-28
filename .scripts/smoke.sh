@@ -118,101 +118,110 @@ ROCKET="\xF0\x9F\x9A\x80"
 printf "Running smoke tests ... $ROCKET $ROCKET $ROCKET\n"
 sleep 2
 
-for (( i=1; i<=$COUNT; i++ )); do
-  for test in ${TESTS[@]}; do
-    descr_var="DESCR_$test"
-    query_var="QUERY_$test"
-    exp_var="EXP_$test"
-    op_var="OP_$test"
-    opname_var="OPNAME_$test"
+run_tests ( ){
+  for (( i=1; i<=$COUNT; i++ )); do
+    for test in ${TESTS[@]}; do
+      descr_var="DESCR_$test"
+      query_var="QUERY_$test"
+      exp_var="EXP_$test"
+      op_var="OP_$test"
+      opname_var="OPNAME_$test"
 
-    DESCR="${!descr_var}"
-    QUERY=$(echo "${!query_var}" | awk -v ORS= -v OFS= '{$1=$1}1')
-    EXP="${!exp_var}"
-    OP="${!op_var}"
-    OPNAME="${!opname_var}"
-    CMD=(curl -X POST -H 'Content-Type: application/json' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
+      DESCR="${!descr_var}"
+      QUERY=$(echo "${!query_var}" | awk -v ORS= -v OFS= '{$1=$1}1')
+      EXP="${!exp_var}"
+      OP="${!op_var}"
+      OPNAME="${!opname_var}"
+      CMD=(curl -X POST -H 'Content-Type: application/json' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
 
-    if [ $COUNT -le 1 ]; then
-      echo ""
-      echo "=============================================================="
-      echo "TEST $test: $DESCR"
-      echo "=============================================================="
-      printf '%q ' "${CMD[@]}"
-      printf '\n'
-    fi
-
-    # execute operation
-    set +e
-    ACT=$("${CMD[@]}" 2>/dev/null)
-    EXIT_CODE=$?
-    if [ $EXIT_CODE -ne 0 ]; then
-      printf '%q ' "${CMD[@]}"
-      printf '\n'
-      if [ $EXIT_CODE -eq 7 ]; then
-        printf "CURL ERROR 7 Failed to connect to Permission denied\n"
-      else
-        printf "CURL ERROR $EXIT_CODE\n"
-      fi
-      printf "${ACT}"
-      printf '\n'
-      exit 1
-    fi
-    set -e
-
-    OK=0
-    if [ "$OP" == "equals" ]; then
-      [ "$ACT" == "$EXP" ] && OK=1
-
-    elif [ "$OP" == "startsWith" ]; then
-      EXP=$( echo "$EXP" | sed 's|\\|\\\\|g' | sed 's|\[|\\[|g' | sed 's|\]|\\]|g')
-      if echo "$ACT" | grep -q "^${EXP}"; then
-        OK=1
-      fi
-    fi
-
-    if [ $OK -eq 1 ]; then
       if [ $COUNT -le 1 ]; then
-        echo -------------------------
-        echo "[Expected: $OP]"
-        echo "$EXP"
-        echo -------------------------
-        echo "[Actual]"
-        echo "$ACT"
-        echo -------------------------
-        printf "$OK_CHECK Success!\n"
+        echo ""
+        echo "=============================================================="
+        echo "TEST $test: $DESCR"
+        echo "=============================================================="
+        printf '%q ' "${CMD[@]}"
+        printf '\n'
       fi
-    else
-        echo -------------------------
-        printf "$FAIL_MARK TEST $test Failed! \n"
-        echo -------------------------
-        if [ $COUNT -gt 1 ]; then
-          # only show headers for load tests when an error occurs
-          echo "=============================================================="
-          echo "TEST $test: $DESCR"
-          echo "=============================================================="
-          echo -------------------------
-          printf '%q ' "${CMD[@]}"
-          echo -------------------------
+
+      # execute operation
+      set +e
+      ACT=$("${CMD[@]}" 2>/dev/null)
+      EXIT_CODE=$?
+      if [ $EXIT_CODE -ne 0 ]; then
+        printf '%q ' "${CMD[@]}"
+        printf '\n'
+        if [ $EXIT_CODE -eq 7 ]; then
+          printf "CURL ERROR 7 Failed to connect to Permission denied\n"
+        else
+          printf "CURL ERROR $EXIT_CODE\n"
         fi
-        echo "[Expected: $OP]"
-        echo "$EXP"
-        echo -------------------------
-        echo "[Actual]"
-        echo "$ACT"
-        echo -------------------------
-        printf "$FAIL_MARK TEST $test Failed! \n"
-        echo -------------------------
+        printf "${ACT}"
+        printf '\n'
         exit 1
+      fi
+      set -e
+
+      OK=0
+      if [ "$OP" == "equals" ]; then
+        [ "$ACT" == "$EXP" ] && OK=1
+
+      elif [ "$OP" == "startsWith" ]; then
+        EXP=$( echo "$EXP" | sed 's|\\|\\\\|g' | sed 's|\[|\\[|g' | sed 's|\]|\\]|g')
+        if echo "$ACT" | grep -q "^${EXP}"; then
+          OK=1
+        fi
+      fi
+
+      if [ $OK -eq 1 ]; then
+        if [ $COUNT -le 1 ]; then
+          echo -------------------------
+          echo "[Expected: $OP]"
+          echo "$EXP"
+          echo -------------------------
+          echo "[Actual]"
+          echo "$ACT"
+          echo -------------------------
+          printf "$OK_CHECK Success!\n"
+        fi
+      else
+          echo -------------------------
+          printf "$FAIL_MARK TEST $test Failed! \n"
+          echo -------------------------
+          if [ $COUNT -gt 1 ]; then
+            # only show headers for load tests when an error occurs
+            echo "=============================================================="
+            echo "TEST $test: $DESCR"
+            echo "=============================================================="
+            echo -------------------------
+            printf '%q ' "${CMD[@]}"
+            echo -------------------------
+          fi
+          echo "[Expected: $OP]"
+          echo "$EXP"
+          echo -------------------------
+          echo "[Actual]"
+          echo "$ACT"
+          echo -------------------------
+          printf "$FAIL_MARK TEST $test Failed! \n"
+          echo -------------------------
+          exit 1
+      fi
+    done
+    if [ $COUNT -gt 1 ]; then
+      printf "$OK_CHECK $i \n"
     fi
   done
-  if [ $COUNT -gt 1 ]; then
-    printf "$OK_CHECK $i \n"
-  fi
-done
 
-echo ""
-echo "================================"
-printf "$OK_CHECK ALL TESTS PASS! \n"
-echo "================================"
-echo ""
+  echo ""
+  echo "================================"
+  printf "$OK_CHECK ALL TESTS PASS! \n"
+  echo "================================"
+  echo ""
+}
+
+if [ $COUNT -gt 1 ]; then
+  time run_tests
+else
+  run_tests
+fi
+
