@@ -15,6 +15,8 @@ services:
       - APOLLO_OTEL_EXPORTER_TYPE=collector
       - APOLLO_OTEL_EXPORTER_HOST=collector
       - APOLLO_OTEL_EXPORTER_PORT=4318
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
   inventory:
     container_name: inventory
     build: ./subgraphs/inventory
@@ -22,6 +24,8 @@ services:
       - APOLLO_OTEL_EXPORTER_TYPE=collector
       - APOLLO_OTEL_EXPORTER_HOST=collector
       - APOLLO_OTEL_EXPORTER_PORT=4318
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
   users:
     container_name: users
     build: ./subgraphs/users
@@ -29,9 +33,13 @@ services:
       - APOLLO_OTEL_EXPORTER_TYPE=collector
       - APOLLO_OTEL_EXPORTER_HOST=collector
       - APOLLO_OTEL_EXPORTER_PORT=4318
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
   pandas:
     container_name: pandas
     build: ./subgraphs/pandas
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
   collector:
     container_name: collector
     image: otel/opentelemetry-collector:0.47.0
