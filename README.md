@@ -477,7 +477,7 @@ This demo shows using the Apollo Router with a Federation 2 supergraph schema, c
 
 See the [Apollo Router Docs](https://www.apollographql.com/docs/router/) for details.
 
-## Router with Managed Federation
+### Router with Managed Federation
 
 ```
 make demo-router
@@ -529,7 +529,7 @@ STOPSIGNAL SIGINT
 CMD [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "--log", "info" ]
 ```
 
-## Router with Local Development
+### Router with Local Development
 
 Prerequisites: [Local development](#local-development-with-federation-2)
 
@@ -565,9 +565,44 @@ services:
     build: ./subgraphs/pandas
 ```
 
+
 which uses the same [Dockerfile](router/Dockerfile) as above.
 
 see [./router](router) for more details.
+
+### Router with Open Telemetry
+
+Similar to [Open Telemetry with the Gateway](#tracing-with-open-telemetry)
+
+If using Docker for Mac to try on your laptop, for the best experience:
+
+* Docker for Mac 4.6.1+
+* Enable these experimental features:
+  * New Virtualization framework
+  * VirtioFS accelerated directory sharing
+* Mac Monterey 12.3+
+
+#### Deploy Graph with Open Telemetry Collector
+
+```
+make docker-up-router-otel
+```
+
+#### Run Queries
+
+```
+make load
+```
+
+#### View Open Telemetry Traces in Zipkin
+
+browse to [http://localhost:9411/](http://localhost:9411/)
+
+#### Cleanup
+
+```
+make docker-down-router
+```
 
 ## More on Apollo Router
 
