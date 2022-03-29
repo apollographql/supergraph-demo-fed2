@@ -8,8 +8,6 @@ plugins {
 
 repositories {
   mavenCentral()
-  mavenLocal()
-  maven("repository")
 }
 
 dependencies {
