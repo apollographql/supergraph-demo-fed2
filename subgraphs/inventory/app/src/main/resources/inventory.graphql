@@ -1,4 +1,4 @@
-extend schema @link(url: "https://specs.apollo.dev/federation/v2.0")
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@external", "@requires", "@shareable"])
 
 type Product implements ProductItf @key(fields: "id") {
   id: ID!
@@ -7,8 +7,8 @@ type Product implements ProductItf @key(fields: "id") {
 }
 
 type ProductDimension {
-  size: String
-  weight: Float
+  size: String @external
+  weight: Float @external
 }
 
 type DeliveryEstimates {
