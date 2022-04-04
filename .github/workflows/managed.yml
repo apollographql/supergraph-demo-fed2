@@ -28,7 +28,7 @@ jobs:
           echo rover - installing ...
           echo ---------------------------------------------------------------
           curl -sSL https://rover.apollo.dev/nix/v0.4.8| sh
-          curl -sSl https://rover.apollo.dev/plugins/rover-fed2/nix/v0.4.8 | sh -s -- --elv2-license accept
+          curl -sSL https://rover.apollo.dev/plugins/rover-fed2/nix/v0.4.8 | sh -s -- --elv2-license accept
           echo "$HOME/.rover/bin" >> ${GITHUB_PATH}
       -
         name: update docker-compose
