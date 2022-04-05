@@ -43,7 +43,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
   collector:
     container_name: collector
-    image: otel/opentelemetry-collector:0.47.0
+    image: otel/opentelemetry-collector:0.48.0
     command: ["--config=/conf/collector-config.yml"]
     volumes:
       - ./opentelemetry/collector-config.yml:/conf/collector-config.yml
