@@ -62,5 +62,6 @@ jobs:
           docker-compose -f docker-compose.router.yml logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
+        continue-on-error: true
       - name: docker-compose down
         run: docker-compose -f docker-compose.router.yml down
