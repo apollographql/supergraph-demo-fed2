@@ -3,5 +3,5 @@
 set -e
 
 echo -------------------------------------------------------------------------------------------
-( set -x; ${ROVER_BIN:-'rover'} fed2 supergraph compose --config ./supergraph.yaml > ./supergraph.graphql)
+( set -x; ${ROVER_BIN:-'rover'} supergraph compose --config ./supergraph.yaml > ./supergraph.graphql)
 echo -------------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 ## Contents
 
-- `./examples` - various examples of subgraphs with supergraph.yaml config that can be used with the `rover fed2` subcommand installed. See the main [README.md](../README.md#prerequisites) for rover install instructions.
+- `./examples` - various examples of subgraphs with supergraph.yaml config that can be used with the `rover supergraph` subcommand. See the main [README.md](../README.md#prerequisites) for rover install instructions.
 
 ## Using the `rover` CLI with the examples
 
@@ -10,13 +10,13 @@ Run an example:
 ```
 cd ./basic
 
-rover fed2 supergraph compose --config ./supergraph.yaml
+rover supergraph compose --config ./supergraph.yaml
 ```
 
 Verify it composes successfully:
 
 ```
-rover fed2 supergraph compose --config ./supergraph.yaml
+rover supergraph compose --config ./supergraph.yaml
 WARN: [InconsistentFieldType]: Field "A.v1" has mismatched, but compatible, types across subgraphs: will use type "Int" (from subgraph "a") in supergraph but "A.v1" has subtype "Int!" in subgraph "b"
 
 CoreSchema:

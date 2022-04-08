@@ -61,7 +61,7 @@ You'll need:
 To install `rover`:
 
 ```sh
-curl -sSL https://rover.apollo.dev/nix/v0.4.8 | sh
+curl -sSL https://rover.apollo.dev/nix/v0.5.0-rc.1 | sh
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
@@ -260,16 +260,6 @@ That's it!
 
 This section assumes you have `docker`, `docker-compose` and the `rover` core binary installed from the [Prerequisites](#prerequisites) sections above.
 
-### Additional Prerequisites
-
-#### Install the Federation 2 plugin for `rover` for local composition
-
-```
-curl https://rover.apollo.dev/plugins/rover-fed2/nix/v0.4.8 | sh
-```
-
-For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
-
 ### Local Supergraph Composition
 
 See also: [Apollo Federation docs](https://www.apollographql.com/docs/federation/v2/quickstart/)
@@ -290,7 +280,7 @@ make supergraph
 which runs:
 
 ```
-rover fed2 supergraph compose --config ./supergraph.yaml > supergraph.graphql
+rover supergraph compose --config ./supergraph.yaml > supergraph.graphql
 ```
 
 and then runs:
@@ -471,7 +461,7 @@ service:
 
 As a Graph Router, the Apollo Router plays the same role as the Apollo Gateway. The same subgraph schemas and composed supergraph schema can be used in both the Router and the Gateway.
 
-This demo shows using the Apollo Router with a Federation 2 supergraph schema, composed using the Fed 2 `rover fed2 supergraph compose` command. To see the Router working with Federation 1 composition, checkout the Apollo Router section of [apollographql/supergraph-demo](https://github.com/apollographql/supergraph-demo/blob/main/README.md#apollo-router).
+This demo shows using the Apollo Router with a Federation 2 supergraph schema, composed using the Fed 2 `rover supergraph compose` command. To see the Router working with Federation 1 composition, checkout the Apollo Router section of [apollographql/supergraph-demo](https://github.com/apollographql/supergraph-demo/blob/main/README.md#apollo-router).
 
 [Early benchmarks](https://www.apollographql.com/blog/announcement/backend/apollo-router-our-graphql-federation-runtime-in-rust) show that the Router adds less than 10ms of latency to each operation, and it can process 8x the load of the JavaScript Apollo Gateway.
 

@@ -1,3 +1,4 @@
+federation_version: 2
 subgraphs:
   a:
     routing_url: http://a:4000/graphql

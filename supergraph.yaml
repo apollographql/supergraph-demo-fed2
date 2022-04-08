@@ -1,3 +1,4 @@
+federation_version: 2
 subgraphs:
   inventory:
     routing_url: http://inventory:4000/graphql
