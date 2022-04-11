@@ -9,7 +9,7 @@
   "dependencies": {
     "apollo-server": "3.6.7",
     "apollo-server-core": "3.6.7",
-    "@apollo/gateway": "2.0.0-preview.12",
+    "@apollo/gateway": "2.0.0",
     "supergraph-demo-opentelemetry": "0.2.3",
     "graphql": "16.3.0"
   },
