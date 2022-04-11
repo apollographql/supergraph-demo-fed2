@@ -7,6 +7,6 @@ telemetry:
   tracing:
     otlp:
       endpoint: collector:4317
-      protocol: Grpc
+      protocol: grpc
       grpc:
         timeout: 42
