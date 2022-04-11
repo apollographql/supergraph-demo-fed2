@@ -4,11 +4,9 @@ server:
     origins:
       - https://studio.apollographql.com
 telemetry:
-    opentelemetry:
-      otlp:
-        tracing:
-          exporter:
-            grpc:
-              endpoint: collector:4317
-              protocol: Grpc
-              timeout: 42
+  tracing:
+    otlp:
+      grpc:
+        endpoint: collector:4317
+        protocol: Grpc
+        timeout: 42
