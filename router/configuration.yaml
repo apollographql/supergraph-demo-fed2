@@ -8,4 +8,5 @@ telemetry:
     otlp:
       endpoint: collector:4317
       protocol: grpc
-      timeout: 42
+      # TODO: This needs to be a "duration"
+      # timeout: 42
