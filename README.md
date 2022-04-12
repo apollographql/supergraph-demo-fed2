@@ -76,7 +76,7 @@ For help with `rover` see [installing the Rover CLI](https://www.apollographql.c
 
 ### Create a graph following the prompts
 
-![create graph](docs/media/fed2/0-create-graph.png)
+![Create graph](docs/media/fed2/0-create-graph.png)
 
 * Follow the prompt to add your first graph with the `Deployed` option selected and the `Supergraph` architecture selected.
 * Click Next
@@ -112,14 +112,14 @@ Monitor your schema delivery progress on on studio: https://studio.apollographql
 
 ### Schema Published Successfully!
 
-![Initial publish with Fed 1 not enabled](docs/media/fed2/1-publish-success.png)
+![Publish success](docs/media/fed2/1-publish-success.png)
 
 Click See schema changes
 
 ### View supergraph build results
 
 
-![Enable Fed 2](docs/media/fed2/2-studio-enable.png)
+![Launches](docs/media/fed2/2-studio-launches.png)
 
 ### View unified API schema for apps to use
 
