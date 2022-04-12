@@ -76,10 +76,10 @@ For help with `rover` see [installing the Rover CLI](https://www.apollographql.c
 
 ### Create a graph following the prompts
 
-* Follow the prompt to add your first graph with the `Deployed` option selected
-* Navigate to the Federation tab and note the `APOLLO_KEY` and `APOLLO_GRAPH_REF`
+![create graph](docs/media/fed2/0-create-graph.png)
 
-It should look like this:
+* Follow the prompt to add your first graph with the `Deployed` option selected and the `Supergraph` architecture selected.
+* Click Next
 
 ![Get apollo key](docs/media/fed2/0-apollo-key.png)
 
@@ -92,34 +92,36 @@ Then publish the 3 [subgraph schemas](./subgraphs) to the registry in Apollo Stu
 make publish
 ```
 
-It will prompt you for your `APOLLO_KEY` and your `APOLLO_GRAPH_REF` that you saved from the step above.
+It will prompt you for your `APOLLO_KEY` and your `APOLLO_GRAPH_REF` that you can obtain from the screen above.
 
-This will initially result in an following error:
+The subgraph will be published to the Apollo Registry:
 
 ```
 ---------------------------------------
-subgraph: users
+subgraph: pandas
 ---------------------------------------
-+ rover subgraph publish My-Graph-2-35jcu9@current --routing-url http://users:4000/graphql --schema subgraphs/users/users.graphql --name users --convert
-Publishing SDL to My-Graph-2-35jcu9@current (subgraph: users) using credentials from the default profile.
-error: Errors validating subgraph schemas: [{"message":"Subgraph products: Interface ProductItf cannot implement interfaces with subgraph schemas. Contact Apollo support if you're interested in using this GraphQL feature with federation."}]
++ rover subgraph publish My-Graph-3-vh40el@current --routing-url http://pandas:4000/graphql --schema subgraphs/pandas/pandas.graphql --name pandas --convert
+Publishing SDL to My-Graph-3-vh40el@current (subgraph: pandas) using credentials from the default profile.
+
+A new subgraph called 'pandas' for the 'My-Graph-3-vh40el@current' graph was created
+
+The gateway for the 'My-Graph-3-vh40el@current' graph was updated with a new schema, composed from the updated 'pandas' subgraph
+
+Monitor your schema delivery progress on on studio: https://studio.apollographql.com/graph/My-Graph-3-vh40el/launches/5bbeb91e-c6bd-4fdf-b8af-5c330f26d618?variant=current
 ```
 
-but we can fix that by enabling `Federation 2` in Apollo Studio:
+### Schema Published Successfully!
 
-![Initial publish with Fed 1 not enabled](docs/media/fed2/1-publish-error.png)
+![Initial publish with Fed 1 not enabled](docs/media/fed2/1-publish-success.png)
 
-### Enable `Federation 2` in Apollo Studio
+Click See schema changes
 
-First navigate to your graph settings:
+### View supergraph build results
+
 
 ![Enable Fed 2](docs/media/fed2/2-studio-enable.png)
 
-Then enable `Federation 2`:
-
-![Enable Fed 2](docs/media/fed2/3-studio-enable-2.png)
-
-With Federation 2 enabled, the Federated graph composes successfully in Apollo Studio:
+### View unified API schema for apps to use
 
 ![Federated Graph in Apollo Studio](docs/media/fed2/4-studio-working.png)
 
