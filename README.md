@@ -3,7 +3,7 @@
 ![smoke test](https://github.com/apollographql/supergraph-demo-fed2/actions/workflows/main.yml/badge.svg)
 [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 
-Federation 2 is an evolution of the original Apollo Federation with an improved shared ownership model, enhanced type merging, and cleaner syntax for a smoother developer experience. It’s backwards compatible, requiring no major changes to your subgraphs. Try the alpha today!
+Federation 2 is an evolution of the original Apollo Federation with an improved shared ownership model, enhanced type merging, and cleaner syntax for a smoother developer experience. It’s backwards compatible, requiring no major changes to your subgraphs. Try the GA release today!
 
 * [Welcome](#welcome)
 * [Prerequisites](#prerequisites)
@@ -61,7 +61,7 @@ You'll need:
 To install `rover`:
 
 ```sh
-curl -sSL https://rover.apollo.dev/nix/v0.5.0-rc.1 | sh
+curl -sSL https://rover.apollo.dev/nix/v0.5.0 | sh
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
