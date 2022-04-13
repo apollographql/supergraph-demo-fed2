@@ -7,7 +7,7 @@
     "start": "node users.js"
   },
   "dependencies": {
-    "@apollo/subgraph": "0.4.0",
+    "@apollo/subgraph": "0.4.1",
     "apollo-server": "3.6.7",
     "supergraph-demo-opentelemetry": "0.2.3",
     "graphql": "16.3.0"
