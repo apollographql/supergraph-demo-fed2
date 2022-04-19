@@ -132,7 +132,7 @@ run_tests ( ){
       EXP="${!exp_var}"
       OP="${!op_var}"
       OPNAME="${!opname_var}"
-      CMD=(curl -X POST -H 'Content-Type: application/json' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
+      CMD=(curl -X POST -H 'Content-Type: application/json' -H 'apollographql-client-name: smoke-test' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
 
       if [ $COUNT -le 1 ]; then
         echo ""
