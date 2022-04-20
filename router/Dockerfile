@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM --platform=linux/amd64 debian:bullseye
 
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
