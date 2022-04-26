@@ -1,0 +1,15 @@
+server:
+  listen: 0.0.0.0:4000
+  cors:
+    origins:
+      - https://studio.apollographql.com
+telemetry:
+  tracing:
+    otlp:
+      endpoint: localhost:4317
+      protocol: grpc
+override_subgraph_url:
+  inventory: http://localhost:4001
+  pandas: http://localhost:4002
+  products: http://localhost:4003
+  users: http://localhost:4004

@@ -32,6 +32,12 @@ docker-up-local:
 	@sleep 4
 	@docker logs apollo-gateway
 
+.PHONY: docker-up-local-dev
+docker-up-local-dev:
+	docker-compose -f docker-compose.local-otel.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+
 .PHONY: docker-up-managed
 docker-up-managed:
 	docker-compose -f docker-compose.managed.yml up -d

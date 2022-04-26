@@ -580,6 +580,19 @@ If using Docker for Mac to try on your laptop, for the best experience:
 make docker-up-router-otel
 ```
 
+### Router with your own binary
+
+```
+make docker-up-local-dev
+```
+
+Then you will need to run your own router binary with [this configuration file](router/configuration-local.yaml). It overrides all the subgraph URLs.
+
+```
+./YOUR_ROUTER_BINARY -c router/configuration-local.yaml -s supergraph.graphql
+```
+
+
 #### Run Queries
 
 ```
