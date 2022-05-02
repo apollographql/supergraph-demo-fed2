@@ -2,7 +2,7 @@
 
 PORT="${1:-4000}"
 COUNT="${2:-1}"
-TESTS=(1 2 4)
+TESTS=(1 2 3 4)
 
 # --------------------------------------------------------------------
 # TEST 1
@@ -55,14 +55,15 @@ read -r -d '' EXP_2 <<"EOF"
 EOF
 
 # --------------------------------------------------------------------
-# TEST 3 - DISABLED FOR NOW - UNTIL WE ALLOW @inaccessible in subgraphs
+# TEST 3 - @inaccessible in subgraphs
 # --------------------------------------------------------------------
-DESCR_3="weight: Float @inaccessible should return error"
+DESCR_3="hidden: String @inaccessible should return error"
 OPNAME_3="inaccessibleError"
 read -r -d '' QUERY_3 <<"EOF"
 {
   allProducts {
     id,
+    hidden,
     dimensions {
       size,
       weight
@@ -71,10 +72,10 @@ read -r -d '' QUERY_3 <<"EOF"
 }
 EOF
 
-OP_3=startsWith
+OP_3=contains
 
 read -r -d '' EXP_3 <<"EOF"
-{"errors":[{"message":"Cannot query field \"weight\" on type \"ProductDimension\"
+Cannot query field \"hidden\" on type \"ProductItf\".
 EOF
 
 # --------------------------------------------------------------------
@@ -168,6 +169,11 @@ run_tests ( ){
       elif [ "$OP" == "startsWith" ]; then
         EXP=$( echo "$EXP" | sed 's|\\|\\\\|g' | sed 's|\[|\\[|g' | sed 's|\]|\\]|g')
         if echo "$ACT" | grep -q "^${EXP}"; then
+          OK=1
+        fi
+      elif [ "$OP" == "contains" ]; then
+        EXP=$( echo "$EXP" | sed 's|\\|\\\\|g' | sed 's|\[|\\[|g' | sed 's|\]|\\]|g')
+        if echo "$ACT" | grep -q "${EXP}"; then
           OK=1
         fi
       fi
