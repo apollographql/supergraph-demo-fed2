@@ -2,9 +2,10 @@ version: '3'
 services:
   apollo-router:
     container_name: apollo-router
-    build: ./router
+    image: ghcr.io/apollographql/router:v0.1.0-preview.7
     volumes:
-      - ./router/configuration.yaml:/etc/config/configuration.yaml
+      - ./router/router.yaml:/dist/config/router.yaml
+    command: [ "-c", "config/router.yaml", "--log", "info" ]
     env_file: # create with make graph-api-env
       - graph-api.env
     ports:
