@@ -5,6 +5,9 @@ server:
       - https://studio.apollographql.com
 telemetry:
   tracing:
+    trace_config:
+      service_name: "router"
+      service_namespace: "apollo"
     otlp:
       endpoint: collector:4317
       protocol: grpc

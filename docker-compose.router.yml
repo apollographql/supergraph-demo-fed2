@@ -2,11 +2,11 @@ version: '3'
 services:
   apollo-router:
     container_name: apollo-router
-    build: ./router
+    image: ghcr.io/apollographql/router:v0.1.0-preview.7
     volumes:
-      - ./supergraph.graphql:/etc/config/supergraph.graphql
-      - ./router/configuration.yaml:/etc/config/configuration.yaml
-    command: [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "/etc/config/supergraph.graphql", "--log", "info" ]
+      - ./supergraph.graphql:/dist/schema/supergraph.graphql
+      - ./router/router.yaml:/dist/config/router.yaml
+    command: [ "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
     ports:
       - "4000:4000"
   products:
