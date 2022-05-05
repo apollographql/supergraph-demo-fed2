@@ -1,14 +1,50 @@
-FROM --platform=linux/amd64 debian:bullseye
+FROM --platform=linux/amd64 rust:1.60 as build
 
-WORKDIR /usr/src/app
-RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    curl \
-    jq
+ENV NODE_VERSION=16.13.0
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
 
-COPY install.sh .
-RUN ./install.sh
+ENV RUST_BACKTRACE=full
 
-STOPSIGNAL SIGINT
+# create a new empty shell project
+RUN USER=root cargo new --bin acme_router
 
-CMD [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "--log", "info" ]
+WORKDIR /acme_router
+
+RUN rustup component add rustfmt
+
+# copy over your manifests
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+
+# this build step will cache your dependencies
+RUN cargo build --release
+RUN rm src/*.rs
+
+# copy your source tree
+COPY ./src ./src
+
+# build for release
+RUN rm ./target/release/deps/acme_router*
+RUN cargo build --release
+
+RUN mkdir -p /dist/config && mkdir -p /dist/schema
+
+# our final image uses distroless
+FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
+
+# copy the build artifact from the build stage
+COPY --from=build /dist /dist
+COPY --from=build --chown=root:root /acme_router/target/release/acme_router /dist
+
+WORKDIR /dist
+
+# set the startup command to run your binary
+ENTRYPOINT ["./acme_router"]

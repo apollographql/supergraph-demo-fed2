@@ -1,0 +1,19 @@
+[package]
+name = "acme_router"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.55"
+apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.7" }
+apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v0.1.0-preview.7" }
+async-trait = "0.1.52"
+futures = "0.3.21"
+http = "0.2.6"
+schemars = "0.8.8"
+serde = "1.0.136"
+serde_json = "1.0.79"
+tokio = "1.17.0"
+tower = { version = "0.4.12", features = ["full"] }

@@ -5,7 +5,7 @@ services:
     image: ghcr.io/apollographql/router:v0.1.0-preview.7
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
-      - ./router/router.yaml:/dist/config/router.yaml
+      - ./router.yaml:/dist/config/router.yaml
     command: [ "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
     ports:
       - "4000:4000"
