@@ -53,6 +53,13 @@ docker-up-managed-router:
 	@sleep 4
 	@docker logs apollo-router
 
+.PHONY: docker-up-local-router-custom
+docker-up-local-router-custom:
+	docker-compose -f docker-compose.router-custom.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+	@docker logs apollo-router
+
 .PHONY: docker-build
 docker-build:
 	docker-compose build
@@ -63,7 +70,7 @@ docker-build-force:
 
 .PHONY: docker-build-router
 docker-build-router:
-	@docker build -t supergraph-demo-fed2_apollo-router router/. --no-cache
+	@docker build -t supergraph-demo-fed2_apollo-router router/.
 
 .PHONY: query
 query:

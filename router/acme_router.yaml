@@ -1,0 +1,18 @@
+server:
+  listen: 0.0.0.0:4000
+  cors:
+    origins:
+      - https://studio.apollographql.com
+
+telemetry:
+  tracing:
+    trace_config:
+      service_name: "router"
+      service_namespace: "apollo"
+    otlp:
+      endpoint: collector:4317
+      protocol: grpc
+
+plugins:
+  example.hello_world:
+    message: "world"
