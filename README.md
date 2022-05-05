@@ -12,6 +12,7 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Open Telemetry](#tracing-with-open-telemetry)
 * [Composition examples](examples/README.md)
 * [Apollo Router](#apollo-router)
+* [Apollo Router Custom Plugin](#apollo-router-custom-plugin)
 
 ## Welcome
 
@@ -482,9 +483,10 @@ version: '3'
 services:
   apollo-router:
     container_name: apollo-router
-    build: ./router
+    image: ghcr.io/apollographql/router:v0.1.0-preview.7
     volumes:
-      - ./router/configuration.yaml:/etc/config/configuration.yaml
+      - ./router.yaml:/dist/config/router.yaml
+    command: [ "-c", "config/router.yaml", "--log", "info" ]
     env_file: # create with make graph-api-env
       - graph-api.env
     ports:
@@ -503,23 +505,7 @@ services:
     build: ./subgraphs/pandas
 ```
 
-which uses the following [Dockerfile](router/Dockerfile)
-```
-FROM amd64/ubuntu:latest
-
-WORKDIR /usr/src/app
-RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    curl \
-    jq
-
-COPY install.sh .
-RUN ./install.sh
-
-STOPSIGNAL SIGINT
-
-CMD [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "--log", "info" ]
-```
+which uses the published Router docker image created from this [Dockerfile](https://github.com/apollographql/router/blob/main/dockerfiles/Dockerfile.router)
 
 ### Router with Local Development
 
@@ -529,38 +515,7 @@ Prerequisites: [Local development](#local-development-with-federation-2)
 make demo-local-router
 ```
 
-which uses this [docker-compose.router.yml](docker-compose.router.yml) file:
-
-```yaml
-version: '3'
-services:
-  apollo-router:
-    container_name: apollo-router
-    build: ./router
-    volumes:
-      - ./supergraph.graphql:/etc/config/supergraph.graphql
-      - ./router/configuration.yaml:/etc/config/configuration.yaml
-    command: [ "/usr/src/app/router", "-c", "/etc/config/configuration.yaml", "-s", "/etc/config/supergraph.graphql", "--log", "info" ]
-    ports:
-      - "4000:4000"
-  products:
-    container_name: products
-    build: ./subgraphs/products
-  inventory:
-    container_name: inventory
-    build: ./subgraphs/inventory
-  users:
-    container_name: users
-    build: ./subgraphs/users
-  pandas:
-    container_name: pandas
-    build: ./subgraphs/pandas
-```
-
-
-which uses the same [Dockerfile](router/Dockerfile) as above.
-
-see [./router](router) for more details.
+which uses this [docker-compose.router.yml](docker-compose.router.yml) file
 
 ### Router with Open Telemetry
 
@@ -594,6 +549,82 @@ browse to [http://localhost:9411/](http://localhost:9411/)
 
 ```
 make docker-down-router
+```
+
+## Apollo Router Custom Plugin
+
+Docs and examples:
+
+* [Router Docs: Native Rust Plugins](https://www.apollographql.com/docs/router/customizations/native)
+* [Router Examples](https://github.com/apollographql/router/tree/main/examples)
+
+This is based on the [hello-world native Rust plugin example](https://github.com/apollographql/router/tree/main/examples/hello-world).
+
+The [router](router) folder in this repo has the contents of the custom Router docker image used in the steps below.
+
+```
+git clone git@github.com:apollographql/supergraph-demo-fed2.git
+cd supergraph-demo-fed2
+
+make docker-build-router
+make docker-up-local-router-custom
+make smoke
+make docker-down-router
+```
+
+Which uses a Router custom plugin [Dockerfile](router/Dockerfile) like this:
+
+```
+FROM --platform=linux/amd64 rust:1.60 as build
+
+ENV NODE_VERSION=16.13.0
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
+ENV RUST_BACKTRACE=full
+
+# create a new empty shell project
+RUN USER=root cargo new --bin acme_router
+
+WORKDIR /acme_router
+
+RUN rustup component add rustfmt
+
+# copy over your manifests
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+
+# this build step will cache your dependencies
+RUN cargo build --release
+RUN rm src/*.rs
+
+# copy your source tree
+COPY ./src ./src
+
+# build for release
+RUN rm ./target/release/deps/acme_router*
+RUN cargo build --release
+
+RUN mkdir -p /dist/config && mkdir -p /dist/schema
+
+# our final image uses distroless
+FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
+
+# copy the build artifact from the build stage
+COPY --from=build /dist /dist
+COPY --from=build --chown=root:root /acme_router/target/release/acme_router /dist
+
+WORKDIR /dist
+
+# set the startup command to run your binary
+ENTRYPOINT ["./acme_router"]
 ```
 
 ## More on Apollo Router
