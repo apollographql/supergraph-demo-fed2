@@ -40,11 +40,20 @@ RUN mkdir -p /dist/config && mkdir -p /dist/schema
 # our final image uses distroless
 FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
 
+# if you want bin/sh you'll want a distro that includes it instead
+#FROM --platform=linux/amd64 debian:bullseye
+
 # copy the build artifact from the build stage
 COPY --from=build /dist /dist
 COPY --from=build --chown=root:root /acme_router/target/release/acme_router /dist
 
 WORKDIR /dist
 
+# for faster docker shutdown
+STOPSIGNAL SIGINT
+
 # set the startup command to run your binary
 ENTRYPOINT ["./acme_router"]
+
+# if you want bin/sh you'll want CMD instead of ENTRYPOINT
+# CMD ["./acme_router"]
