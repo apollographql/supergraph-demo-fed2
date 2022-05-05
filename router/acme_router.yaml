@@ -10,8 +10,9 @@ telemetry:
       service_name: "router"
       service_namespace: "apollo"
     otlp:
-      endpoint: collector:4317
+      endpoint: http://collector:4317
       protocol: grpc
+      timeout: 42s
 
 plugins:
   example.hello_world:
