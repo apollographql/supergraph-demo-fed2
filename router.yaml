@@ -9,7 +9,6 @@ telemetry:
       service_name: "router"
       service_namespace: "apollo"
     otlp:
-      endpoint: collector:4317
+      endpoint: http://collector:4317
       protocol: grpc
-      # TODO: This needs to be a "duration"
-      # timeout: 42
+      timeout: 42s
