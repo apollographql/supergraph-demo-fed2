@@ -37,7 +37,7 @@ RUN cargo build --release
 
 RUN mkdir -p /dist/config && mkdir -p /dist/schema
 
-# our final image uses distroless
+# our final image uses distroless, which is more secure by default
 FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
 
 # if you want bin/sh you'll want a distro that includes it instead
@@ -53,7 +53,6 @@ WORKDIR /dist
 STOPSIGNAL SIGINT
 
 # set the startup command to run your binary
+# note: if you want sh you can override the entrypoint using docker run -it --entrypoint=sh my-router-image
 ENTRYPOINT ["./acme_router"]
 
-# if you want bin/sh you'll want CMD instead of ENTRYPOINT
-# CMD ["./acme_router"]
