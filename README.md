@@ -449,6 +449,18 @@ service:
 
 ![honeycomb](docs/media/honeycomb.png)
 
+#### View Metrics from Open Telemetry Spans using Prometheus
+
+Once the cluster is up and has queries against it (via `make smoke`), browse to [http://localhost:9090/](http://localhost:9090/) and begin querying against metrics pulled from the trace spans. 
+
+Example queries: 
+
+* P95 by service: `histogram_quantile(.99, sum(rate(latency_bucket[5m])) by (le, service_name))`
+
+* Average latency by service and operation (e.g. router/graphql.validate): `sum by (operation, service_name)(rate(latency_sum{}[1m])) / sum by (operation, service_name)(rate(latency_count{}[1m]))`
+
+* RPM by service: `sum(rate(calls_total{operation="HTTP POST"}[1m])) by (service_name)`
+
 #### Learn More about Open Telemetry
 
 * Docs: [Open Telemetry for Apollo Federation](https://www.apollographql.com/docs/federation/opentelemetry/)
