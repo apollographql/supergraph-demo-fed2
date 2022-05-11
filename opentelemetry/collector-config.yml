@@ -7,6 +7,10 @@ receivers:
           allowed_origins:
             - http://*
             - https://*
+  otlp/spanmetrics:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:12346
 
 exporters:
   zipkin:
@@ -16,6 +20,8 @@ exporters:
 
 processors:
   batch:
+  spanmetrics:
+    metrics_exporter: prometheus
 
 extensions:
   zpages:
@@ -27,8 +33,8 @@ service:
     traces:
       receivers: [otlp]
       exporters: [zipkin]
-      processors: [batch]
+      processors: [spanmetrics, batch]
     metrics:
-      receivers: [otlp]
+      receivers: [otlp/spanmetrics]
       exporters: [prometheus]
       processors: [batch]

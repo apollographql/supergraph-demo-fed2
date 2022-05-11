@@ -78,14 +78,6 @@ checksum = "c2ae23d8a1f5cc1a4e33ec9b1f0d4d626f9e4736619b4c1a4f1482a594ac2e13"
 
 [[package]]
 name = "apollo-parser"
-version = "0.2.4"
-source = "git+https://github.com/apollographql/apollo-rs.git?rev=e707e0f78f41ace1c3ecfe69bc10f4144ffbf7ac#e707e0f78f41ace1c3ecfe69bc10f4144ffbf7ac"
-dependencies = [
- "rowan",
-]
-
-[[package]]
-name = "apollo-parser"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb3f8fe8c9fb08c1e99bf4a50698adcd807cafba2d2aacc49d8ffc79123fce59"
@@ -95,25 +87,28 @@ dependencies = [
 
 [[package]]
 name = "apollo-router"
-version = "0.1.0-preview.7"
-source = "git+https://github.com/apollographql/router?tag=v0.1.0-preview.7#4b5f179d51d9a9c4eecd6fef0f5780f616ac2c34"
+version = "0.9.0-rc.0"
+source = "git+https://github.com/apollographql/router?tag=v0.9.0-rc.0#c11f4778e0f236d68e99bb75d36550e875a66124"
 dependencies = [
  "anyhow",
- "apollo-parser 0.2.4",
  "apollo-router-core",
  "apollo-spaceport",
  "apollo-uplink",
  "async-trait",
  "atty",
  "axum",
+ "backtrace",
+ "buildstructor",
  "bytes",
  "clap",
+ "deadpool",
  "derivative",
  "derive_more",
  "directories",
  "displaydoc",
  "envmnt",
  "futures",
+ "futures-batch",
  "hotwatch",
  "http",
  "humantime",
@@ -132,6 +127,7 @@ dependencies = [
  "opentelemetry-prometheus",
  "opentelemetry-semantic-conventions",
  "opentelemetry-zipkin",
+ "paste",
  "prometheus",
  "regex",
  "reqwest",
@@ -159,10 +155,10 @@ dependencies = [
 
 [[package]]
 name = "apollo-router-core"
-version = "0.1.0-preview.7"
-source = "git+https://github.com/apollographql/router?tag=v0.1.0-preview.7#4b5f179d51d9a9c4eecd6fef0f5780f616ac2c34"
+version = "0.9.0-rc.0"
+source = "git+https://github.com/apollographql/router?tag=v0.9.0-rc.0#c11f4778e0f236d68e99bb75d36550e875a66124"
 dependencies = [
- "apollo-parser 0.2.5",
+ "apollo-parser",
  "async-trait",
  "atty",
  "axum",
@@ -213,8 +209,8 @@ dependencies = [
 
 [[package]]
 name = "apollo-spaceport"
-version = "0.1.0-preview.7"
-source = "git+https://github.com/apollographql/router?tag=v0.1.0-preview.7#4b5f179d51d9a9c4eecd6fef0f5780f616ac2c34"
+version = "0.9.0-rc.0"
+source = "git+https://github.com/apollographql/router?tag=v0.9.0-rc.0#c11f4778e0f236d68e99bb75d36550e875a66124"
 dependencies = [
  "bytes",
  "clap",
@@ -222,6 +218,7 @@ dependencies = [
  "prost",
  "prost-types",
  "reqwest",
+ "serde",
  "sys-info",
  "tokio",
  "tokio-stream",
@@ -234,8 +231,8 @@ dependencies = [
 
 [[package]]
 name = "apollo-uplink"
-version = "0.1.0-preview.7"
-source = "git+https://github.com/apollographql/router?tag=v0.1.0-preview.7#4b5f179d51d9a9c4eecd6fef0f5780f616ac2c34"
+version = "0.9.0-rc.0"
+source = "git+https://github.com/apollographql/router?tag=v0.9.0-rc.0#c11f4778e0f236d68e99bb75d36550e875a66124"
 dependencies = [
  "futures",
  "graphql_client",
@@ -452,9 +449,9 @@ dependencies = [
 
 [[package]]
 name = "buildstructor"
-version = "0.1.9"
+version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37e6f88bd8b7701288c5a10d46e76a1b93dd2953f5972c260f7bfa5f58f6382b"
+checksum = "cb349df936841e81bbb21ab0305a898c411b99c85a6fe088f8296209f5d821b7"
 dependencies = [
  "lazy_static",
  "proc-macro2",
@@ -718,6 +715,28 @@ dependencies = [
  "hashbrown 0.12.1",
  "lock_api",
  "serde",
+]
+
+[[package]]
+name = "deadpool"
+version = "0.9.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a90d58a15f5acfe41afcac9775d8e92f2338d14482220c778c6e42aa77778182"
+dependencies = [
+ "async-trait",
+ "deadpool-runtime",
+ "num_cpus",
+ "retain_mut",
+ "tokio",
+]
+
+[[package]]
+name = "deadpool-runtime"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eaa37046cc0f6c3cc6090fbdbf73ef0b8ef4cfcc37f6befc0020f63e8cf121e1"
+dependencies = [
+ "tokio",
 ]
 
 [[package]]
@@ -1063,6 +1082,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "futures-batch"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0f5c372b0c5d1023cce2a0ff7667b589ba88dae751b5f65c400b5d0803b30cbf"
+dependencies = [
+ "futures",
+ "futures-timer",
+ "pin-utils",
+]
+
+[[package]]
 name = "futures-channel"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1133,6 +1163,12 @@ name = "futures-task"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57c66a976bf5909d801bbef33416c41372779507e7a6b3a5e25e4749c58f776a"
+
+[[package]]
+name = "futures-timer"
+version = "2.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1de7508b218029b0f01662ed8f61b1c964b3ae99d6f25462d0f55a595109df6"
 
 [[package]]
 name = "futures-util"
@@ -2715,6 +2751,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "retain_mut"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c31b5c4033f8fdde8700e4657be2c497e7288f01515be52168c631e2e4d4086"
+
+[[package]]
 name = "rhai"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2770,7 +2812,7 @@ dependencies = [
 [[package]]
 name = "router-bridge"
 version = "0.1.0"
-source = "git+https://github.com/apollographql/federation-rs.git?rev=33659ef40f44af593da047d7f3349a1b3d86136c#33659ef40f44af593da047d7f3349a1b3d86136c"
+source = "git+https://github.com/apollographql/federation-rs.git?rev=572120fdbf957a0640cb946958b9fe52207584ac#572120fdbf957a0640cb946958b9fe52207584ac"
 dependencies = [
  "anyhow",
  "async-channel",
