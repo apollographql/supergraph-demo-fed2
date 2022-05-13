@@ -1,4 +1,3 @@
-use apollo_router_core::http_compat::IntoHeaderValue::HeaderValue;
 use apollo_router_core::plugin::Plugin;
 use apollo_router_core::{
     register_plugin, ExecutionRequest, ExecutionResponse, QueryPlannerRequest,
