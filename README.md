@@ -12,6 +12,7 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Open Telemetry](#tracing-with-open-telemetry)
 * [Composition examples](examples/README.md)
 * [Apollo Router](#apollo-router)
+* [Apollo Router Custom Image and Rhai Script](#apollo-router-custom-image-and-rhai-script)
 * [Apollo Router Custom Plugin](#apollo-router-custom-plugin)
 
 ## Welcome
@@ -563,6 +564,70 @@ browse to [http://localhost:9411/](http://localhost:9411/)
 make docker-down-router
 ```
 
+## Apollo Router Custom Image and Rhai Script
+
+The published Router Docker image should work for the majority of use cases.
+
+A custom Docker image can also be used:
+
+```
+make docker-build-router-image
+make docker-up-local-router-custom-image
+make smoke
+```
+
+Which uses a Router custom image [Dockerfile](router/custom-image/Dockerfile) like this:
+
+```
+FROM --platform=linux/amd64 debian:bullseye
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl 
+
+WORKDIR /dist
+
+COPY ./router.rhai .
+
+RUN curl -ssL https://router.apollo.dev/download/nix/latest | sh
+
+# for faster docker shutdown
+STOPSIGNAL SIGINT
+
+# set the startup command to run your binary
+# note: if you want sh you can override the entrypoint using docker run -it --entrypoint=sh my-router-image
+ENTRYPOINT ["./router"]
+```
+
+Which uses this [router.rhai](router/custom-image/router.rhai) script:
+
+```rhai
+fn router_service(service) {
+    // Define a closure to process our response
+    let f = |response| {
+        let start = apollo_start.elapsed;
+        // ... Do some processing
+        let duration = apollo_start.elapsed - start;
+        print(`response processing took: ${duration}`);
+
+        // Log out any errors we may have
+        print(response.body.errors);
+    };
+    // Map our response using our closure
+    service.map_response(f);
+}
+```
+
+To see the `INFO` level `print()` statements:
+```
+make docker-logs-local-router-custom-image
+```
+
+Then cleanup:
+```
+make docker-down-router
+```
+
 ## Apollo Router Custom Plugin
 
 Docs and examples:
@@ -572,19 +637,19 @@ Docs and examples:
 
 This is based on the [hello-world native Rust plugin example](https://github.com/apollographql/router/tree/main/examples/hello-world).
 
-The [router](router) folder in this repo has the contents of the custom Router docker image used in the steps below.
+The [router/custom-plugin](router/custom-plugin/) folder in this repo has the contents of the custom Router docker image used in the steps below.
 
 ```
 git clone git@github.com:apollographql/supergraph-demo-fed2.git
 cd supergraph-demo-fed2
 
-make docker-build-router
-make docker-up-local-router-custom
+make docker-build-router-plugin
+make docker-up-local-router-custom-plugin
 make smoke
 make docker-down-router
 ```
 
-Which uses a Router custom plugin [Dockerfile](router/Dockerfile) like this:
+Which uses a Router custom plugin [Dockerfile](router/custom-plugin/Dockerfile) like this:
 
 ```
 FROM --platform=linux/amd64 rust:1.60 as build

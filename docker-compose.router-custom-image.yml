@@ -1,11 +1,11 @@
 version: '3'
 services:
-  apollo-router:
-    container_name: apollo-router
-    build: ./router
+  apollo-router-custom-image:
+    container_name: apollo-router-custom-image
+    build: ./router/custom-image
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
-      - ./router/acme_router.yaml:/dist/config/router.yaml
+      - ./router/custom-image/acme_router.yaml:/dist/config/router.yaml
     command: [ "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
     ports:
       - "4000:4000"

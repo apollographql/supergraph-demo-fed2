@@ -1,4 +1,4 @@
-name: CI Router Custom
+name: CI Router Custom Image
 on:
   push:
     branches: [ main ]
@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci-docker-local:
-    name: CI Router Custom
+    name: CI Router Custom Image
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -54,13 +54,13 @@ jobs:
           cat supergraph.graphql
       - name: docker-compose build
         run: |
-          ( set -x; docker-compose -f docker-compose.router-custom.yml build --no-cache --pull --parallel --progress plain )
+          ( set -x; docker-compose -f docker-compose.router-custom-image.yml build --no-cache --pull --parallel --progress plain )
       - name: docker-compose up -d
         run: |
-          ( set -x; docker-compose -f docker-compose.router-custom.yml  up -d )
+          ( set -x; docker-compose -f docker-compose.router-custom-image.yml  up -d )
           sleep 8
-          docker-compose -f docker-compose.router-custom.yml logs
+          docker-compose -f docker-compose.router-custom-image.yml logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
       - name: docker-compose down
-        run: docker-compose -f docker-compose.router-custom.yml down
+        run: docker-compose -f docker-compose.router-custom-image.yml down
