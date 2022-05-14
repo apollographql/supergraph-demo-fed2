@@ -1,0 +1,21 @@
+server:
+  listen: 0.0.0.0:4000
+  cors:
+    origins:
+      - https://studio.apollographql.com
+
+telemetry:
+  tracing:
+    trace_config:
+      service_name: "router"
+      service_namespace: "apollo"
+    otlp:
+      endpoint: http://collector:4317
+      protocol: grpc
+      timeout: 42s
+
+plugins:
+  experimental.rhai:
+    # Currently there can only be a single rhai file.  If there are multiple
+    # customizations, keep them all in a single file.
+    filename: "/dist/router.rhai"

@@ -53,12 +53,23 @@ docker-up-managed-router:
 	@sleep 4
 	@docker logs apollo-router
 
-.PHONY: docker-up-local-router-custom
-docker-up-local-router-custom:
-	docker-compose -f docker-compose.router-custom.yml up -d
+.PHONY: docker-up-local-router-custom-image
+docker-up-local-router-custom-image:
+	docker-compose -f docker-compose.router-custom-image.yml up -d
 	@echo "waiting for Kotlin inventory subgraph to initialize"
 	@sleep 4
-	@docker logs apollo-router
+	@docker logs apollo-router-custom-image
+
+.PHONY: docker-logs-local-router-custom-image
+docker-logs-local-router-custom-image:
+	@docker logs apollo-router-custom-image
+
+.PHONY: docker-up-local-router-custom-plugin
+docker-up-local-router-custom-plugin:
+	docker-compose -f docker-compose.router-custom-plugin.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+	@docker logs apollo-router-custom-plugin
 
 .PHONY: docker-build
 docker-build:
@@ -69,8 +80,16 @@ docker-build-force:
 	docker-compose build --no-cache --pull --parallel --progress plain
 
 .PHONY: docker-build-router
-docker-build-router:
-	@docker build -t supergraph-demo-fed2_apollo-router router/.
+docker-build-router: docker-build-router-image docker-build-router-plugin   
+
+.PHONY: docker-build-router-image
+docker-build-router-image:
+	@docker build -t supergraph-demo-fed2_apollo-router-custom-image router/custom-image/. --no-cache
+
+.PHONY: docker-build-router-plugin
+docker-build-router-plugin:
+	@docker build -t supergraph-demo-fed2_apollo-router-custom-plugin router/custom-plugin/.
+
 
 .PHONY: query
 query:
@@ -184,6 +203,14 @@ act-ci-local:
 .PHONY: act-ci-local-router
 act-ci-local-router:
 	act -P $(ubuntu-latest) -W .github/workflows/main-router.yml --detect-event
+
+.PHONY: act-ci-local-router-custom-image
+act-ci-local-router-custom-image:
+	act -P $(ubuntu-latest) -W .github/workflows/main-router-custom-image.yml --detect-event
+
+.PHONY: act-ci-local-router-custom-plugin
+act-ci-local-router-custom-plugin:
+	act -P $(ubuntu-latest) -W .github/workflows/main-router-custom-plugin.yml --detect-event
 
 .PHONY: act-ci-managed
 act-ci-managed:
