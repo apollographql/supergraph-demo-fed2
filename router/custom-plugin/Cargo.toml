@@ -12,7 +12,7 @@ apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v
 async-trait = "0.1.53"
 futures = "0.3.21"
 http = "0.2.7"
-schemars = "0.8.9"
+schemars = "0.8.10"
 serde = "1.0.137"
 serde_json = "1.0.81"
 tokio = "1.18.2"
