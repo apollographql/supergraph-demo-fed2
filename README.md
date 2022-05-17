@@ -496,7 +496,7 @@ version: '3'
 services:
   apollo-router:
     container_name: apollo-router
-    image: ghcr.io/apollographql/router:v0.1.0-preview.7
+    image: ghcr.io/apollographql/router:v0.9.1
     volumes:
       - ./router.yaml:/dist/config/router.yaml
     command: [ "-c", "config/router.yaml", "--log", "info" ]
