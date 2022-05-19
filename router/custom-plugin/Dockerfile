@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 rust:1.60 as build
+FROM --platform=linux/amd64 rust:1.61 as build
 
 ENV NODE_VERSION=16.13.0
 RUN apt install -y curl
