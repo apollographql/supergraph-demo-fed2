@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import java.io.IOException
-import javax.annotation.PostConstruct
-
 
 @SpringBootApplication
 class Application
@@ -25,16 +22,9 @@ fun main(args: Array<String>) {
 
 @Component
 class GraphQLProvider {
-  private var graphQL: GraphQL? = null
 
   @Bean
-  fun graphQL(): GraphQL? {
-    return graphQL
-  }
-
-  @PostConstruct
-  @Throws(IOException::class)
-  fun init() {
+  fun graphQL(): GraphQL {
     val runtimeWiring = RuntimeWiring.newRuntimeWiring()
       .type("ProductItf") { builder ->
         builder.typeResolver { environment ->
@@ -60,7 +50,7 @@ class GraphQLProvider {
         }
       }
       .build()
-    graphQL = GraphQL.newGraphQL(schema)
+    return GraphQL.newGraphQL(schema)
       .instrumentation(FederatedTracingInstrumentation())
       .build()
   }
