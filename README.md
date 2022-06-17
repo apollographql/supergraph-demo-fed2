@@ -70,7 +70,7 @@ curl -sSL https://rover.apollo.dev/nix/latest | sh
 To clone this repo:
 
 ```sh
-git clone: git@github.com:apollographql/supergraph-demo-fed2.git
+git clone git@github.com:apollographql/supergraph-demo-fed2.git
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
