@@ -59,11 +59,18 @@ You'll need:
 * [docker](https://docs.docker.com/get-docker/)
 * [docker-compose](https://docs.docker.com/compose/install/)
 * `rover` [the CLI for managing graphs](https://www.apollographql.com/docs/rover/getting-started)
+* a clone of this repo
 
 To install `rover`:
 
 ```sh
 curl -sSL https://rover.apollo.dev/nix/latest | sh
+```
+
+To clone this repo:
+
+```sh
+git clone: git@github.com:apollographql/supergraph-demo-fed2.git
 ```
 
 For help with `rover` see [installing the Rover CLI](https://www.apollographql.com/docs/federation/v2/quickstart/#1-install-the-rover-cli).
@@ -86,6 +93,8 @@ For help with `rover` see [installing the Rover CLI](https://www.apollographql.c
 ![Get apollo key](docs/media/fed2/0-apollo-key.png)
 
 ### Publish subgraphs to Apollo Studio
+
+> Run the `make` commands within the root project directory after you've cloned the repo.
 
 Then publish the 3 [subgraph schemas](./subgraphs) to the registry in Apollo Studio.
 
@@ -112,14 +121,13 @@ The gateway for the 'My-Graph-3-vh40el@current' graph was updated with a new sch
 Monitor your schema delivery progress on on studio: https://studio.apollographql.com/graph/My-Graph-3-vh40el/launches/5bbeb91e-c6bd-4fdf-b8af-5c330f26d618?variant=current
 ```
 
-### Schema Published Successfully!
+### Schema Published Successfully
 
 ![Publish success](docs/media/fed2/1-publish-success.png)
 
 Click See schema changes
 
 ### View supergraph build results
-
 
 ![Launches](docs/media/fed2/2-studio-launches.png)
 
@@ -452,9 +460,9 @@ service:
 
 #### View Metrics from Open Telemetry Spans using Prometheus
 
-Once the cluster is up and has queries against it (via `make smoke`), browse to [http://localhost:9090/](http://localhost:9090/) and begin querying against metrics pulled from the trace spans. 
+Once the cluster is up and has queries against it (via `make smoke`), browse to [http://localhost:9090/](http://localhost:9090/) and begin querying against metrics pulled from the trace spans.
 
-Example queries: 
+Example queries:
 
 * P95 by service: `histogram_quantile(.99, sum(rate(latency_bucket[5m])) by (le, service_name))`
 
@@ -583,7 +591,7 @@ FROM --platform=linux/amd64 debian:bullseye
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
-    curl 
+    curl
 
 WORKDIR /dist
 
@@ -619,11 +627,13 @@ fn router_service(service) {
 ```
 
 To see the `INFO` level `print()` statements:
+
 ```
 make docker-logs-local-router-custom-image
 ```
 
 Then cleanup:
+
 ```
 make docker-down-router
 ```
