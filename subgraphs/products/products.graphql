@@ -43,5 +43,4 @@ type ProductDimension @shareable {
 }
 type User @key(fields: "email") {
   email: ID!
-  totalProductsCreated: Int @shareable
 }
