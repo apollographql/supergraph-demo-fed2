@@ -28,7 +28,7 @@ type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku
   variation: ProductVariation
   dimensions: ProductDimension
   createdBy: User
-  hidden: String
+  hidden: String @tag(name: "internal")
 }
 enum ShippingClass {
   STANDARD
