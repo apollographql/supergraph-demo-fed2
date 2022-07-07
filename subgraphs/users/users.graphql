@@ -5,3 +5,10 @@ type User @key(fields:"email") {
     name: String
     totalProductsCreated: Int
 }
+
+type Admin @key(fields:"email") {
+    email:ID! @tag(name: "test-from-users")
+    name: String
+    totalProductsCreated: Int
+    isAdmin: Boolean
+}
