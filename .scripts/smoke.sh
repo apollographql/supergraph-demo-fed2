@@ -2,7 +2,7 @@
 
 PORT="${1:-4000}"
 COUNT="${2:-1}"
-TESTS=(1 2 3 4)
+TESTS=(1 2 3 4 5)
 
 # --------------------------------------------------------------------
 # TEST 1
@@ -10,7 +10,7 @@ TESTS=(1 2 3 4)
 DESCR_1="allProducts with delivery"
 OPNAME_1="allProdDelivery"
 read -r -d '' QUERY_1 <<"EOF"
-{
+query allProdDelivery {
   allProducts {
     delivery {
       estimatedDelivery,
@@ -36,7 +36,7 @@ EOF
 DESCR_2="allProducts with totalProductsCreated"
 OPNAME_2="allProdCreated"
 read -r -d '' QUERY_2 <<"EOF"
-{
+query allProdCreated {
   allProducts {
     id,
     sku,
@@ -60,7 +60,7 @@ EOF
 DESCR_3="hidden: String @inaccessible should return error"
 OPNAME_3="inaccessibleError"
 read -r -d '' QUERY_3 <<"EOF"
-{
+query inaccessibleError {
   allProducts {
     id,
     hidden,
@@ -84,7 +84,7 @@ EOF
 DESCR_4="exampleQuery with pandas"
 OPNAME_4="exampleQuery"
 read -r -d '' QUERY_4 <<"EOF"
-{
+query exampleQuery {
  allProducts {
    id,
    sku,
@@ -110,6 +110,32 @@ read -r -d '' EXP_4 <<"EOF"
 {"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}}],"allPandas":[{"name":"Basi","favoriteFood":"bamboo leaves"},{"name":"Yun","favoriteFood":"apple"}]}}
 EOF
 
+# --------------------------------------------------------------------
+# TEST 5
+# --------------------------------------------------------------------
+DESCR_5="deferred query"
+OPNAME_5="deferred"
+read -r -d '' QUERY_5 <<"EOF"
+query deferred {
+  allProducts {
+    variation {
+      ...MyFragment @defer
+    },
+    sku,
+    id
+  }
+}
+fragment MyFragment on ProductVariation {
+  id
+}
+EOF
+
+OP_5=equals
+
+read -r -d '' EXP_5 <<"EOF"
+{"data":{"allProducts":[{"variation":{"id":"OSS"},"sku":"federation","id":"apollo-federation"},{"variation":{"id":"platform"},"sku":"studio","id":"apollo-studio"}]}}
+EOF
+
 set -e
 
 OK_CHECK="\xE2\x9C\x85"
@@ -129,19 +155,18 @@ run_tests ( ){
       opname_var="OPNAME_$test"
 
       DESCR="${!descr_var}"
-      QUERY=$(echo "${!query_var}" | awk -v ORS= -v OFS= '{$1=$1}1')
+      QUERY=$(echo "${!query_var}" | tr '\n' ' ' | awk '$1=$1')
       EXP="${!exp_var}"
       OP="${!op_var}"
       OPNAME="${!opname_var}"
-      CMD=(curl -X POST -H 'Content-Type: application/json' -H 'apollographql-client-name: smoke-test' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
+      CMD=(curl -X POST -H "Content-Type: application/json" -H "apollographql-client-name: smoke-test" --data "{ \"query\": \"${QUERY}\", \"operationName\": \"$OPNAME\" }" http://localhost:$PORT/ )
 
       if [ $COUNT -le 1 ]; then
         echo ""
         echo "=============================================================="
         echo "TEST $test: $DESCR"
         echo "=============================================================="
-        printf '%q ' "${CMD[@]}"
-        printf '\n'
+        echo "${CMD[@]}"
       fi
 
       # execute operation
@@ -149,10 +174,12 @@ run_tests ( ){
       ACT=$("${CMD[@]}" 2>/dev/null)
       EXIT_CODE=$?
       if [ $EXIT_CODE -ne 0 ]; then
-        printf '%q ' "${CMD[@]}"
-        printf '\n'
         if [ $EXIT_CODE -eq 7 ]; then
-          printf "CURL ERROR 7 Failed to connect to Permission denied\n"
+          printf "CURL ERROR 7: Failed to connect() to host or proxy.\n"
+        elif [ $EXIT_CODE -eq 52 ]; then
+          printf "CURL ERROR 52: Empty reply from server.\n"
+        elif [ $EXIT_CODE -eq 56 ]; then
+          printf "CURL ERROR 56: Recv failure: Connection reset by peer.\n"
         else
           printf "CURL ERROR $EXIT_CODE\n"
         fi

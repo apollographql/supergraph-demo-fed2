@@ -6,7 +6,7 @@ services:
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
       - ./router/custom-image/acme_router.yaml:/dist/config/router.yaml
-    command: [ "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
+    command: [ "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "trace" ]
     ports:
       - "4000:4000"
   products:
