@@ -2,7 +2,7 @@
 
 PORT="${1:-4000}"
 COUNT="${2:-1}"
-TESTS=(1 2 3 4 5)
+TESTS=(1 2 3 4 5 6 7)
 
 # --------------------------------------------------------------------
 # TEST 1
@@ -10,7 +10,7 @@ TESTS=(1 2 3 4 5)
 DESCR_1="allProducts with delivery"
 OPNAME_1="allProdDelivery"
 read -r -d '' QUERY_1 <<"EOF"
-{
+query allProdDelivery {
   allProducts {
     delivery {
       estimatedDelivery,
@@ -36,7 +36,7 @@ EOF
 DESCR_2="allProducts with totalProductsCreated"
 OPNAME_2="allProdCreated"
 read -r -d '' QUERY_2 <<"EOF"
-{
+query allProdCreated {
   allProducts {
     id,
     sku,
@@ -60,7 +60,7 @@ EOF
 DESCR_3="hidden: String @inaccessible should return error"
 OPNAME_3="inaccessibleError"
 read -r -d '' QUERY_3 <<"EOF"
-{
+query inaccessibleError {
   allProducts {
     id,
     hidden,
@@ -84,7 +84,7 @@ EOF
 DESCR_4="exampleQuery with pandas"
 OPNAME_4="exampleQuery"
 read -r -d '' QUERY_4 <<"EOF"
-{
+query exampleQuery {
  allProducts {
    id,
    sku,
@@ -110,14 +110,13 @@ read -r -d '' EXP_4 <<"EOF"
 {"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}}],"allPandas":[{"name":"Basi","favoriteFood":"bamboo leaves"},{"name":"Yun","favoriteFood":"apple"}]}}
 EOF
 
-
 # --------------------------------------------------------------------
 # TEST 5
 # --------------------------------------------------------------------
 DESCR_5="exampleQuery with reviews and override"
 OPNAME_5="allProductsWithReviews"
 read -r -d '' QUERY_5 <<"EOF"
-{
+query allProductsWithReviews {
  allProducts {
    id,
    sku,
@@ -143,6 +142,77 @@ read -r -d '' EXP_5 <<"EOF"
 {"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Federation"}]},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Studio"}]}]}}
 EOF
 
+# --------------------------------------------------------------------
+# TEST 6
+# --------------------------------------------------------------------
+DESCR_6="defer variation query"
+OPNAME_6="deferVariation"
+read -r -d '' QUERY_6 <<"EOF"
+query deferVariation {
+  allProducts {
+    variation {
+      ...MyFragment @defer
+    },
+    sku,
+    id
+  }
+}
+fragment MyFragment on ProductVariation {
+  id
+}
+EOF
+OP_6=equals
+
+read -r -d '' EXP_6 <<"EOF"
+--graphql
+content-type: application/json
+
+{"data":{"allProducts":[{"sku":"federation","id":"apollo-federation"},{"sku":"studio","id":"apollo-studio"}]},"hasNext":true}
+--graphql
+content-type: application/json
+
+{"data":{"allProducts":[{"variation":{"id":"OSS"}},{"variation":{"id":"platform"}}]},"hasNext":true}
+--graphql--
+content-type: application/json
+
+{"hasNext":false}
+EOF
+
+# --------------------------------------------------------------------
+# TEST 7
+# --------------------------------------------------------------------
+DESCR_7="deferred user query"
+OPNAME_7="deferUser"
+read -r -d '' QUERY_7 <<"EOF"
+query deferUser { 
+  allProducts { 
+    createdBy { 
+      ...MyFragment @defer
+    }
+    sku
+    id 
+  }     
+}
+     
+fragment MyFragment on User { name }
+EOF
+
+OP_7=equals
+
+read -r -d '' EXP_7 <<"EOF"
+--graphql
+content-type: application/json
+
+{"data":{"allProducts":[{"sku":"federation","id":"apollo-federation"},{"sku":"studio","id":"apollo-studio"}]},"hasNext":true}
+--graphql
+content-type: application/json
+
+{"data":{"allProducts":[{"createdBy":{"name":"Apollo Studio Support"}},{"createdBy":{"name":"Apollo Studio Support"}}]},"hasNext":true}
+--graphql--
+content-type: application/json
+
+{"hasNext":false}
+EOF
 
 set -e
 
@@ -163,30 +233,31 @@ run_tests ( ){
       opname_var="OPNAME_$test"
 
       DESCR="${!descr_var}"
-      QUERY=$(echo "${!query_var}" | awk -v ORS= -v OFS= '{$1=$1}1')
+      QUERY=$(echo "${!query_var}" | tr '\n' ' ' | awk '$1=$1')
       EXP="${!exp_var}"
       OP="${!op_var}"
       OPNAME="${!opname_var}"
-      CMD=(curl -X POST -H 'Content-Type: application/json' -H 'apollographql-client-name: smoke-test' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
+      CMD=(curl -X POST -H "Content-Type: application/json" -H "apollographql-client-name: smoke-test" --data "{ \"query\": \"${QUERY}\", \"operationName\": \"$OPNAME\" }" http://localhost:$PORT/ )
 
       if [ $COUNT -le 1 ]; then
         echo ""
         echo "=============================================================="
         echo "TEST $test: $DESCR"
         echo "=============================================================="
-        printf '%q ' "${CMD[@]}"
-        printf '\n'
+        echo "${CMD[@]}"
       fi
 
       # execute operation
       set +e
-      ACT=$("${CMD[@]}" 2>/dev/null)
+      ACT=$("${CMD[@]}" | tr -d '\r' 2>/dev/null)
       EXIT_CODE=$?
       if [ $EXIT_CODE -ne 0 ]; then
-        printf '%q ' "${CMD[@]}"
-        printf '\n'
         if [ $EXIT_CODE -eq 7 ]; then
-          printf "CURL ERROR 7 Failed to connect to Permission denied\n"
+          printf "CURL ERROR 7: Failed to connect() to host or proxy.\n"
+        elif [ $EXIT_CODE -eq 52 ]; then
+          printf "CURL ERROR 52: Empty reply from server.\n"
+        elif [ $EXIT_CODE -eq 56 ]; then
+          printf "CURL ERROR 56: Recv failure: Connection reset by peer.\n"
         else
           printf "CURL ERROR $EXIT_CODE\n"
         fi

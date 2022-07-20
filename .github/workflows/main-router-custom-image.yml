@@ -1,5 +1,7 @@
 name: CI Router Custom Image
 on:
+  pull_request:
+    branches: [ main ]
   push:
     branches: [ main ]
   schedule:
@@ -49,6 +51,7 @@ jobs:
           echo "$(docker-compose --version)"
           echo ---------------------------------------------------------------
       - name: make supergraph
+        if: false
         run: |
           make supergraph
           cat supergraph.graphql
@@ -60,7 +63,16 @@ jobs:
           ( set -x; docker-compose -f docker-compose.router-custom-image.yml  up -d )
           sleep 8
           docker-compose -f docker-compose.router-custom-image.yml logs
+      - name: pre debug
+        run: |
+          docker-compose -f docker-compose.router-custom-image.yml logs
+          docker-compose -f docker-compose.router-custom-image.yml ps
       - name: smoke test
         run: .scripts/smoke.sh 4000
+      - name: post debug
+        if: always()
+        run: |
+          docker-compose -f docker-compose.router-custom-image.yml logs
+          docker-compose -f docker-compose.router-custom-image.yml ps
       - name: docker-compose down
         run: docker-compose -f docker-compose.router-custom-image.yml down
