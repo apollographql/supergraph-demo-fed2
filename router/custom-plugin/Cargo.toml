@@ -13,7 +13,7 @@ async-trait = "0.1.56"
 futures = "0.3.21"
 http = "0.2.8"
 schemars = "0.8.10"
-serde = "1.0.139"
+serde = "1.0.140"
 serde_json = "1.0.82"
 tokio = "1.20.0"
 tower = { version = "0.4.13", features = ["full"] }
