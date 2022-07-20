@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /dist
 
-COPY ./router.rhai .
+COPY ./rhai/ rhai/
 
 RUN curl -ssL https://router.apollo.dev/download/nix/latest | sh
 
