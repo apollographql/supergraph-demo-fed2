@@ -14,8 +14,11 @@ telemetry:
       protocol: grpc
       timeout: 42s
 
-plugins:
-  experimental.rhai:
-    # Currently there can only be a single rhai file.  If there are multiple
-    # customizations, keep them all in a single file.
-    filename: "/dist/router.rhai"
+rhai:
+  # You must have a "main" rhai file. By default this is "main.rhai"
+  # You can change this name by specifying main:
+  main: "test.rhai"
+  # Your rhai scripts are loaded from relative directory "./rhai"
+  # (relative to the directory in which your router is executing)
+  # You can change this location by specifying scripts:
+  scripts: "./rhai"
