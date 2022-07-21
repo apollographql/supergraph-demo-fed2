@@ -22,6 +22,3 @@ rhai:
   # (relative to the directory in which your router is executing)
   # You can change this location by specifying scripts:
   scripts: "./rhai"
-
-server:
-  experimental_defer_support: true
