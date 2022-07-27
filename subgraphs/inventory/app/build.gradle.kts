@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
   implementation("com.graphql-java:graphql-java:18.3")
-  implementation("com.graphql-java:graphql-java-spring-boot-starter-webmvc:2.0")
+  implementation("com.graphql-java:graphql-java-spring-boot-starter-webmvc:2021-10-25T04-50-54-fbc162f")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("com.apollographql.federation:federation-graphql-java-support:2.0.3")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
