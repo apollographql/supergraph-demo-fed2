@@ -3,6 +3,7 @@ server:
   cors:
     origins:
       - https://studio.apollographql.com
+  experimental_defer_support: true
 
 telemetry:
   tracing:
