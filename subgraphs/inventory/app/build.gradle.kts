@@ -14,7 +14,7 @@ dependencies {
   implementation("com.graphql-java:graphql-java:18.3")
   implementation("com.graphql-java:graphql-java-spring-boot-starter-webmvc:2.0")
   implementation("org.springframework.boot:spring-boot-starter-web")
-  implementation("com.apollographql.federation:federation-graphql-java-support:2.0.4")
+  implementation("com.apollographql.federation:federation-graphql-java-support:2.0.5")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
