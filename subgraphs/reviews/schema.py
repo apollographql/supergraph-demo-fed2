@@ -18,11 +18,14 @@ def get_reviews(root: "Product") -> list[Review]:
 class Product:
     id: strawberry.ID
     reviews_count: int
+    reviews_score: float = strawberry.federation.field(
+        override="products", shareable=True
+    )
     reviews: list[Review] = strawberry.field(resolver=get_reviews)
 
     @classmethod
     def resolve_reference(cls, id: strawberry.ID):
-        return Product(id=id, reviews_count=3)
+        return Product(id=id, reviews_count=3, reviews_score=4.6)
 
 
 @strawberry.type

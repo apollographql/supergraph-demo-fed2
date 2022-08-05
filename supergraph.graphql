@@ -78,6 +78,7 @@ type Product implements ProductItf & SkuItf
   variation: ProductVariation @join__field(graph: PRODUCTS)
   createdBy: User @join__field(graph: PRODUCTS)
   hidden: String @join__field(graph: PRODUCTS)
+  reviewsScore: Float! @join__field(graph: REVIEWS, override: "products")
   reviewsCount: Int! @join__field(graph: REVIEWS)
   reviews: [Review!]! @join__field(graph: REVIEWS)
 }

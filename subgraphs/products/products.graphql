@@ -29,6 +29,7 @@ type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku
   dimensions: ProductDimension
   createdBy: User
   hidden: String
+  reviewsScore: Float! @shareable
 }
 enum ShippingClass {
   STANDARD

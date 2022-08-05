@@ -49,6 +49,9 @@ const resolvers = {
         createdBy: (reference) => {
             return { email: 'support@apollographql.com', totalProductsCreated: 1337 }
         },
+        reviewsScore: () => {
+            return 4.5;
+        },
         __resolveReference: (reference) => {
             if (reference.id) return products.find(p => p.id == reference.id);
             else if (reference.sku && reference.package) return products.find(p => p.sku == reference.sku && p.package == reference.package);
