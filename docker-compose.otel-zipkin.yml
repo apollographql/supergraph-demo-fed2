@@ -34,6 +34,10 @@ services:
   pandas:
     container_name: pandas
     build: ./subgraphs/pandas
+  reviews:
+    container_name: reviews
+    build: ./subgraphs/reviews
+    # TODO: otel
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin:2.23.18

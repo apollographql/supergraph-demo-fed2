@@ -36,6 +36,10 @@ services:
   pandas:
     container_name: pandas
     build: ./subgraphs/pandas
+  reviews:
+    container_name: reviews
+    build: ./subgraphs/reviews
+    # TODO: otel
   collector:
     container_name: collector
     image: otel/opentelemetry-collector-contrib:0.57.2

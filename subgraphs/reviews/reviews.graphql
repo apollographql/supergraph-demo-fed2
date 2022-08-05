@@ -1,0 +1,28 @@
+schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key"]) {
+  query: Query
+}
+
+type Product @key(fields: "id") {
+  id: ID!
+  reviewsCount: Int!
+  reviews: [Review!]!
+}
+
+type Query {
+  _service: _Service!
+  _entities(representations: [_Any!]!): [_Entity]!
+  Hi: String!
+}
+
+type Review {
+  id: Int!
+  body: String!
+}
+
+scalar _Any
+
+union _Entity = Product
+
+type _Service {
+  sdl: String!
+}

@@ -35,6 +35,7 @@ enum join__Graph {
   INVENTORY @join__graph(name: "inventory", url: "http://inventory:4000/graphql")
   PANDAS @join__graph(name: "pandas", url: "http://pandas:4000/graphql")
   PRODUCTS @join__graph(name: "products", url: "http://products:4000/graphql")
+  REVIEWS @join__graph(name: "reviews", url: "http://reviews:4000/graphql")
   USERS @join__graph(name: "users", url: "http://users:4000/graphql")
 }
 
@@ -67,6 +68,7 @@ type Product implements ProductItf & SkuItf
   @join__type(graph: PRODUCTS, key: "id")
   @join__type(graph: PRODUCTS, key: "sku package")
   @join__type(graph: PRODUCTS, key: "sku variation { id }")
+  @join__type(graph: REVIEWS, key: "id")
 {
   id: ID! @tag(name: "hi-from-products")
   dimensions: ProductDimension @join__field(graph: INVENTORY, external: true) @join__field(graph: PRODUCTS)
@@ -76,6 +78,8 @@ type Product implements ProductItf & SkuItf
   variation: ProductVariation @join__field(graph: PRODUCTS)
   createdBy: User @join__field(graph: PRODUCTS)
   hidden: String @join__field(graph: PRODUCTS)
+  reviewsCount: Int! @join__field(graph: REVIEWS)
+  reviews: [Review!]! @join__field(graph: REVIEWS)
 }
 
 type ProductDimension
@@ -111,12 +115,21 @@ type Query
   @join__type(graph: INVENTORY)
   @join__type(graph: PANDAS)
   @join__type(graph: PRODUCTS)
+  @join__type(graph: REVIEWS)
   @join__type(graph: USERS)
 {
   allPandas: [Panda] @join__field(graph: PANDAS)
   panda(name: ID!): Panda @join__field(graph: PANDAS)
   allProducts: [ProductItf] @join__field(graph: PRODUCTS)
   product(id: ID!): ProductItf @join__field(graph: PRODUCTS)
+  Hi: String! @join__field(graph: REVIEWS)
+}
+
+type Review
+  @join__type(graph: REVIEWS)
+{
+  id: Int!
+  body: String!
 }
 
 enum ShippingClass

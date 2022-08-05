@@ -112,3 +112,7 @@ dist
 # TernJS port file
 .tern-port
 
+.vscode/
+
+__pycache__/
+.venv
