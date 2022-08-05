@@ -14,8 +14,16 @@ def get_reviews(root: "Product") -> list[Review]:
     ]
 
 
+@strawberry.federation.interface()
+class ProductItf:
+    id: strawberry.ID
+    reviews_count: int
+    reviews_score: float
+    reviews: list[Review]
+
+
 @strawberry.federation.type(keys=["id"])
-class Product:
+class Product(ProductItf):
     id: strawberry.ID
     reviews_count: int
     reviews_score: float = strawberry.federation.field(

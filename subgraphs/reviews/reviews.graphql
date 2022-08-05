@@ -2,10 +2,17 @@ schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "
   query: Query
 }
 
-type Product @key(fields: "id") {
+type Product implements ProductItf @key(fields: "id") {
   id: ID!
   reviewsCount: Int!
   reviewsScore: Float! @shareable @override(from: "products")
+  reviews: [Review!]!
+}
+
+interface ProductItf {
+  id: ID!
+  reviewsCount: Int!
+  reviewsScore: Float!
   reviews: [Review!]!
 }
 
