@@ -42,5 +42,8 @@ class Query:
 
 
 schema = strawberry.federation.Schema(
-    query=Query, types=[Product, Review], enable_federation_2=True
+    query=Query,
+    types=[Product, Review],
+    enable_federation_2=True,
+    extensions=[],
 )

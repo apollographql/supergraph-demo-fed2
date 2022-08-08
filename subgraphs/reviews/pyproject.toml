@@ -3,9 +3,13 @@ authors = [
   {name = "Patrick Arminio", email = "patrick.arminio@gmail.com"},
 ]
 dependencies = [
-  "strawberry-graphql==0.124.0.dev1659690947",
-  "uvicorn>=0.18.2",
-  "starlette>=0.20.4",
+    "strawberry-graphql==0.124.0.dev1659690947",
+    "uvicorn>=0.18.2",
+    "starlette>=0.20.4",
+    "opentelemetry-api>=1.11.1",
+    "opentelemetry-sdk>=1.11.1",
+    "opentelemetry-exporter-zipkin>=1.11.1",
+    "opentelemetry-instrumentation-starlette>=0.30b1",
 ]
 description = ""
 license = {text = "MIT"}
