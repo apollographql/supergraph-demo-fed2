@@ -1,5 +1,5 @@
 # Use a separate layer for the build for better caching
-FROM gradle:7.5.0-jdk11 AS TEMP_BUILD_IMAGE
+FROM gradle:7.5.1-jdk11 AS TEMP_BUILD_IMAGE
 
 WORKDIR /usr/src/app
 
