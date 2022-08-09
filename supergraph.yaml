@@ -3,7 +3,7 @@ subgraphs:
   inventory:
     routing_url: http://inventory:4000/graphql
     schema:
-      file: subgraphs/inventory/app/src/main/resources/inventory.graphql
+      file: subgraphs/inventory/app/src/main/resources/graphql/inventory.graphqls
   products:
     routing_url: http://products:4000/graphql
     schema:
