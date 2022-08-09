@@ -5,13 +5,19 @@ import strawberry
 class Review:
     id: int
     body: str
+    product_id: strawberry.Private[str]
+
+
+reviews = [
+    Review(
+        id=1, body=f"A review for Apollo Federation", product_id="apollo-federation"
+    ),
+    Review(id=2, body=f"A review for Apollo Studio", product_id="apollo-studio"),
+]
 
 
 def get_reviews(root: "Product") -> list[Review]:
-    return [
-        Review(id=id_, body=f"A review for {root.id}")
-        for id_ in range(root.reviews_count)
-    ]
+    return list(filter(lambda r: r.product_id == root.id, reviews))
 
 
 @strawberry.federation.interface()
@@ -26,9 +32,7 @@ class ProductItf:
 class Product(ProductItf):
     id: strawberry.ID
     reviews_count: int
-    reviews_score: float = strawberry.federation.field(
-        override="products", shareable=True
-    )
+    reviews_score: float = strawberry.federation.field(override="products")
     reviews: list[Review] = strawberry.field(resolver=get_reviews)
 
     @classmethod
@@ -38,7 +42,9 @@ class Product(ProductItf):
 
 @strawberry.type
 class Query:
-    _hi: str = strawberry.field(resolver=lambda: "Hello World!")
+    @strawberry.field
+    def review(self, id: int) -> Review | None:
+        return next((r for r in reviews if r.id == id), None)
 
 
 schema = strawberry.federation.Schema(
