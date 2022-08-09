@@ -1,6 +1,5 @@
 plugins {
   id("org.springframework.boot") version "2.7.2"
-  id("io.spring.dependency-management") version "1.0.12.RELEASE"
   id("org.jetbrains.kotlin.jvm") version "1.7.10"
   id("org.jetbrains.kotlin.plugin.spring") version "1.7.10"
 }
@@ -10,12 +9,20 @@ repositories {
   mavenCentral()
 }
 
+java.sourceCompatibility = JavaVersion.VERSION_17
+
 dependencies {
-  implementation("com.graphql-java:graphql-java:18.3")
-  implementation("com.graphql-java:graphql-java-spring-boot-starter-webmvc:2.0")
-  implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation(platform("org.springframework.boot:spring-boot-dependencies:2.7.2"))
   implementation("com.apollographql.federation:federation-graphql-java-support:2.0.5")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  implementation("org.springframework.boot:spring-boot-starter-graphql")
+  implementation("org.springframework.boot:spring-boot-starter-web")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+  kotlinOptions {
+    freeCompilerArgs = listOf("-Xjsr305=strict")
+    jvmTarget = "17"
+  }
 }
