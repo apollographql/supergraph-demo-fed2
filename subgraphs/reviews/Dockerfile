@@ -11,4 +11,6 @@ COPY . /project
 WORKDIR /project
 RUN pdm install --prod --no-lock --no-editable
 
+STOPSIGNAL SIGINT
+
 CMD ["pdm", "run", "server"]
