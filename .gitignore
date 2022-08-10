@@ -112,3 +112,12 @@ dist
 # TernJS port file
 .tern-port
 
+# Gradle Ignore
+.gradle
+build
+gradlew
+gradlew.bat
+gradle/
+
+# IntelliJ
+.idea
