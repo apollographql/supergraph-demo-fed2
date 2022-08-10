@@ -17,20 +17,10 @@ interface ProductItf {
 }
 
 type Query {
-  _service: _Service!
-  _entities(representations: [_Any!]!): [_Entity]!
   review(id: Int!): Review
 }
 
 type Review {
   id: Int!
   body: String!
-}
-
-scalar _Any
-
-union _Entity = Product
-
-type _Service {
-  sdl: String!
 }
