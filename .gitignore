@@ -116,3 +116,13 @@ dist
 
 __pycache__/
 .venv
+
+# Gradle Ignore
+.gradle
+build
+gradlew
+gradlew.bat
+gradle/
+
+# IntelliJ
+.idea

@@ -1,5 +1,5 @@
 # Use a separate layer for the build for better caching
-FROM gradle:7.5.0-jdk11 AS TEMP_BUILD_IMAGE
+FROM gradle:7.5.1-jdk17 AS TEMP_BUILD_IMAGE
 
 WORKDIR /usr/src/app
 
@@ -17,7 +17,7 @@ RUN gradle clean build --no-daemon --parallel
 
 
 # Create a new layer with the build output to run the app
-FROM openjdk:11-jre-bullseye
+FROM openjdk:17-bullseye
 ENV ARTIFACT_NAME=app.jar
 
 WORKDIR /usr/src/app
