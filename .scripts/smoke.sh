@@ -2,7 +2,7 @@
 
 PORT="${1:-4000}"
 COUNT="${2:-1}"
-TESTS=(1 2 3 4)
+TESTS=(1 2 3 4 5)
 
 # --------------------------------------------------------------------
 # TEST 1
@@ -109,6 +109,40 @@ OP_4=equals
 read -r -d '' EXP_4 <<"EOF"
 {"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}}],"allPandas":[{"name":"Basi","favoriteFood":"bamboo leaves"},{"name":"Yun","favoriteFood":"apple"}]}}
 EOF
+
+
+# --------------------------------------------------------------------
+# TEST 5
+# --------------------------------------------------------------------
+DESCR_5="exampleQuery with reviews and override"
+OPNAME_5="allProductsWithReviews"
+read -r -d '' QUERY_5 <<"EOF"
+{
+ allProducts {
+   id,
+   sku,
+   dimensions {
+     size,
+     weight
+   }
+   delivery {
+     estimatedDelivery,
+     fastestDelivery
+   }
+   reviewsScore,
+   reviews {
+     body
+   }
+ }
+}
+EOF
+
+OP_5=equals
+
+read -r -d '' EXP_5 <<"EOF"
+{"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Federation"}]},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Studio"}]}]}}
+EOF
+
 
 set -e
 
@@ -230,4 +264,3 @@ if [ $COUNT -gt 1 ]; then
 else
   run_tests
 fi
-

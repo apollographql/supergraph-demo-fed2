@@ -34,6 +34,12 @@ services:
   pandas:
     container_name: pandas
     build: ./subgraphs/pandas
+  reviews:
+    container_name: reviews
+    build: ./subgraphs/reviews
+    environment:
+      - APOLLO_OTEL_EXPORTER_TYPE=zipkin
+      - APOLLO_OTEL_EXPORTER_HOST=zipkin
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin:2.23.18

@@ -16,3 +16,7 @@ subgraphs:
     routing_url: http://pandas:4000/graphql
     schema:
       file: subgraphs/pandas/pandas.graphql
+  reviews:
+    routing_url: http://reviews:4000/graphql
+    schema:
+      file: subgraphs/reviews/reviews.graphql

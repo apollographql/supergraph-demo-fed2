@@ -41,6 +41,13 @@ services:
     build: ./subgraphs/pandas
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
+  reviews:
+    container_name: reviews
+    build: ./subgraphs/reviews
+    environment:
+      - APOLLO_OTEL_EXPORTER_TYPE=collector
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+      - APOLLO_OTEL_EXPORTER_PORT=4318
   collector:
     container_name: collector
     image: otel/opentelemetry-collector-contrib:0.57.2
