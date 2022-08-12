@@ -8,7 +8,8 @@ WORKDIR /dist
 
 COPY ./rhai/ rhai/
 
-RUN curl -ssL https://router.apollo.dev/download/nix/latest | sh -s -- v0.12.1-alpha-defer4
+#RUN curl -ssL https://router.apollo.dev/download/nix/latest | sh -s -- v0.12.1-alpha-defer4
+RUN curl -ssL https://router.apollo.dev/download/nix/latest | sh
 
 # for faster docker shutdown
 STOPSIGNAL SIGINT
