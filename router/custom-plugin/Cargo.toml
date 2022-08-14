@@ -10,7 +10,7 @@ anyhow = "1.0.61"
 apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.9.0" }
 apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v0.9.0" }
 async-trait = "0.1.57"
-futures = "0.3.21"
+futures = "0.3.23"
 http = "0.2.8"
 schemars = "0.8.10"
 serde = "1.0.143"
