@@ -14,7 +14,7 @@ if (process.env.APOLLO_OTEL_EXPORTER_TYPE) {
 }
 
 // Main
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer } = require('@apollo/server');
 const { ApolloServerPluginUsageReporting } = require('apollo-server-core');
 const { ApolloGateway } = require('@apollo/gateway');
 const { readFileSync } = require('fs');
