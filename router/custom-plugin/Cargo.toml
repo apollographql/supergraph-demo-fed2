@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.61"
+anyhow = "1.0.62"
 apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.9.0" }
 apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v0.9.0" }
 async-trait = "0.1.57"
