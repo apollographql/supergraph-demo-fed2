@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "apollo-server": "3.10.1",
-    "graphql": "16.5.0"
+    "graphql": "16.6.0"
   },
   "keywords": [],
   "author": "",

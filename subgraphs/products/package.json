@@ -10,7 +10,7 @@
     "@apollo/subgraph": "2.0.5",
     "apollo-server": "3.10.1",
     "supergraph-demo-opentelemetry": "0.2.3",
-    "graphql": "16.5.0"
+    "graphql": "16.6.0"
   },
   "keywords": [],
   "author": "",
