@@ -90,6 +90,13 @@ docker-build-router-image:
 docker-build-router-plugin:
 	@docker build -t supergraph-demo-fed2_apollo-router-custom-plugin router/custom-plugin/.
 
+.PHONY: docker-products-hot-reload
+docker-products-hot-reload:
+	docker-compose -f docker-compose.router-otel.yml up --detach --build products
+
+.PHONY: docker-products-logs
+docker-products-logs:
+	docker-compose -f docker-compose.router-otel.yml logs products
 
 .PHONY: query
 query:

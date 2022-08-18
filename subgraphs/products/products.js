@@ -20,8 +20,13 @@ const { readFileSync } = require('fs');
 const port = process.env.APOLLO_PORT || 4000;
 
 const products = [
-    { id: 'apollo-federation', sku: 'federation', package: '@apollo/federation', variation: "OSS" },
-    { id: 'apollo-studio', sku: 'studio', package: '', variation: "platform" },
+    { id: 'apollo-federation', sku: 'federation', package: '@apollo/federation'},
+    { id: 'apollo-studio', sku: 'studio', package: ''},
+]
+
+const variationByProduct = [
+    { id: 'apollo-federation', variation: { id: "OSS", name: "platform"}},
+    { id: 'apollo-studio', variation: { id: "platform", name: "platform-name"}},
 ]
 const typeDefs = gql(readFileSync('./products.graphql', { encoding: 'utf-8' }));
 const resolvers = {
@@ -40,8 +45,13 @@ const resolvers = {
     },
     Product: {
         variation: (reference) => {
-            if (reference.variation) return { id: reference.variation };
-            return { id: products.find(p => p.id == reference.id).variation }
+            return new Promise(r => setTimeout(() => {
+              if (reference.id) {
+                const variation = variationByProduct.find(p => p.id == reference.id).variation;
+                r(variation);
+	      }
+	      r({ id: 'defaultVariation', name: 'default variation' });
+	    }, 500));
         },
         dimensions: () => {
             return { size: "1", weight: 1 }

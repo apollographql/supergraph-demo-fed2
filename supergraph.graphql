@@ -115,6 +115,7 @@ type ProductVariation
   @join__type(graph: PRODUCTS)
 {
   id: ID!
+  name: String
 }
 
 type Query

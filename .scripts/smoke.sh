@@ -147,18 +147,17 @@ EOF
 # --------------------------------------------------------------------
 DESCR_6="defer variation query"
 OPNAME_6="deferVariation"
+ISSLOW_6="true"
 read -r -d '' QUERY_6 <<"EOF"
 query deferVariation {
   allProducts {
-    variation {
-      ...MyFragment @defer
-    },
+    ...MyFragment @defer
     sku,
     id
   }
 }
-fragment MyFragment on ProductVariation {
-  id
+fragment MyFragment on Product {
+  variation { name }
 }
 EOF
 OP_6=equals
@@ -171,7 +170,7 @@ content-type: application/json
 --graphql
 content-type: application/json
 
-{"data":{"allProducts":[{"variation":{"id":"OSS"}},{"variation":{"id":"platform"}}]},"hasNext":true}
+{"data":{"allProducts":[{"variation":{"name":"platform"}},{"variation":{"name":"platform-name"}}]},"hasNext":true}
 --graphql--
 content-type: application/json
 
@@ -231,13 +230,21 @@ run_tests ( ){
       exp_var="EXP_$test"
       op_var="OP_$test"
       opname_var="OPNAME_$test"
+      is_slow_var="ISSLOW_$test"
 
       DESCR="${!descr_var}"
       QUERY=$(echo "${!query_var}" | tr '\n' ' ' | awk '$1=$1')
       EXP="${!exp_var}"
       OP="${!op_var}"
       OPNAME="${!opname_var}"
+      ISSLOW="${!is_slow_var}"
       CMD=(curl -X POST -H "Content-Type: application/json" -H "apollographql-client-name: smoke-test" --data "{ \"query\": \"${QUERY}\", \"operationName\": \"$OPNAME\" }" http://localhost:$PORT/ )
+
+      if [ $i -gt 1 ]; then
+        if [ "$ISSLOW" == "true" ]; then
+          continue
+        fi
+      fi
 
       if [ $COUNT -le 1 ]; then
         echo ""
