@@ -15,6 +15,7 @@ interface ProductItf implements SkuItf {
   dimensions: ProductDimension
   createdBy: User
   hidden: String @inaccessible
+  oldField: String @deprecated(reason: "refactored out")
 }
 
 interface SkuItf {
@@ -30,6 +31,7 @@ type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku
   createdBy: User
   hidden: String
   reviewsScore: Float!
+  oldField: String
 }
 enum ShippingClass {
   STANDARD

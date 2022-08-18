@@ -20,14 +20,15 @@ const { readFileSync } = require('fs');
 const port = process.env.APOLLO_PORT || 4000;
 
 const products = [
-    { id: 'apollo-federation', sku: 'federation', package: '@apollo/federation'},
-    { id: 'apollo-studio', sku: 'studio', package: ''},
+    { id: 'apollo-federation', sku: 'federation', package: '@apollo/federation', oldField: 'deprecated'},
+    { id: 'apollo-studio', sku: 'studio', package: '', oldField: 'deprecated'},
 ]
 
 const variationByProduct = [
     { id: 'apollo-federation', variation: { id: "OSS", name: "platform"}},
     { id: 'apollo-studio', variation: { id: "platform", name: "platform-name"}},
 ]
+
 const typeDefs = gql(readFileSync('./products.graphql', { encoding: 'utf-8' }));
 const resolvers = {
     Query: {
@@ -51,7 +52,7 @@ const resolvers = {
                 r(variation);
 	      }
 	      r({ id: 'defaultVariation', name: 'default variation' });
-	    }, 5000));
+	    }, 1000));
         },
         dimensions: () => {
             return { size: "1", weight: 1 }
