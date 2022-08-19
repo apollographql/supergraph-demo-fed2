@@ -14,8 +14,9 @@ if (process.env.APOLLO_OTEL_EXPORTER_TYPE) {
 }
 
 // Main
-const { ApolloServer } = require('apollo-server');
-const { ApolloServerPluginUsageReporting } = require('apollo-server-core');
+const { ApolloServer } = require('@apollo/server');
+const { ApolloServerPluginUsageReporting } = require('@apollo/server/plugin/usageReporting');
+const { startStandaloneServer } = require('@apollo/server/standalone')
 const { ApolloGateway } = require('@apollo/gateway');
 const { readFileSync } = require('fs');
 
@@ -40,14 +41,18 @@ if (embeddedSchema){
 
 const gateway = new ApolloGateway(config);
 
-const server = new ApolloServer({
-  gateway,
-  debug: true,
-  // Subscriptions are unsupported but planned for a future Gateway version.
-  subscriptions: false,
-  plugins
-});
+async function startApolloServer() {
+  const server = new ApolloServer({ gateway, 
+    debug: true, 
+    // Subscriptions are unsupported but planned for a future Gateway version.
+    subscriptions: false, 
+    plugins});
+  const { url } = await startStandaloneServer(server, {
+    context: async ({ req }) => ({ token: req.headers.token }),
+    listen: { port: 4000 },
+  });
 
-server.listen( {port: port} ).then(({ url }) => {
-  console.log(`🚀 Graph Router ready at ${url}`);
-}).catch(err => {console.error(err)});
+console.log(`🚀  Server ready at ${url}`);
+}
+
+startApolloServer();

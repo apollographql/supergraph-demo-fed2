@@ -128,7 +128,7 @@ type Query
   panda(name: ID!): Panda @join__field(graph: PANDAS)
   allProducts: [ProductItf] @join__field(graph: PRODUCTS)
   product(id: ID!): ProductItf @join__field(graph: PRODUCTS)
-  Hi: String! @join__field(graph: REVIEWS)
+  review(id: Int!): Review @join__field(graph: REVIEWS)
 }
 
 type Review
