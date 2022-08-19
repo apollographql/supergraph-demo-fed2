@@ -1,8 +1,7 @@
 server:
   listen: 0.0.0.0:4000
   cors:
-    origins:
-      - https://studio.apollographql.com
+    allow_any_origin: true
   experimental_defer_support: true
 
 telemetry:
