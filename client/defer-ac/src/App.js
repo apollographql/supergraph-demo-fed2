@@ -87,11 +87,22 @@ function Render(query) {
 	return <p>Error :(</p>;
   }
 
-  return data.allProducts.map(({ id, variation }) => (
-    <div key={id}>
-      <p>{id} : {variation.name}</p>
+  return (
+    <div>
+
+    {data.allProducts.map(({ id, variation }) => {
+      if(variation) {
+        return <div key={id}>
+        <p>{id} : <b>{variation.name}</b></p>
+        </div>
+      } else {
+        return <div key={id}>
+        <p>{id}</p>
+        </div>
+      }
+    })}
     </div>
-  ));
+  )
 }
 
 function App() {
