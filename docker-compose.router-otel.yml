@@ -2,7 +2,7 @@ version: '3'
 services:
   apollo-router:
     container_name: apollo-router
-    image: ghcr.io/apollographql/router:v0.15.1
+    image: ghcr.io/apollographql/router:v0.16.0
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
       - ./router.yaml:/dist/config/router.yaml
