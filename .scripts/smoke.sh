@@ -170,7 +170,7 @@ content-type: application/json
 --graphql
 content-type: application/json
 
-{"data":{"allProducts":[{"variation":{"name":"platform"}},{"variation":{"name":"platform-name"}}]},"hasNext":true}
+{"hasNext":true,"incremental":[{"data":{"variation":{"name":"platform"}},"path":["allProducts",0]},{"data":{"variation":{"name":"platform-name"}},"path":["allProducts",1]}]}
 --graphql--
 content-type: application/json
 
@@ -206,7 +206,7 @@ content-type: application/json
 --graphql
 content-type: application/json
 
-{"data":{"allProducts":[{"createdBy":{"name":"Apollo Studio Support"}},{"createdBy":{"name":"Apollo Studio Support"}}]},"hasNext":true}
+{"hasNext":true,"incremental":[{"data":{"createdBy":{"name":"Apollo Studio Support"}},"path":["allProducts",0]},{"data":{"createdBy":{"name":"Apollo Studio Support"}},"path":["allProducts",1]}]}
 --graphql--
 content-type: application/json
 
