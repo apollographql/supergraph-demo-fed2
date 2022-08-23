@@ -1,7 +1,5 @@
 name: CI Router Custom Image
 on:
-  pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
   schedule:
