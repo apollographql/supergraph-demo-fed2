@@ -9,6 +9,7 @@ TESTS=(1 2 3 4 5 6 7)
 # --------------------------------------------------------------------
 DESCR_1="allProducts with delivery"
 OPNAME_1="allProdDelivery"
+ACCEPT_1="application/json"
 read -r -d '' QUERY_1 <<"EOF"
 query allProdDelivery {
   allProducts {
@@ -35,6 +36,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_2="allProducts with totalProductsCreated"
 OPNAME_2="allProdCreated"
+ACCEPT_2="application/json"
 read -r -d '' QUERY_2 <<"EOF"
 query allProdCreated {
   allProducts {
@@ -59,6 +61,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_3="hidden: String @inaccessible should return error"
 OPNAME_3="inaccessibleError"
+ACCEPT_3="application/json"
 read -r -d '' QUERY_3 <<"EOF"
 query inaccessibleError {
   allProducts {
@@ -83,6 +86,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_4="exampleQuery with pandas"
 OPNAME_4="exampleQuery"
+ACCEPT_4="application/json"
 read -r -d '' QUERY_4 <<"EOF"
 query exampleQuery {
  allProducts {
@@ -115,6 +119,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_5="exampleQuery with reviews and override"
 OPNAME_5="allProductsWithReviews"
+ACCEPT_5="application/json"
 read -r -d '' QUERY_5 <<"EOF"
 query allProductsWithReviews {
  allProducts {
@@ -147,6 +152,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_6="defer variation query"
 OPNAME_6="deferVariation"
+ACCEPT_6="multipart/mixed, application/json"
 ISSLOW_6="true"
 read -r -d '' QUERY_6 <<"EOF"
 query deferVariation {
@@ -162,7 +168,8 @@ fragment MyFragment on Product {
 EOF
 OP_6=equals
 
-read -r -d '' EXP_6 <<"EOF"
+IFS= read -r -d '' EXP_6 <<"EOF"
+
 --graphql
 content-type: application/json
 
@@ -171,10 +178,11 @@ content-type: application/json
 content-type: application/json
 
 {"hasNext":true,"incremental":[{"data":{"variation":{"name":"platform"}},"path":["allProducts",0]},{"data":{"variation":{"name":"platform-name"}},"path":["allProducts",1]}]}
---graphql--
+--graphql
 content-type: application/json
 
 {"hasNext":false}
+--graphql--
 EOF
 
 # --------------------------------------------------------------------
@@ -182,23 +190,25 @@ EOF
 # --------------------------------------------------------------------
 DESCR_7="deferred user query"
 OPNAME_7="deferUser"
+ACCEPT_7="multipart/mixed,application/json"
 read -r -d '' QUERY_7 <<"EOF"
-query deferUser { 
-  allProducts { 
-    createdBy { 
+query deferUser {
+  allProducts {
+    createdBy {
       ...MyFragment @defer
     }
     sku
     id 
-  }     
+  }
 }
-     
+
 fragment MyFragment on User { name }
 EOF
 
 OP_7=equals
 
-read -r -d '' EXP_7 <<"EOF"
+IFS= read -r -d '' EXP_7 <<"EOF"
+
 --graphql
 content-type: application/json
 
@@ -211,6 +221,7 @@ content-type: application/json
 content-type: application/json
 
 {"hasNext":false}
+--graphql--
 EOF
 
 set -e
@@ -221,6 +232,7 @@ ROCKET="\xF0\x9F\x9A\x80"
 
 printf "Running smoke tests ... $ROCKET $ROCKET $ROCKET\n"
 sleep 2
+trap 'rm -f *.tmp' EXIT
 
 run_tests ( ){
   for (( i=1; i<=$COUNT; i++ )); do
@@ -230,6 +242,7 @@ run_tests ( ){
       exp_var="EXP_$test"
       op_var="OP_$test"
       opname_var="OPNAME_$test"
+      accept_var="ACCEPT_$test"
       is_slow_var="ISSLOW_$test"
 
       DESCR="${!descr_var}"
@@ -237,8 +250,9 @@ run_tests ( ){
       EXP="${!exp_var}"
       OP="${!op_var}"
       OPNAME="${!opname_var}"
+      ACCEPT="${!accept_var}"
       ISSLOW="${!is_slow_var}"
-      CMD=(curl -X POST -H "Content-Type: application/json" -H "apollographql-client-name: smoke-test" --data "{ \"query\": \"${QUERY}\", \"operationName\": \"$OPNAME\" }" http://localhost:$PORT/ )
+      CMD=(curl -i -X POST -H "Content-Type: application/json" -H "apollographql-client-name: smoke-test" -H "accept:${ACCEPT}" --data "{ \"query\": \"${QUERY}\", \"operationName\": \"$OPNAME\" }" http://localhost:$PORT/ )
 
       if [ $i -gt 1 ]; then
         if [ "$ISSLOW" == "true" ]; then
@@ -256,7 +270,7 @@ run_tests ( ){
 
       # execute operation
       set +e
-      ACT=$("${CMD[@]}" | tr -d '\r' 2>/dev/null)
+      RESULT=$("${CMD[@]}" 2>/dev/null)
       EXIT_CODE=$?
       if [ $EXIT_CODE -ne 0 ]; then
         if [ $EXIT_CODE -eq 7 ]; then
@@ -274,10 +288,16 @@ run_tests ( ){
       fi
       set -e
 
+      echo "$RESULT" | awk -v bl=1 'bl{bl=0; h=($0 ~ /HTTP\/1/)} /^\r?$/{bl=1} {print $0>(h?"headers.tmp":"body.tmp")}'
+      HEADERS=$(<headers.tmp)
+      ACT=$(<body.tmp)
+
+      ACT=$(echo "$ACT" | sed "s/\r//g" | sed "s/\n\n/\n/g")
+      EXP=$(echo "$EXP" | sed "s/\r//g" | sed "s/\n\n/\n/g")
+
       OK=0
       if [ "$OP" == "equals" ]; then
-        [ "$ACT" == "$EXP" ] && OK=1
-
+        [[ "$ACT" == "$EXP" ]] && OK=1
       elif [ "$OP" == "startsWith" ]; then
         EXP=$( echo "$EXP" | sed 's|\\|\\\\|g' | sed 's|\[|\\[|g' | sed 's|\]|\\]|g')
         if echo "$ACT" | grep -q "^${EXP}"; then
@@ -293,11 +313,14 @@ run_tests ( ){
       if [ $OK -eq 1 ]; then
         if [ $COUNT -le 1 ]; then
           echo -------------------------
-          echo "[Expected: $OP]"
-          echo "$EXP"
+          echo "[Response Headers]"
+          echo "$HEADERS"
           echo -------------------------
-          echo "[Actual]"
+          echo "[Response Body]"
           echo "$ACT"
+          echo -------------------------
+          echo "[Expected Body: $OP]"
+          echo "$EXP"
           echo -------------------------
           printf "$OK_CHECK Success!\n"
         fi
@@ -314,11 +337,14 @@ run_tests ( ){
             printf '%q ' "${CMD[@]}"
             echo -------------------------
           fi
-          echo "[Expected: $OP]"
-          echo "$EXP"
+          echo "[Response Headers]"
+          echo "$HEADERS"
           echo -------------------------
-          echo "[Actual]"
+          echo "[Response Body]"
           echo "$ACT"
+          echo -------------------------
+          echo "[Expected Body: $OP]"
+          echo "$EXP"
           echo -------------------------
           printf "$FAIL_MARK TEST $test Failed! \n"
           echo -------------------------
