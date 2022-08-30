@@ -51,7 +51,7 @@ const resolvers = {
                 r(variation);
 	      }
 	      r({ id: 'defaultVariation', name: 'default variation' });
-	    }, 500));
+	    }, 5000));
         },
         dimensions: () => {
             return { size: "1", weight: 1 }

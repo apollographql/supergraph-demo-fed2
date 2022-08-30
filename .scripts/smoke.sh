@@ -152,7 +152,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_6="defer variation query"
 OPNAME_6="deferVariation"
-ACCEPT_6="multipart/mixed, application/json"
+ACCEPT_6="multipart/mixed; deferSpec=20220822, application/json"
 ISSLOW_6="true"
 read -r -d '' QUERY_6 <<"EOF"
 query deferVariation {
