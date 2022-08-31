@@ -21,7 +21,6 @@ WORKDIR /acme_router
 RUN rustup component add rustfmt
 
 # copy over your manifests
-COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
 
 # this build step will cache your dependencies
