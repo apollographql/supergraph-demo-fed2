@@ -1,12 +1,14 @@
-name: CI Router
+name: CI Router Custom Main
 on:
+  pull_request:
+    branches: [ main ]
   schedule:
     - cron: '30 7 * * *'
   workflow_dispatch:
 
 jobs:
   ci-docker-local:
-    name: CI Router
+    name: CI Router Custom Main
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -52,13 +54,13 @@ jobs:
           cat supergraph.graphql
       - name: docker-compose build
         run: |
-          ( set -x; docker-compose -f docker-compose.router.yml build --no-cache --pull --parallel --progress plain )
+          ( set -x; docker-compose -f docker-compose.router-custom-main.yml build --no-cache --pull --parallel --progress plain )
       - name: docker-compose up -d
         run: |
-          ( set -x; docker-compose -f docker-compose.router.yml  up -d )
+          ( set -x; docker-compose -f docker-compose.router-custom-main.yml  up -d )
           sleep 8
-          docker-compose -f docker-compose.router.yml logs
+          docker-compose -f docker-compose.router-custom-main.yml logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
       - name: docker-compose down
-        run: docker-compose -f docker-compose.router.yml down
+        run: docker-compose -f docker-compose.router-custom-main.yml down

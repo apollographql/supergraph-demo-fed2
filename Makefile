@@ -241,6 +241,10 @@ act-ci-local-router-custom-image:
 act-ci-local-router-custom-plugin:
 	act -P $(ubuntu-latest) -W .github/workflows/main-router-custom-plugin.yml --detect-event
 
+.PHONY: act-ci-local-router-custom-main
+act-ci-local-router-custom-main:
+	act -P $(ubuntu-latest) -W .github/workflows/main-router-custom-main.yml --detect-event
+
 .PHONY: act-ci-managed
 act-ci-managed:
 	act -P $(ubuntu-latest) -W .github/workflows/managed.yml --secret-file graph-api.env --detect-event -j ci-docker-managed

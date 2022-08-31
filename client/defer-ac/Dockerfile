@@ -8,7 +8,6 @@ COPY apollo-client-3.7.0-beta.6.tgz .
 RUN npm install
 RUN npm install apollo-client-3.7.0-beta.6.tgz
 
-COPY build build
 COPY public public
 COPY src src
 
