@@ -1,0 +1,19 @@
+cors:
+  allow_any_origin: true
+server:
+  listen: 0.0.0.0:4000
+  experimental_defer_support: true
+
+telemetry:
+  tracing:
+    trace_config:
+      service_name: "router"
+      service_namespace: "apollo"
+    otlp:
+      endpoint: http://collector:4317
+      protocol: grpc
+      timeout: 42s
+
+plugins:
+  experimental.include_subgraph_errors:
+    all: true # Propagate errors from all subraphs
