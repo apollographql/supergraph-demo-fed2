@@ -78,6 +78,13 @@ docker-up-local-router-custom-main:
 	@sleep 4
 	@docker logs apollo-router-custom-main
 
+.PHONY: docker-up-local-router-custom-main-defer-ac
+docker-up-local-router-custom-main-defer-ac:
+	docker-compose -f docker-compose.router-custom-main-defer-ac.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+	@docker logs apollo-router-custom-main
+
 .PHONY: docker-build
 docker-build:
 	docker-compose build
@@ -100,6 +107,10 @@ docker-build-router-plugin:
 .PHONY: docker-build-router-main
 docker-build-router-main:
 	@docker build -t supergraph-demo-fed2_apollo-router-custom-main router/custom-main/.
+
+.PHONY: docker-build-router-main-defer-ac
+docker-build-router-main-defer-ac:
+	docker-compose -f docker-compose.router-custom-main-defer-ac.yml build --parallel --progress plain
 
 .PHONY: docker-products-hot-reload
 docker-products-hot-reload:

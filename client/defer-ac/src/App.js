@@ -71,6 +71,7 @@ function TestQuery() {
 }
 
 function DeferredProducts() {
+  console.log("DeferredProducts")
   return Render(DEFERRED_QUERY)
 }
 
@@ -80,6 +81,9 @@ function NonDeferredProducts() {
 
 function Render(query) {
   const { loading, error, data } = useQuery(query);
+
+  console.log("Render:")
+  console.log(loading, error, data)
 
   if (loading) return <p>Loading...</p>;
   if (error) {
