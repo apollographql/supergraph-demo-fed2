@@ -1,8 +1,8 @@
+cors:
+  allow_any_origin: true
 server:
-  experimental_defer_support: true
   listen: 0.0.0.0:4000
-  cors:
-    allow_any_origin: true
+  experimental_defer_support: true
 
 telemetry:
   tracing:
@@ -22,3 +22,7 @@ rhai:
   # (relative to the directory in which your router is executing)
   # You can change this location by specifying scripts:
   scripts: "./rhai"
+
+plugins:
+  experimental.include_subgraph_errors:
+    all: true # Propagate errors from all subraphs
