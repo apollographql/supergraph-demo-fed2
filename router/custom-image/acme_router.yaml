@@ -1,8 +1,7 @@
+cors:
+  allow_any_origin: true
 server:
   listen: 0.0.0.0:4000
-  cors:
-    origins:
-      - https://studio.apollographql.com
 
 telemetry:
   tracing:
@@ -22,3 +21,7 @@ rhai:
   # (relative to the directory in which your router is executing)
   # You can change this location by specifying scripts:
   scripts: "./rhai"
+
+plugins:
+  experimental.include_subgraph_errors:
+    all: true # Propagate errors from all subraphs
