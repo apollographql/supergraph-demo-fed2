@@ -234,6 +234,9 @@ printf "Running smoke tests ... $ROCKET $ROCKET $ROCKET\n"
 sleep 2
 trap 'rm -f *.tmp' EXIT
 
+source "$(dirname $0)/smoke-defer-compressed.sh"
+sleep 5
+
 run_tests ( ){
   for (( i=1; i<=$COUNT; i++ )); do
     for test in ${TESTS[@]}; do
@@ -282,7 +285,7 @@ run_tests ( ){
         else
           printf "CURL ERROR $EXIT_CODE\n"
         fi
-        printf "${ACT}"
+        printf "${RESULT}"
         printf '\n'
         exit 1
       fi

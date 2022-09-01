@@ -108,6 +108,10 @@ docker-build-router-plugin:
 docker-build-router-main:
 	@docker build -t supergraph-demo-fed2_apollo-router-custom-main router/custom-main/.
 
+.PHONY: docker-build-router-main-no-cache
+docker-build-router-main-no-cache:
+	@docker build -t supergraph-demo-fed2_apollo-router-custom-main router/custom-main/. --no-cache
+
 .PHONY: docker-build-router-main-defer-ac
 docker-build-router-main-defer-ac:
 	docker-compose -f docker-compose.router-custom-main-defer-ac.yml build --parallel --progress plain
