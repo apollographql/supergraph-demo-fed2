@@ -190,7 +190,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_7="deferred user query"
 OPNAME_7="deferUser"
-ACCEPT_7="multipart/mixed,application/json"
+ACCEPT_7="multipart/mixed; deferSpec=20220824, application/json"
 read -r -d '' QUERY_7 <<"EOF"
 query deferUser {
   allProducts {
@@ -216,8 +216,8 @@ content-type: application/json
 --graphql
 content-type: application/json
 
-{"hasNext":true,"incremental":[{"data":{"createdBy":{"name":"Apollo Studio Support"}},"path":["allProducts",0]},{"data":{"createdBy":{"name":"Apollo Studio Support"}},"path":["allProducts",1]}]}
---graphql--
+{"hasNext":true,"incremental":[{"data":{"name":"Apollo Studio Support"},"path":["allProducts",0,"createdBy"]},{"data":{"name":"Apollo Studio Support"},"path":["allProducts",1,"createdBy"]}]}
+--graphql
 content-type: application/json
 
 {"hasNext":false}
