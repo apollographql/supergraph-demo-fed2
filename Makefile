@@ -22,6 +22,9 @@ demo-local-router: supergraph docker-up-local-router smoke docker-down-router
 .PHONY: demo-rebuild
 demo-rebuild: supergraph docker-build-force docker-up-local smoke docker-down
 
+.PHONY: run-router-main
+run-router-main: compose-subgraphs-localhost build-router-main docker-up-subgraphs-localhost up-router-main
+
 .PHONY: docker-up
 docker-up: docker-up-local
 
@@ -85,6 +88,17 @@ docker-up-local-router-custom-main-defer-ac:
 	@sleep 4
 	@docker logs apollo-router-custom-main
 
+.PHONY: docker-up-subgraphs-localhost
+docker-up-subgraphs-localhost:
+	docker-compose -f docker-compose.subgraphs-localhost.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+	docker-compose -f docker-compose.subgraphs-localhost.yml logs
+
+.PHONY: up-router-main
+up-router-main:
+	./router/custom-main/localhost/acme_router -c router/custom-main/localhost/router.yaml -s router/custom-main/localhost/supergraph.graphql
+
 .PHONY: docker-build
 docker-build:
 	docker-compose build
@@ -123,6 +137,23 @@ docker-build-router-main-with-subgraphs-no-cache:
 .PHONY: docker-build-router-main-defer-ac
 docker-build-router-main-defer-ac:
 	docker-compose -f docker-compose.router-custom-main-defer-ac.yml build --parallel --progress plain
+
+.PHONY: build-router-main
+build-router-main:
+	cd router/custom-main && cargo build --release
+	cp router/custom-main/target/release/acme_router router/custom-main/localhost/acme_router
+
+.PHONY: clean-router-main
+clean-router-main:
+	rm -rf router/custom-main/target || true
+
+.PHONY: docker-build-subgraphs
+docker-build-subgraphs:
+	docker-compose -f docker-compose.subgraphs-localhost.yml build --parallel --progress plain
+
+.PHONY: docker-build-subgraphs-no-cache
+docker-build-subgraphs-no-cache:
+	docker-compose -f docker-compose.subgraphs-localhost.yml build --no-cache --parallel --progress plain
 
 .PHONY: docker-products-hot-reload
 docker-products-hot-reload:
@@ -174,6 +205,10 @@ config:
 .PHONY: compose
 compose:
 	.scripts/compose.sh
+
+.PHONY: compose-subgraphs-localhost
+compose-subgraphs-localhost:
+	router/custom-main/localhost/compose.sh
 
 .PHONY: publish
 publish:
