@@ -2,7 +2,57 @@
 
 PORT="${1:-4000}"
 COUNT="${2:-1}"
-TESTS=(1 2 3 4 5 6 7)
+
+
+OK_CHECK="\xE2\x9C\x85"
+FAIL_MARK="\xE2\x9D\x8C"
+ROCKET="\xF0\x9F\x9A\x80"
+
+err() {
+    local red=`tput setaf 1 2>/dev/null || echo ''`
+    local reset=`tput sgr0 2>/dev/null || echo ''`
+    echo "${red}ERROR${reset}: $1" >&2
+    exit 1
+}
+
+exec_curl() {
+  ERR=""
+  RES=$("$@" 2>/dev/null)
+  EXIT_CODE=$?
+  if [ $EXIT_CODE -ne 0 ]; then
+    echo "$@"
+    if [ $EXIT_CODE -eq 7 ]; then
+      ERR="CURL ERROR 7: Failed to connect() to host or proxy."
+    elif [ $EXIT_CODE -eq 52 ]; then
+      ERR="CURL ERROR 52: Empty reply from server."
+    elif [ $EXIT_CODE -eq 56 ]; then
+      ERR="CURL ERROR 56: Recv failure: Connection reset by peer."
+    else
+      ERR="CURL ERROR $EXIT_CODE\n"
+    fi
+  fi
+  return $EXIT_CODE
+}
+
+HAS_DEFER=0
+
+# introspection query
+exec_curl curl -X POST http://localhost:$PORT/ \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "query { __schema { directives { name }}}" }'
+if [ $? != 0 ]; then err "$ERR"; fi
+printf "$OK_CHECK Introspection Success!\n"
+
+if echo "$RES" | grep -q '{"name":"defer"}'; then HAS_DEFER=1; fi
+
+if [ $HAS_DEFER -eq 1 ]; then
+  echo " - has @defer support"
+  TESTS=(1 2 3 4 5 6 7)
+else
+  echo " - no @defer support"
+  TESTS=(1 2 3 4 5)
+fi
+printf "\n"
 
 # --------------------------------------------------------------------
 # TEST 1
@@ -226,16 +276,9 @@ EOF
 
 set -e
 
-OK_CHECK="\xE2\x9C\x85"
-FAIL_MARK="\xE2\x9D\x8C"
-ROCKET="\xF0\x9F\x9A\x80"
-
 printf "Running smoke tests ... $ROCKET $ROCKET $ROCKET\n"
-sleep 2
 trap 'rm -f *.tmp' EXIT
-
-source "$(dirname $0)/smoke-defer-compressed.sh"
-sleep 5
+sleep 2
 
 run_tests ( ){
   for (( i=1; i<=$COUNT; i++ )); do
