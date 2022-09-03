@@ -37,6 +37,7 @@ enum ShippingClass {
 }
 type ProductVariation {
   id: ID!
+  name: String
 }
 type ProductDimension @shareable {
   size: String

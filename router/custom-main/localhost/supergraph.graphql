@@ -32,11 +32,11 @@ type DeliveryEstimates
 scalar join__FieldSet
 
 enum join__Graph {
-  INVENTORY @join__graph(name: "inventory", url: "http://inventory:4000/graphql")
-  PANDAS @join__graph(name: "pandas", url: "http://pandas:4000/graphql")
-  PRODUCTS @join__graph(name: "products", url: "http://products:4000/graphql")
-  REVIEWS @join__graph(name: "reviews", url: "http://reviews:4000/graphql")
-  USERS @join__graph(name: "users", url: "http://users:4000/graphql")
+  INVENTORY @join__graph(name: "inventory", url: "http://localhost:4002/graphql")
+  PANDAS @join__graph(name: "pandas", url: "http://localhost:4004/graphql")
+  PRODUCTS @join__graph(name: "products", url: "http://localhost:4001/graphql")
+  REVIEWS @join__graph(name: "reviews", url: "http://localhost:4005/graphql")
+  USERS @join__graph(name: "users", url: "http://localhost:4003/graphql")
 }
 
 scalar link__Import

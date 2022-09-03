@@ -2,15 +2,66 @@
 
 PORT="${1:-4000}"
 COUNT="${2:-1}"
-TESTS=(1 2 3 4 5)
+
+
+OK_CHECK="\xE2\x9C\x85"
+FAIL_MARK="\xE2\x9D\x8C"
+ROCKET="\xF0\x9F\x9A\x80"
+
+err() {
+    local red=`tput setaf 1 2>/dev/null || echo ''`
+    local reset=`tput sgr0 2>/dev/null || echo ''`
+    echo "${red}ERROR${reset}: $1" >&2
+    exit 1
+}
+
+exec_curl() {
+  ERR=""
+  RES=$("$@" 2>/dev/null)
+  EXIT_CODE=$?
+  if [ $EXIT_CODE -ne 0 ]; then
+    echo "$@"
+    if [ $EXIT_CODE -eq 7 ]; then
+      ERR="CURL ERROR 7: Failed to connect() to host or proxy."
+    elif [ $EXIT_CODE -eq 52 ]; then
+      ERR="CURL ERROR 52: Empty reply from server."
+    elif [ $EXIT_CODE -eq 56 ]; then
+      ERR="CURL ERROR 56: Recv failure: Connection reset by peer."
+    else
+      ERR="CURL ERROR $EXIT_CODE\n"
+    fi
+  fi
+  return $EXIT_CODE
+}
+
+HAS_DEFER=0
+
+# introspection query
+exec_curl curl -X POST http://localhost:$PORT/ \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "query { __schema { directives { name }}}" }'
+if [ $? != 0 ]; then err "$ERR"; fi
+printf "$OK_CHECK Introspection Success!\n"
+
+if echo "$RES" | grep -q '{"name":"defer"}'; then HAS_DEFER=1; fi
+
+if [ $HAS_DEFER -eq 1 ]; then
+  echo " - has @defer support"
+  TESTS=(1 2 3 4 5 6 7)
+else
+  echo " - no @defer support"
+  TESTS=(1 2 3 4 5)
+fi
+printf "\n"
 
 # --------------------------------------------------------------------
 # TEST 1
 # --------------------------------------------------------------------
 DESCR_1="allProducts with delivery"
 OPNAME_1="allProdDelivery"
+ACCEPT_1="application/json"
 read -r -d '' QUERY_1 <<"EOF"
-{
+query allProdDelivery {
   allProducts {
     delivery {
       estimatedDelivery,
@@ -35,8 +86,9 @@ EOF
 # --------------------------------------------------------------------
 DESCR_2="allProducts with totalProductsCreated"
 OPNAME_2="allProdCreated"
+ACCEPT_2="application/json"
 read -r -d '' QUERY_2 <<"EOF"
-{
+query allProdCreated {
   allProducts {
     id,
     sku,
@@ -59,8 +111,9 @@ EOF
 # --------------------------------------------------------------------
 DESCR_3="hidden: String @inaccessible should return error"
 OPNAME_3="inaccessibleError"
+ACCEPT_3="application/json"
 read -r -d '' QUERY_3 <<"EOF"
-{
+query inaccessibleError {
   allProducts {
     id,
     hidden,
@@ -83,8 +136,9 @@ EOF
 # --------------------------------------------------------------------
 DESCR_4="exampleQuery with pandas"
 OPNAME_4="exampleQuery"
+ACCEPT_4="application/json"
 read -r -d '' QUERY_4 <<"EOF"
-{
+query exampleQuery {
  allProducts {
    id,
    sku,
@@ -110,14 +164,14 @@ read -r -d '' EXP_4 <<"EOF"
 {"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}}],"allPandas":[{"name":"Basi","favoriteFood":"bamboo leaves"},{"name":"Yun","favoriteFood":"apple"}]}}
 EOF
 
-
 # --------------------------------------------------------------------
 # TEST 5
 # --------------------------------------------------------------------
 DESCR_5="exampleQuery with reviews and override"
 OPNAME_5="allProductsWithReviews"
+ACCEPT_5="application/json"
 read -r -d '' QUERY_5 <<"EOF"
-{
+query allProductsWithReviews {
  allProducts {
    id,
    sku,
@@ -143,14 +197,87 @@ read -r -d '' EXP_5 <<"EOF"
 {"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Federation"}]},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Studio"}]}]}}
 EOF
 
+# --------------------------------------------------------------------
+# TEST 6
+# --------------------------------------------------------------------
+DESCR_6="defer variation query"
+OPNAME_6="deferVariation"
+ACCEPT_6="multipart/mixed; deferSpec=20220824, application/json"
+ISSLOW_6="true"
+read -r -d '' QUERY_6 <<"EOF"
+query deferVariation {
+  allProducts {
+    ...MyFragment @defer
+    sku,
+    id
+  }
+}
+fragment MyFragment on Product {
+  variation { name }
+}
+EOF
+OP_6=equals
+
+IFS= read -r -d '' EXP_6 <<"EOF"
+
+--graphql
+content-type: application/json
+
+{"data":{"allProducts":[{"sku":"federation","id":"apollo-federation"},{"sku":"studio","id":"apollo-studio"}]},"hasNext":true}
+--graphql
+content-type: application/json
+
+{"hasNext":true,"incremental":[{"data":{"variation":{"name":"platform"}},"path":["allProducts",0]},{"data":{"variation":{"name":"platform-name"}},"path":["allProducts",1]}]}
+--graphql
+content-type: application/json
+
+{"hasNext":false}
+--graphql--
+EOF
+
+# --------------------------------------------------------------------
+# TEST 7
+# --------------------------------------------------------------------
+DESCR_7="deferred user query"
+OPNAME_7="deferUser"
+ACCEPT_7="multipart/mixed; deferSpec=20220824, application/json"
+read -r -d '' QUERY_7 <<"EOF"
+query deferUser {
+  allProducts {
+    createdBy {
+      ...MyFragment @defer
+    }
+    sku
+    id 
+  }
+}
+
+fragment MyFragment on User { name }
+EOF
+
+OP_7=equals
+
+IFS= read -r -d '' EXP_7 <<"EOF"
+
+--graphql
+content-type: application/json
+
+{"data":{"allProducts":[{"sku":"federation","id":"apollo-federation"},{"sku":"studio","id":"apollo-studio"}]},"hasNext":true}
+--graphql
+content-type: application/json
+
+{"hasNext":true,"incremental":[{"data":{"name":"Apollo Studio Support"},"path":["allProducts",0,"createdBy"]},{"data":{"name":"Apollo Studio Support"},"path":["allProducts",1,"createdBy"]}]}
+--graphql
+content-type: application/json
+
+{"hasNext":false}
+--graphql--
+EOF
 
 set -e
 
-OK_CHECK="\xE2\x9C\x85"
-FAIL_MARK="\xE2\x9D\x8C"
-ROCKET="\xF0\x9F\x9A\x80"
-
 printf "Running smoke tests ... $ROCKET $ROCKET $ROCKET\n"
+trap 'rm -f *.tmp' EXIT
 sleep 2
 
 run_tests ( ){
@@ -161,45 +288,62 @@ run_tests ( ){
       exp_var="EXP_$test"
       op_var="OP_$test"
       opname_var="OPNAME_$test"
+      accept_var="ACCEPT_$test"
+      is_slow_var="ISSLOW_$test"
 
       DESCR="${!descr_var}"
-      QUERY=$(echo "${!query_var}" | awk -v ORS= -v OFS= '{$1=$1}1')
+      QUERY=$(echo "${!query_var}" | tr '\n' ' ' | awk '$1=$1')
       EXP="${!exp_var}"
       OP="${!op_var}"
       OPNAME="${!opname_var}"
-      CMD=(curl -X POST -H 'Content-Type: application/json' -H 'apollographql-client-name: smoke-test' --data '{ "query": "'"query $OPNAME${QUERY}"'", "operationName": "'"$OPNAME"'" }' http://localhost:$PORT/ )
+      ACCEPT="${!accept_var}"
+      ISSLOW="${!is_slow_var}"
+      CMD=(curl -i -X POST -H "Content-Type: application/json" -H "apollographql-client-name: smoke-test" -H "accept:${ACCEPT}" --data "{ \"query\": \"${QUERY}\", \"operationName\": \"$OPNAME\" }" http://localhost:$PORT/ )
+
+      if [ $i -gt 1 ]; then
+        if [ "$ISSLOW" == "true" ]; then
+          continue
+        fi
+      fi
 
       if [ $COUNT -le 1 ]; then
         echo ""
         echo "=============================================================="
         echo "TEST $test: $DESCR"
         echo "=============================================================="
-        printf '%q ' "${CMD[@]}"
-        printf '\n'
+        echo "${CMD[@]}"
       fi
 
       # execute operation
       set +e
-      ACT=$("${CMD[@]}" 2>/dev/null)
+      RESULT=$("${CMD[@]}" 2>/dev/null)
       EXIT_CODE=$?
       if [ $EXIT_CODE -ne 0 ]; then
-        printf '%q ' "${CMD[@]}"
-        printf '\n'
         if [ $EXIT_CODE -eq 7 ]; then
-          printf "CURL ERROR 7 Failed to connect to Permission denied\n"
+          printf "CURL ERROR 7: Failed to connect() to host or proxy.\n"
+        elif [ $EXIT_CODE -eq 52 ]; then
+          printf "CURL ERROR 52: Empty reply from server.\n"
+        elif [ $EXIT_CODE -eq 56 ]; then
+          printf "CURL ERROR 56: Recv failure: Connection reset by peer.\n"
         else
           printf "CURL ERROR $EXIT_CODE\n"
         fi
-        printf "${ACT}"
+        printf "${RESULT}"
         printf '\n'
         exit 1
       fi
       set -e
 
+      echo "$RESULT" | awk -v bl=1 'bl{bl=0; h=($0 ~ /HTTP\/1/)} /^\r?$/{bl=1} {print $0>(h?"headers.tmp":"body.tmp")}'
+      HEADERS=$(<headers.tmp)
+      ACT=$(<body.tmp)
+
+      ACT=$(echo "$ACT" | sed "s/\r//g" | sed "s/\n\n/\n/g")
+      EXP=$(echo "$EXP" | sed "s/\r//g" | sed "s/\n\n/\n/g")
+
       OK=0
       if [ "$OP" == "equals" ]; then
-        [ "$ACT" == "$EXP" ] && OK=1
-
+        [[ "$ACT" == "$EXP" ]] && OK=1
       elif [ "$OP" == "startsWith" ]; then
         EXP=$( echo "$EXP" | sed 's|\\|\\\\|g' | sed 's|\[|\\[|g' | sed 's|\]|\\]|g')
         if echo "$ACT" | grep -q "^${EXP}"; then
@@ -215,11 +359,14 @@ run_tests ( ){
       if [ $OK -eq 1 ]; then
         if [ $COUNT -le 1 ]; then
           echo -------------------------
-          echo "[Expected: $OP]"
-          echo "$EXP"
+          echo "[Response Headers]"
+          echo "$HEADERS"
           echo -------------------------
-          echo "[Actual]"
+          echo "[Response Body]"
           echo "$ACT"
+          echo -------------------------
+          echo "[Expected Body: $OP]"
+          echo "$EXP"
           echo -------------------------
           printf "$OK_CHECK Success!\n"
         fi
@@ -236,11 +383,14 @@ run_tests ( ){
             printf '%q ' "${CMD[@]}"
             echo -------------------------
           fi
-          echo "[Expected: $OP]"
-          echo "$EXP"
+          echo "[Response Headers]"
+          echo "$HEADERS"
           echo -------------------------
-          echo "[Actual]"
+          echo "[Response Body]"
           echo "$ACT"
+          echo -------------------------
+          echo "[Expected Body: $OP]"
+          echo "$EXP"
           echo -------------------------
           printf "$FAIL_MARK TEST $test Failed! \n"
           echo -------------------------
