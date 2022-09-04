@@ -25,6 +25,9 @@ demo-rebuild: supergraph docker-build-force docker-up-local smoke docker-down
 .PHONY: run-router-main
 run-router-main: compose-subgraphs-localhost build-router-main docker-up-subgraphs-localhost up-router-main
 
+.PHONY: run-router-plugin
+run-router-plugin: compose-subgraphs-localhost build-router-plugin docker-up-subgraphs-localhost up-router-plugin
+
 .PHONY: docker-up
 docker-up: docker-up-local
 
@@ -67,6 +70,10 @@ docker-up-local-router-custom-image:
 docker-logs-local-router-custom-image:
 	@docker logs apollo-router-custom-image
 
+.PHONY: docker-logs-local-router-custom-plugin
+docker-logs-local-router-custom-plugin:
+	@docker logs apollo-router-custom-plugin
+
 .PHONY: docker-up-local-router-custom-plugin
 docker-up-local-router-custom-plugin:
 	docker-compose -f docker-compose.router-custom-plugin.yml up -d
@@ -98,6 +105,10 @@ docker-up-subgraphs-localhost:
 .PHONY: up-router-main
 up-router-main:
 	./router/custom-main/localhost/acme_router -c router/custom-main/localhost/router.yaml -s router/custom-main/localhost/supergraph.graphql
+
+.PHONY: up-router-plugin
+up-router-plugin:
+	./router/custom-plugin/localhost/acme_router -c router/custom-plugin/localhost/router.yaml -s router/custom-plugin/localhost/supergraph.graphql
 
 .PHONY: docker-build
 docker-build:
@@ -146,6 +157,15 @@ build-router-main:
 .PHONY: clean-router-main
 clean-router-main:
 	rm -rf router/custom-main/target || true
+
+.PHONY: build-router-plugin
+build-router-plugin:
+	cd router/custom-plugin && cargo build --release
+	cp router/custom-plugin/target/release/acme_router router/custom-plugin/localhost/acme_router
+
+.PHONY: clean-router-plugin
+clean-router-plugin:
+	rm -rf router/custom-plugin/target || true
 
 .PHONY: docker-build-subgraphs
 docker-build-subgraphs:

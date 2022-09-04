@@ -640,7 +640,11 @@ make docker-down-router
 
 ## Apollo Router Custom Plugin
 
-Docs and examples:
+### Prerequisites
+* [Rust](https://www.rust-lang.org/tools/install)
+  * for local incremental Router builds with a native Router plugin in Rust
+
+### Docs and examples:
 
 * [Router Docs: Native Rust Plugins](https://www.apollographql.com/docs/router/customizations/native)
 * [Router Examples](https://github.com/apollographql/router/tree/main/examples)
@@ -649,20 +653,49 @@ This is based on the [hello-world native Rust plugin example](https://github.com
 
 The [router/custom-plugin](router/custom-plugin/) folder in this repo has the contents of the custom Router docker image used in the steps below.
 
+### Clone the repo
+
 ```
 git clone git@github.com:apollographql/supergraph-demo-fed2.git
 cd supergraph-demo-fed2
+```
 
-make docker-build-router-plugin
-make docker-up-local-router-custom-plugin
+### Build / run a local Router instance with some subgraphs
+
+```
+make run-router-plugin
+```
+
+This will:
+
+* build a custom Router binary with a basic hello world plugin that does some custom logging
+* start some subgraphs with `docker-compose` listening on various localhost ports
+* start a local instance of the Router
+
+### Test queries
+
+Then in a separate console window, run some tests against the local Router instance:
+
+```
 make smoke
-make docker-down-router
 ```
 
-Which uses a Router custom plugin [Dockerfile](router/custom-plugin/Dockerfile) like this:
+### Shutdown
+
+When you're done:
+
+* crtl-c to shutdown your local router instance
+* shutdown the subgraphs:
 
 ```
-FROM --platform=linux/amd64 rust:1.60 as build
+make docker-down
+```
+
+### Alternate: Dockerized build of the Router
+The Router can also be built from a [Dockerfile](router/custom-plugin/Dockerfile) like this:
+
+```
+FROM --platform=linux/amd64 rust:1.63 as build
 
 ENV NODE_VERSION=16.13.0
 RUN apt install -y curl
@@ -685,7 +718,6 @@ WORKDIR /acme_router
 RUN rustup component add rustfmt
 
 # copy over your manifests
-COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
 
 # this build step will cache your dependencies
@@ -701,18 +733,36 @@ RUN cargo build --release
 
 RUN mkdir -p /dist/config && mkdir -p /dist/schema
 
-# our final image uses distroless
-FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
+# our final image uses distroless, which is more secure by default
+#FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
+
+# if you want bin/sh you'll want a distro that includes it instead
+FROM --platform=linux/amd64 debian:bullseye
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl
 
 # copy the build artifact from the build stage
 COPY --from=build /dist /dist
 COPY --from=build --chown=root:root /acme_router/target/release/acme_router /dist
+COPY --from=build --chown=root:root /acme_router/Cargo.lock /dist
 
 WORKDIR /dist
 
+# for faster docker shutdown
+STOPSIGNAL SIGINT
+
 # set the startup command to run your binary
+# note: if you want sh you can override the entrypoint using docker run -it --entrypoint=sh my-router-image
 ENTRYPOINT ["./acme_router"]
 ```
+
+Note that we're:
+
+* using `debian/bullseye` which provides a shell you can use for debugging with:
+  * `docker run -it --entrypoint=sh supergraph-demo-fed2_apollo-router-custom-plugin`
+* copying the `Cargo.lock` to `dist` which contains the exact dependency versions used
 
 ## More on Apollo Router
 

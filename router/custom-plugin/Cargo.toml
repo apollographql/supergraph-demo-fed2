@@ -4,16 +4,18 @@ version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[patch.crates-io]
+async-compression = { git = 'https://github.com/geal/async-compression', tag = 'encoder-flush' }
 
 [dependencies]
-anyhow = "1.0.63"
-apollo-router = { git = "https://github.com/apollographql/router", tag = "v0.9.0" }
-apollo-router-core = { git = "https://github.com/apollographql/router", tag = "v0.9.0" }
+anyhow = "1.0.62"
+apollo-router = { git = "https://github.com/apollographql/router", tag = "v1.0.0-alpha.1" }
 async-trait = "0.1.57"
 futures = "0.3.24"
 http = "0.2.8"
 schemars = "0.8.10"
 serde = "1.0.144"
 serde_json = "1.0.85"
-tokio = "1.21.0"
+tokio = "1.20.1"
 tower = { version = "0.4.13", features = ["full"] }
+tracing = "0.1"
