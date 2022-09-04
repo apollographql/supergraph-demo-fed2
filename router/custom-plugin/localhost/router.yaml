@@ -16,5 +16,3 @@ telemetry:
 plugins:
   experimental.include_subgraph_errors:
     all: true # Propagate errors from all subraphs
-  example.hello_world:
-    name: "Bob"

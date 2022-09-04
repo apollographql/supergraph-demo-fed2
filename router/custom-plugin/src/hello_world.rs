@@ -1,12 +1,14 @@
-use apollo_router_core::plugin::Plugin;
-use apollo_router_core::{
-    register_plugin, ExecutionRequest, ExecutionResponse, QueryPlannerRequest,
-    QueryPlannerResponse, RouterRequest, RouterResponse, SubgraphRequest, SubgraphResponse,
-};
+use apollo_router::plugin::Plugin;
+use apollo_router::plugin::PluginInit;
+use apollo_router::register_plugin;
+use apollo_router::services::execution;
+use apollo_router::services::subgraph;
+use apollo_router::services::supergraph;
 use schemars::JsonSchema;
 use serde::Deserialize;
-use tower::util::BoxService;
-use tower::{BoxError, ServiceBuilder, ServiceExt};
+use tower::BoxError;
+use tower::ServiceBuilder;
+use tower::ServiceExt;
 
 #[derive(Debug)]
 struct HelloWorld {
@@ -17,7 +19,7 @@ struct HelloWorld {
 #[derive(Debug, Default, Deserialize, JsonSchema)]
 struct Conf {
     // Put your plugin configuration here. It will automatically be deserialized from JSON.
-    message: String,
+    name: String, // The name of the entity you'd like to say hello to
 }
 
 // This is a bare bones plugin that can be duplicated when creating your own.
@@ -25,55 +27,39 @@ struct Conf {
 impl Plugin for HelloWorld {
     type Config = Conf;
 
-    async fn new(configuration: Self::Config) -> Result<Self, BoxError> {
-        Ok(HelloWorld { configuration })
+    async fn new(init: PluginInit<Self::Config>) -> Result<Self, BoxError> {
+        Ok(HelloWorld {
+            configuration: init.config,
+        })
     }
 
-    fn router_service(
-        &mut self,
-        service: BoxService<RouterRequest, RouterResponse, BoxError>,
-    ) -> BoxService<RouterRequest, RouterResponse, BoxError> {
+    fn supergraph_service(&self, service: supergraph::BoxService) -> supergraph::BoxService {
+        // Say hello when our service is added to the router_service
+        // stage of the router plugin pipeline.
+        #[cfg(test)]
+        println!("Hello {}", self.configuration.name);
+        #[cfg(not(test))]
+        tracing::info!("Hello {}", self.configuration.name);
         // Always use service builder to compose your plugins.
         // It provides off the shelf building blocks for your plugin.
-        let message = self.configuration.message.clone();
         ServiceBuilder::new()
-            .map_response(|mut resp: RouterResponse| {
-                resp.response.headers_mut().insert(
-                    "Hello",
-                    message
-                        .try_into()
-                        .unwrap_or(http::HeaderValue::from_static("")),
-                );
-                resp
-            })
+            // .map_request()
+            // .map_response()
+            // .rate_limit()
+            // .checkpoint()
+            // .timeout()
             .service(service)
             .boxed()
     }
 
-    fn query_planning_service(
-        &mut self,
-        service: BoxService<QueryPlannerRequest, QueryPlannerResponse, BoxError>,
-    ) -> BoxService<QueryPlannerRequest, QueryPlannerResponse, BoxError> {
-        // This is the default implementation and does not modify the default service.
-        // The trait also has this implementation, and we just provide it here for illustration.
-        service
-    }
-
-    fn execution_service(
-        &mut self,
-        service: BoxService<ExecutionRequest, ExecutionResponse, BoxError>,
-    ) -> BoxService<ExecutionRequest, ExecutionResponse, BoxError> {
+    fn execution_service(&self, service: execution::BoxService) -> execution::BoxService {
         //This is the default implementation and does not modify the default service.
         // The trait also has this implementation, and we just provide it here for illustration.
         service
     }
 
     // Called for each subgraph
-    fn subgraph_service(
-        &mut self,
-        _name: &str,
-        service: BoxService<SubgraphRequest, SubgraphResponse, BoxError>,
-    ) -> BoxService<SubgraphRequest, SubgraphResponse, BoxError> {
+    fn subgraph_service(&self, _name: &str, service: subgraph::BoxService) -> subgraph::BoxService {
         // Always use service builder to compose your plugins.
         // It provides off the shelf building blocks for your plugin.
         ServiceBuilder::new()
@@ -96,13 +82,24 @@ register_plugin!("example", "hello_world", HelloWorld);
 
 #[cfg(test)]
 mod tests {
-
+    // If we run this test as follows: cargo test -- --nocapture
+    // we will see the message "Hello Bob" printed to standard out
     #[tokio::test]
-    async fn plugin_registered() {
-        apollo_router_core::plugins()
-            .get("example.hello_world")
-            .expect("Plugin not found")
-            .create_instance(&serde_json::json!({"name" : "Bob"}))
+    async fn display_message() {
+        let config = serde_json::json!({
+            "plugins": {
+                "example.hello_world": {
+                    "name": "Bob"
+                }
+            }
+        });
+        // Build a test harness. Usually we'd use this and send requests to
+        // it, but in this case it's enough to build the harness to see our
+        // output when our service registers.
+        let _test_harness = apollo_router::TestHarness::builder()
+            .configuration_json(config)
+            .unwrap()
+            .build()
             .await
             .unwrap();
     }
