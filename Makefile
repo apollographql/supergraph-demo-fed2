@@ -151,7 +151,7 @@ docker-build-router-main-defer-ac:
 
 .PHONY: build-router-main
 build-router-main:
-	cd router/custom-main && cargo build --release
+	cd router/custom-main && cargo update && cargo build --release
 	cp router/custom-main/target/release/acme_router router/custom-main/localhost/acme_router
 
 .PHONY: clean-router-main
@@ -160,7 +160,7 @@ clean-router-main:
 
 .PHONY: build-router-plugin
 build-router-plugin:
-	cd router/custom-plugin && cargo build --release
+	cd router/custom-plugin && cargo update && cargo build --release
 	cp router/custom-plugin/target/release/acme_router router/custom-plugin/localhost/acme_router
 
 .PHONY: clean-router-plugin

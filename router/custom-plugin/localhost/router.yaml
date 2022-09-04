@@ -3,16 +3,8 @@ cors:
 server:
   listen: 0.0.0.0:4000
 
-telemetry:
-  tracing:
-    trace_config:
-      service_name: "router"
-      service_namespace: "apollo"
-    otlp:
-      endpoint: http://collector:4317
-      protocol: grpc
-      timeout: 42s
-
 plugins:
   experimental.include_subgraph_errors:
     all: true # Propagate errors from all subraphs
+  example.hello_world:
+    name: "Bob"
