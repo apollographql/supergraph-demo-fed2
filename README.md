@@ -666,11 +666,39 @@ cd supergraph-demo-fed2
 make run-router-plugin
 ```
 
-This will:
+This will build a custom Router binary with a basic hello world plugin
 
-* build a custom Router binary with a basic hello world plugin that does some custom logging
-* start some subgraphs with `docker-compose` listening on various localhost ports
-* start a local instance of the Router
+```
+   ...
+   Compiling opentelemetry-http v0.6.0
+   Compiling opentelemetry-zipkin v0.15.0
+   Compiling opentelemetry-jaeger v0.16.0
+   Compiling opentelemetry-datadog v0.5.0
+   Compiling apollo-router v1.0.0-alpha.1 (https://github.com/apollographql/router?tag=v1.0.0-alpha.1#b79d9156)
+   Compiling acme_router v0.1.0 (/Users/prasek/apollo/supergraph-demo-fed2/router/custom-plugin)
+    Finished release [optimized] target(s) in 4m 40s
+```
+
+Then start some subgraphs with `docker-compose` listening on various localhost ports
+
+```
+docker-compose -f docker-compose.subgraphs-localhost.yml up -d
+Creating network "supergraph-demo-fed2_default" with the default driver
+Creating pandas    ... done
+Creating reviews   ... done
+Creating products  ... done
+Creating users     ... done
+Creating inventory ... done
+```
+
+Then start a local instance of the Router
+
+```
+./router/custom-plugin/localhost/acme_router -c router/custom-plugin/localhost/router.yaml -s router/custom-plugin/localhost/supergraph.graphql
+2022-09-04T22:22:58.803895Z  INFO apollo_router::executable: Apollo Router v1.0.0-alpha.1 // (c) Apollo Graph, Inc. // Licensed as ELv2 (https://go.apollo.dev/elv2)
+2022-09-04T22:22:58.929699Z  INFO apollo_router::router_factory: list of plugins plugin_details=[("experimental.include_subgraph_errors", "apollo_router::plugins::include_subgraph_errors::IncludeSubgraphErrors"), ("apollo.csrf", "apollo_router::plugins::csrf::Csrf"), ("apollo.telemetry", "apollo_router::plugins::telemetry::Telemetry")]
+2022-09-04T22:23:00.281776Z  INFO apollo_router::axum_http_server_factory: GraphQL endpoint exposed at http://0.0.0.0:4000/ 🚀
+```
 
 ### Test queries
 
@@ -678,6 +706,41 @@ Then in a separate console window, run some tests against the local Router insta
 
 ```
 make smoke
+```
+
+which results in:
+```
+✅ Introspection Success!
+ - has @defer support
+
+Running smoke tests ... 🚀 🚀 🚀
+
+...
+
+================================
+✅ ALL TESTS PASS!
+================================
+```
+
+plus Router custom log message with `Hello Bob` in the text from the native Router plugin:
+```
+2022-09-04T22:31:32.326013Z  INFO request{method=POST uri=/ version=HTTP/1.1 otel.kind=server otel.status_code=}: acme_router::hello_world: Hello Bob
+2022-09-04T22:31:34.445743Z  INFO request{method=POST uri=/ version=HTTP/1.1 otel.kind=server otel.status_code=}: acme_router::hello_world: Hello Bob
+2022-09-04T22:31:34.544385Z  INFO request{method=POST uri=/ version=HTTP/1.1 otel.kind=server otel.status_code=}: acme_router::hello_world: Hello Bob
+```
+
+### Incremental rebuild
+
+You can now make changes to your native Router plugin and rebuild:
+
+* ctrl-c to stop your local router instance
+* rebuild with `make run-router-plugin`
+
+The Router will recompile very quickly:
+```
+cd router/custom-plugin && cargo build --release
+   Compiling acme_router v0.1.0 (/Users/prasek/apollo/supergraph-demo-fed2/router/custom-plugin)
+    Finished release [optimized] target(s) in 3.56s
 ```
 
 ### Shutdown
