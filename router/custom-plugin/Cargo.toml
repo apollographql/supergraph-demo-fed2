@@ -8,7 +8,7 @@ edition = "2021"
 async-compression = { git = 'https://github.com/geal/async-compression', tag = 'encoder-flush' }
 
 [dependencies]
-anyhow = "1.0.62"
+anyhow = "1.0.64"
 apollo-router = { git = "https://github.com/apollographql/router", tag = "v1.0.0-alpha.1" }
 async-trait = "0.1.57"
 futures = "0.3.24"
