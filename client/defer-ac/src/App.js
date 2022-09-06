@@ -81,7 +81,7 @@ function NonDeferredProducts() {
 
 function Render(query) {
   const { loading, error, data } = useQuery( query, {
-      fetchPolicy: "no-cache"
+//      fetchPolicy: "no-cache"
   });
 
   console.log("Render:")
@@ -132,10 +132,12 @@ function App() {
             <h2 className="Deferred-query">A deferred query 🚀</h2>
             <DeferredProducts />
           </div>
+    {/*
           <div>
             <h2 className="Nondeferred-query">A non-deferred query ⏲️</h2>
             <NonDeferredProducts />
           </div>
+        */}
         </div>
       </div>
     </ApolloProvider>
