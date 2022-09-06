@@ -158,6 +158,11 @@ build-router-main:
 clean-router-main:
 	rm -rf router/custom-main/target || true
 
+.PHONY: clean-cargo-cache
+clean-cargo-cache:
+	rm -rf ~/.cargo/git
+	rm -rf ~/.cargo/registry
+
 .PHONY: build-router-plugin
 build-router-plugin:
 	cd router/custom-plugin && cargo update && cargo build --release
