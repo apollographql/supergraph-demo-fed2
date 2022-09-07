@@ -80,9 +80,7 @@ function NonDeferredProducts() {
 }
 
 function Render(query) {
-  const { loading, error, data } = useQuery( query, {
-      fetchPolicy: "no-cache"
-  });
+  const { loading, error, data } = useQuery( query );
 
   console.log("Render:")
   console.log(loading, error, data)
