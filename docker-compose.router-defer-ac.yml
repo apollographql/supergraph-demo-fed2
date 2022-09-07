@@ -5,9 +5,9 @@ services:
     build: ./client/defer-ac
     ports:
       - "3000:3000"
-  apollo-router-custom-main:
-    container_name: apollo-router-custom-main
-    build: ./router/custom-main
+  apollo-router:
+    container_name: apollo-router
+    image: ghcr.io/apollographql/router:v1.0.0-alpha.3
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
       - ./router.yaml:/dist/config/router.yaml
