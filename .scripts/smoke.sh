@@ -3,7 +3,6 @@
 PORT="${1:-4000}"
 COUNT="${2:-1}"
 
-
 OK_CHECK="\xE2\x9C\x85"
 FAIL_MARK="\xE2\x9D\x8C"
 ROCKET="\xF0\x9F\x9A\x80"
@@ -34,6 +33,10 @@ exec_curl() {
   return $EXIT_CODE
 }
 
+TESTS=(1 2 3 4 5)
+DEFER_TESTS=(6 7)
+DEPRECATED_TESTS=(8 9)
+
 HAS_DEFER=0
 
 # introspection query
@@ -47,12 +50,13 @@ if echo "$RES" | grep -q '{"name":"defer"}'; then HAS_DEFER=1; fi
 
 if [ $HAS_DEFER -eq 1 ]; then
   echo " - has @defer support"
-  TESTS=(1 2 3 4 5 6 7)
+  TESTS=("${TESTS[@]}" "${DEFER_TESTS[@]}")
 else
   echo " - no @defer support"
-  TESTS=(1 2 3 4 5)
 fi
 printf "\n"
+
+TESTS=("${TESTS[@]}" "${DEPRECATED_TESTS[@]}")
 
 # --------------------------------------------------------------------
 # TEST 1
@@ -272,6 +276,51 @@ content-type: application/json
 
 {"hasNext":false}
 --graphql--
+EOF
+
+# --------------------------------------------------------------------
+# TEST 8
+# --------------------------------------------------------------------
+DESCR_8="deprecatedQuery"
+OPNAME_8="deprecatedQuery"
+read -r -d '' QUERY_8 <<"EOF"
+query deprecatedQuery {
+ allProducts {
+   id,
+   sku,
+   oldField
+ }
+}
+EOF
+
+OP_8=equals
+
+read -r -d '' EXP_8 <<"EOF"
+{"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","oldField":"deprecated"},{"id":"apollo-studio","sku":"studio","oldField":"deprecated"}]}}
+EOF
+
+# --------------------------------------------------------------------
+# TEST 9
+# --------------------------------------------------------------------
+DESCR_9="deprecatedIntrospectionQuery"
+OPNAME_9="deprecatedIntrospectionQuery"
+read -r -d '' QUERY_9 <<"EOF"
+query deprecatedIntrospectionQuery {
+  __type(name:\"ProductItf\"
+  ) {
+    fields(includeDeprecated: true) {
+      name,
+      isDeprecated,
+      deprecationReason
+    }
+  }
+}
+EOF
+
+OP_9=contains
+
+read -r -d '' EXP_9 <<"EOF"
+{"name":"oldField","isDeprecated":true,"deprecationReason":"refactored out"}
 EOF
 
 set -e
