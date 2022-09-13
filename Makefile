@@ -25,6 +25,9 @@ demo-rebuild: supergraph docker-build-force docker-up-local smoke docker-down
 .PHONY: run-router-main
 run-router-main: compose-subgraphs-localhost build-router-main docker-up-subgraphs-localhost up-router-main
 
+.PHONY: run-router-main-managed
+run-router-main-managed: compose-subgraphs-localhost build-router-main docker-up-subgraphs-localhost up-router-main-managed
+
 .PHONY: run-router-plugin
 run-router-plugin: compose-subgraphs-localhost build-router-plugin docker-up-subgraphs-localhost up-router-plugin
 
@@ -88,6 +91,13 @@ docker-up-local-router-custom-main:
 	@sleep 4
 	@docker logs apollo-router-custom-main
 
+.PHONY: docker-up-local-router-custom-main-managed
+docker-up-local-router-custom-main-managed:
+	docker-compose -f docker-compose.router-custom-main-managed.yml up -d
+	@echo "waiting for Kotlin inventory subgraph to initialize"
+	@sleep 4
+	@docker logs apollo-router-custom-main-managed
+
 .PHONY: docker-up-local-router-defer-ac
 docker-up-local-router-defer-ac:
 	docker-compose -f docker-compose.router-defer-ac.yml up -d
@@ -105,6 +115,10 @@ docker-up-subgraphs-localhost:
 .PHONY: up-router-main
 up-router-main:
 	./router/custom-main/localhost/acme_router -c router/custom-main/localhost/router.yaml -s router/custom-main/localhost/supergraph.graphql
+
+.PHONY: up-router-main-managed
+up-router-main-managed:
+	.scripts/up-router-main.sh
 
 .PHONY: up-router-plugin
 up-router-plugin:
@@ -239,6 +253,10 @@ compose-subgraphs-localhost:
 publish:
 	.scripts/publish.sh
 
+.PHONY: publish-localhost
+publish-localhost:
+	.scripts/publish.sh "localhost"
+
 .PHONY: unpublish
 unpublish:
 	.scripts/unpublish.sh
@@ -316,6 +334,10 @@ act-ci-local-router-custom-plugin:
 .PHONY: act-ci-local-router-custom-main
 act-ci-local-router-custom-main:
 	act -P $(ubuntu-latest) -W .github/workflows/main-router-custom-main.yml --detect-event
+
+.PHONY: act-ci-local-router-custom-main-managed
+act-ci-local-router-custom-main-managed:
+	act -P $(ubuntu-latest) -W .github/workflows/managed-router-custom-main.yml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_MAIN=supergraph-router-fed2@ci-router-main --detect-event
 
 .PHONY: act-ci-managed
 act-ci-managed:
