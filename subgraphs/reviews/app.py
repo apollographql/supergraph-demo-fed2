@@ -9,6 +9,7 @@ graphql_app = GraphQL(schema, graphiql=False)
 
 app = Starlette()
 
+app.add_route("/", graphql_app)
 app.add_route("/graphql", graphql_app)
 
 
