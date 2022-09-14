@@ -2,6 +2,5 @@ cors:
   allow_any_origin: true
 supergraph:
   introspection: true
-plugins:
-  experimental.include_subgraph_errors:
-    all: true # Propagate errors from all subraphs
+include_subgraph_errors:
+  all: true # Propagate errors from all subraphs
