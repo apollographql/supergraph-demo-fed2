@@ -1,8 +1,9 @@
 cors:
   allow_any_origin: true
-server:
+supergraph:
   listen: 0.0.0.0:4000
-
-plugins:
-  experimental.include_subgraph_errors:
-    all: true # Propagate errors from all subraphs
+  introspection: true
+sandbox: # temporary workaround until RC1 is released
+  listen: 0.0.0.0:4000
+include_subgraph_errors:
+  all: true # Propagate errors from all subraphs

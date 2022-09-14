@@ -504,7 +504,7 @@ version: '3'
 services:
   apollo-router:
     container_name: apollo-router
-    image: ghcr.io/apollographql/router:v0.9.1
+    image: ghcr.io/apollographql/router:v1.0.0-rc.0
     volumes:
       - ./router.yaml:/dist/config/router.yaml
     command: [ "-c", "config/router.yaml", "--log", "info" ]
@@ -674,7 +674,7 @@ This will build a custom Router binary with a basic hello world plugin
    Compiling opentelemetry-zipkin v0.15.0
    Compiling opentelemetry-jaeger v0.16.0
    Compiling opentelemetry-datadog v0.5.0
-   Compiling apollo-router v1.0.0-alpha.1 (https://github.com/apollographql/router?tag=v1.0.0-alpha.1#b79d9156)
+   Compiling apollo-router v1.0.0-rc.0
    Compiling acme_router v0.1.0 (/Users/prasek/apollo/supergraph-demo-fed2/router/custom-plugin)
     Finished release [optimized] target(s) in 4m 40s
 ```
@@ -695,8 +695,8 @@ Then start a local instance of the Router
 
 ```
 ./router/custom-plugin/localhost/acme_router -c router/custom-plugin/localhost/router.yaml -s router/custom-plugin/localhost/supergraph.graphql
-2022-09-04T22:22:58.803895Z  INFO apollo_router::executable: Apollo Router v1.0.0-alpha.1 // (c) Apollo Graph, Inc. // Licensed as ELv2 (https://go.apollo.dev/elv2)
-2022-09-04T22:22:58.929699Z  INFO apollo_router::router_factory: list of plugins plugin_details=[("experimental.include_subgraph_errors", "apollo_router::plugins::include_subgraph_errors::IncludeSubgraphErrors"), ("apollo.csrf", "apollo_router::plugins::csrf::Csrf"), ("apollo.telemetry", "apollo_router::plugins::telemetry::Telemetry")]
+2022-09-04T22:22:58.803895Z  INFO apollo_router::executable: Apollo Router v1.0.0-rc.0 // (c) Apollo Graph, Inc. // Licensed as ELv2 (https://go.apollo.dev/elv2)
+2022-09-04T22:22:58.929699Z  INFO apollo_router::router_factory: list of plugins plugin_details=[("include_subgraph_errors", "apollo_router::plugins::include_subgraph_errors::IncludeSubgraphErrors"), ("apollo.csrf", "apollo_router::plugins::csrf::Csrf"), ("apollo.telemetry", "apollo_router::plugins::telemetry::Telemetry")]
 2022-09-04T22:23:00.281776Z  INFO apollo_router::axum_http_server_factory: GraphQL endpoint exposed at http://0.0.0.0:4000/ 🚀
 ```
 

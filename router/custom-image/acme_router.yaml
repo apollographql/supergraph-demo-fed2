@@ -1,8 +1,10 @@
 cors:
   allow_any_origin: true
-server:
+supergraph:
   listen: 0.0.0.0:4000
-
+  introspection: true
+sandbox: # temporary workaround until RC1 is released
+  listen: 0.0.0.0:4000
 telemetry:
   tracing:
     trace_config:
@@ -22,6 +24,5 @@ rhai:
   # You can change this location by specifying scripts:
   scripts: "./rhai"
 
-plugins:
-  experimental.include_subgraph_errors:
-    all: true # Propagate errors from all subraphs
+include_subgraph_errors:
+  all: true # Propagate errors from all subraphs
