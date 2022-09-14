@@ -11,7 +11,6 @@ RUN rustup component add rustfmt
 
 # copy over your manifests
 COPY ./Cargo.toml ./Cargo.toml
-COPY ./Cargo.lock ./Cargo.lock
 
 # this build step will cache your dependencies
 RUN cargo build --release
