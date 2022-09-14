@@ -6,7 +6,7 @@ services:
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
       - ./opentelemetry/router.yaml:/dist/config/router.yaml
-    command: [ "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
+    command: [ "--dev', "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
     ports:
       - "4000:4000"
   products:
