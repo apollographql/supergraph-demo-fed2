@@ -52,12 +52,15 @@ jobs:
         run: |
           make supergraph
           cat supergraph.graphql
-      - name: docker-compose build
+      - name: docker-compose build router
         run: |
-          ( set -x; docker-compose -f docker-compose.router-custom-main.yml build --no-cache --pull --parallel --progress plain )
+          ( set -x; docker-compose -f docker-compose.router-custom-main.yml --profile router build --no-cache --pull --parallel --progress plain )
+      - name: docker-compose build subgraphs
+        run: |
+          ( set -x; docker-compose -f docker-compose.router-custom-main.yml --profile subgraphs build --no-cache --pull --parallel --progress plain )
       - name: docker-compose up -d
         run: |
-          ( set -x; docker-compose -f docker-compose.router-custom-main.yml  up -d )
+          ( set -x; docker-compose -f docker-compose.router-custom-main.yml --profile all up -d )
           sleep 10
           docker-compose -f docker-compose.router-custom-main.yml logs
       - name: smoke test

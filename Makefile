@@ -86,17 +86,17 @@ docker-up-local-router-custom-plugin:
 
 .PHONY: docker-up-local-router-custom-main
 docker-up-local-router-custom-main:
-	docker-compose -f docker-compose.router-custom-main.yml up -d
+	docker-compose -f docker-compose.router-custom-main.yml --profile all up -d
 	@echo "waiting for Kotlin inventory subgraph to initialize"
 	@sleep 4
 	@docker logs apollo-router-custom-main
 
-.PHONY: docker-up-local-router-custom-main-managed
-docker-up-local-router-custom-main-managed:
-	docker-compose -f docker-compose.router-custom-main-managed.yml up -d
+.PHONY: docker-up-router-custom-main-managed
+docker-up-router-custom-main-managed:
+	docker-compose -f docker-compose.router-custom-main-managed.yml --profile all up -d
 	@echo "waiting for Kotlin inventory subgraph to initialize"
 	@sleep 4
-	@docker logs apollo-router-custom-main-managed
+	@docker logs apollo-router-custom-main
 
 .PHONY: docker-up-local-router-defer-ac
 docker-up-local-router-defer-ac:
