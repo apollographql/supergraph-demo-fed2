@@ -231,11 +231,7 @@ content-type: application/json
 --graphql
 content-type: application/json
 
-{"hasNext":true,"incremental":[{"data":{"variation":{"name":"platform"}},"path":["allProducts",0]},{"data":{"variation":{"name":"platform-name"}},"path":["allProducts",1]}]}
---graphql
-content-type: application/json
-
-{"hasNext":false}
+{"hasNext":false,"incremental":[{"data":{"variation":{"name":"platform"}},"path":["allProducts",0]},{"data":{"variation":{"name":"platform-name"}},"path":["allProducts",1]}]}
 --graphql--
 EOF
 
@@ -270,11 +266,7 @@ content-type: application/json
 --graphql
 content-type: application/json
 
-{"hasNext":true,"incremental":[{"data":{"name":"Apollo Studio Support"},"path":["allProducts",0,"createdBy"]},{"data":{"name":"Apollo Studio Support"},"path":["allProducts",1,"createdBy"]}]}
---graphql
-content-type: application/json
-
-{"hasNext":false}
+{"hasNext":false,"incremental":[{"data":{"name":"Apollo Studio Support"},"path":["allProducts",0,"createdBy"]},{"data":{"name":"Apollo Studio Support"},"path":["allProducts",1,"createdBy"]}]}
 --graphql--
 EOF
 

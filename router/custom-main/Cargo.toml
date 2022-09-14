@@ -4,9 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[patch.crates-io]
-async-compression = { git = 'https://github.com/geal/async-compression', tag = 'encoder-flush' }
-
 [dependencies]
 anyhow = "1.0.65"
 apollo-router = { git = "https://github.com/apollographql/router", branch = "main" }
