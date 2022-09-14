@@ -1,10 +1,21 @@
 #!/bin/bash 
 
+SUBGRAPH_PORTS="${1:default}"
+
 echo "======================================="
 echo "SUBGRAPH PUBLISH"
 echo "======================================="
 
-source "$(dirname $0)/subgraphs.sh"
+echo ""
+if [[ "$SUBGRAPH_PORTS" == "localhost" ]]; then
+  echo "Subgraphs to listen on different localhost ports (4001, 4002, ...)"
+  source "$(dirname $0)/subgraphs-localhost.sh"
+else
+  echo "Subgraphs to listen on different docker-compose DNS names (all on port 4000)"
+  source "$(dirname $0)/subgraphs.sh"
+fi
+echo ""
+
 source "$(dirname $0)/graph-api-env.sh"
 
 for subgraph in ${subgraphs[@]}; do

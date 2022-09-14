@@ -3,8 +3,8 @@
 if [[ "${CI}" != "true" ]]; then
 
   # optional overrides
-  graph=$1
-  key=$2
+  graph="$OVERRIDE_GRAPH"
+  key="$OVERRIDE_KEY"
 
   # load defaults if present
   if ls graph-api.env > /dev/null 2>&1; then
