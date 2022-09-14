@@ -3,8 +3,7 @@ cors:
 supergraph:
   listen: 0.0.0.0:4000
   introspection: true
-homepage:
-  listen: 0.0.0.0:4000
+
 include_subgraph_errors:
   all: true # Propagate errors from all subraphs
 plugins:
