@@ -1,6 +1,6 @@
 cors:
   allow_any_origin: true
-server:
+supergraph:
   listen: 0.0.0.0:4000
 
 telemetry:
@@ -13,6 +13,5 @@ telemetry:
       protocol: grpc
       timeout: 42s
 
-plugins:
-  experimental.include_subgraph_errors:
-    all: true # Propagate errors from all subraphs
+include_subgraph_errors:
+  all: true # Propagate errors from all subraphs
