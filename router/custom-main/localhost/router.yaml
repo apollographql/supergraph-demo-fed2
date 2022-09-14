@@ -3,6 +3,5 @@ cors:
 supergraph:
   listen: 127.0.0.1:4000
   introspection: true
-  preview_defer_support: true
 include_subgraph_errors:
   all: true # Propagate errors from all subraphs
