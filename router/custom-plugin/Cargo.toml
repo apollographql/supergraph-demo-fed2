@@ -9,7 +9,7 @@ async-compression = { git = 'https://github.com/geal/async-compression', tag = '
 
 [dependencies]
 anyhow = "1.0.65"
-apollo-router = { git = "https://github.com/apollographql/router", tag = "v1.0.0-alpha.3" }
+apollo-router = "1.0.0-rc.0"
 async-trait = "0.1.57"
 futures = "0.3.24"
 http = "0.2.8"
