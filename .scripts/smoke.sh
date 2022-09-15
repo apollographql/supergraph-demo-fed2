@@ -82,7 +82,7 @@ EOF
 OP_1=equals
 
 read -r -d '' EXP_1 <<"EOF"
-{"data":{"allProducts":[{"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"createdBy":{"name":"Apollo Studio Support","email":"support@apollographql.com"}},{"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"createdBy":{"name":"Apollo Studio Support","email":"support@apollographql.com"}}]}}
+{"data":{"allProducts":[{"delivery":{"estimatedDelivery":"6/25/2023","fastestDelivery":"6/24/2023"},"createdBy":{"name":"Converse","email":"info@converse.com"}},{"delivery":{"estimatedDelivery":"6/25/2023","fastestDelivery":"6/24/2023"},"createdBy":{"name":"Van Doren","email":"info@vans.com"}}]}}
 EOF
 
 # --------------------------------------------------------------------
@@ -107,7 +107,7 @@ EOF
 OP_2=equals
 
 read -r -d '' EXP_2 <<"EOF"
-{"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","createdBy":{"email":"support@apollographql.com","totalProductsCreated":1337}},{"id":"apollo-studio","sku":"studio","createdBy":{"email":"support@apollographql.com","totalProductsCreated":1337}}]}}
+{"data":{"allProducts":[{"id":"converse-1","sku":"converse-1","createdBy":{"email":"info@converse.com","totalProductsCreated":1099}},{"id":"vans-1","sku":"vans-1","createdBy":{"email":"info@vans.com","totalProductsCreated":1099}}]}}
 EOF
 
 # --------------------------------------------------------------------
@@ -165,7 +165,7 @@ EOF
 OP_4=equals
 
 read -r -d '' EXP_4 <<"EOF"
-{"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"}}],"allPandas":[{"name":"Basi","favoriteFood":"bamboo leaves"},{"name":"Yun","favoriteFood":"apple"}]}}
+{"data":{"allProducts":[{"id":"converse-1","sku":"converse-1","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2023","fastestDelivery":"6/24/2023"}},{"id":"vans-1","sku":"vans-1","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2023","fastestDelivery":"6/24/2023"}}],"allPandas":[{"name":"Basi","favoriteFood":"bamboo leaves"},{"name":"Yun","favoriteFood":"apple"}]}}
 EOF
 
 # --------------------------------------------------------------------
@@ -198,7 +198,7 @@ EOF
 OP_5=equals
 
 read -r -d '' EXP_5 <<"EOF"
-{"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Federation"}]},{"id":"apollo-studio","sku":"studio","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2021","fastestDelivery":"6/24/2021"},"reviewsScore":4.6,"reviews":[{"body":"A review for Apollo Studio"}]}]}}
+{"data":{"allProducts":[{"id":"converse-1","sku":"converse-1","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2023","fastestDelivery":"6/24/2023"},"reviewsScore":4.6,"reviews":[]},{"id":"vans-1","sku":"vans-1","dimensions":{"size":"1","weight":1},"delivery":{"estimatedDelivery":"6/25/2023","fastestDelivery":"6/24/2023"},"reviewsScore":4.6,"reviews":[]}]}}
 EOF
 
 # --------------------------------------------------------------------
@@ -227,11 +227,11 @@ IFS= read -r -d '' EXP_6 <<"EOF"
 --graphql
 content-type: application/json
 
-{"data":{"allProducts":[{"sku":"federation","id":"apollo-federation"},{"sku":"studio","id":"apollo-studio"}]},"hasNext":true}
+{"data":{"allProducts":[{"sku":"converse-1","id":"converse-1"},{"sku":"vans-1","id":"vans-1"}]},"hasNext":true}
 --graphql
 content-type: application/json
 
-{"hasNext":false,"incremental":[{"data":{"variation":{"name":"platform"}},"path":["allProducts",0]},{"data":{"variation":{"name":"platform-name"}},"path":["allProducts",1]}]}
+{"hasNext":false,"incremental":[{"data":{"variation":{"name":"Converse Chuck Taylor"}},"path":["allProducts",0]},{"data":{"variation":{"name":"Vans Classic Sneaker"}},"path":["allProducts",1]}]}
 --graphql--
 EOF
 
@@ -262,11 +262,11 @@ IFS= read -r -d '' EXP_7 <<"EOF"
 --graphql
 content-type: application/json
 
-{"data":{"allProducts":[{"sku":"federation","id":"apollo-federation"},{"sku":"studio","id":"apollo-studio"}]},"hasNext":true}
+{"data":{"allProducts":[{"sku":"converse-1","id":"converse-1"},{"sku":"vans-1","id":"vans-1"}]},"hasNext":true}
 --graphql
 content-type: application/json
 
-{"hasNext":false,"incremental":[{"data":{"name":"Apollo Studio Support"},"path":["allProducts",0,"createdBy"]},{"data":{"name":"Apollo Studio Support"},"path":["allProducts",1,"createdBy"]}]}
+{"hasNext":false,"incremental":[{"data":{"name":"Converse"},"path":["allProducts",0,"createdBy"]},{"data":{"name":"Van Doren"},"path":["allProducts",1,"createdBy"]}]}
 --graphql--
 EOF
 
@@ -288,7 +288,7 @@ EOF
 OP_8=equals
 
 read -r -d '' EXP_8 <<"EOF"
-{"data":{"allProducts":[{"id":"apollo-federation","sku":"federation","oldField":"deprecated"},{"id":"apollo-studio","sku":"studio","oldField":"deprecated"}]}}
+{"data":{"allProducts":[{"id":"converse-1","sku":"converse-1","oldField":"deprecated"},{"id":"vans-1","sku":"vans-1","oldField":"deprecated"}]}}
 EOF
 
 # --------------------------------------------------------------------

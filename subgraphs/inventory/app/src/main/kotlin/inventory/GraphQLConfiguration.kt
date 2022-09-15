@@ -18,8 +18,8 @@ import org.springframework.graphql.execution.RuntimeWiringConfigurer
 class GraphQLConfiguration {
 
     private val allProducts = listOf(
-        Product("apollo-federation", Delivery("6/25/2021", "6/24/2021")),
-        Product("apollo-studio", Delivery("6/25/2021", "6/24/2021")),
+        Product("converse-1", Delivery("6/25/2023", "6/24/2023")),
+        Product("vans-1", Delivery("6/25/2023", "6/24/2023")),
     )
 
     @Bean
@@ -44,7 +44,11 @@ class GraphQLConfiguration {
                     .fetchEntities { env: DataFetchingEnvironment ->
                         env.getArgument<List<Map<String, Any>>>("representations").map { representation ->
                             when(representation["__typename"]) {
-                                "Product" -> allProducts.firstOrNull { it.id == representation["id"] } ?: error("Product not found: $representation")
+                                "Product" -> {
+                                   val prod = allProducts.firstOrNull { it.id == representation["id"] } ?: error("Product not found: $representation")
+				   Thread.sleep(1000)
+				   prod
+				}
                                 else -> error("Unknown type: $representation")
                             }
                         }
