@@ -19,16 +19,23 @@ const { readFileSync } = require('fs');
 
 const port = process.env.APOLLO_PORT || 4000;
 
+// Data sources
 const products = [
-    { id: 'apollo-federation', sku: 'federation', package: '@apollo/federation', oldField: 'deprecated'},
-    { id: 'apollo-studio', sku: 'studio', package: '', oldField: 'deprecated'},
+    { id: 'converse-1', sku: 'converse-1', package: 'converse', name: 'Converse Chuck Taylor', oldField: 'deprecated'},
+    { id: 'vans-1', sku: 'vans-1', package: 'vans', name: 'Vans Classic Sneaker', oldField: 'deprecated'},
 ]
 
 const variationByProduct = [
-    { id: 'apollo-federation', variation: { id: "OSS", name: "platform"}},
-    { id: 'apollo-studio', variation: { id: "platform", name: "platform-name"}},
+    { id: 'converse-1', variation: { id: 'converse-classic', name: 'Converse Chuck Taylor'}},
+    { id: 'vans-1', variation: { id: 'vans-classic', name: 'Vans Classic Sneaker'}},
 ]
 
+const userByProduct = [
+    { id: 'converse-1', user: { email: 'info@converse.com', totalProductsCreated: 1099}},
+    { id: 'vans-1', user: { email: 'info@vans.com', totalProductsCreated: 1099}},
+]
+
+// GraphQL
 const typeDefs = gql(readFileSync('./products.graphql', { encoding: 'utf-8' }));
 const resolvers = {
     Query: {
@@ -58,7 +65,10 @@ const resolvers = {
             return { size: "1", weight: 1 }
         },
         createdBy: (reference) => {
-            return { email: 'support@apollographql.com', totalProductsCreated: 1337 }
+            if (reference.id) {
+                return userByProduct.find(p => p.id == reference.id).user;
+            }
+            return null;
         },
         reviewsScore: () => {
             return 4.5;

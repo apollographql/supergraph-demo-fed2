@@ -1,6 +1,19 @@
 #!/bin/bash
 
 echo "====================="
+echo "Defer multi"
+echo "====================="
+( set -x; curl -i -X POST http://localhost:4000/ \
+  -H 'accept: multipart/mixed; deferSpec=20220824, application/json' \
+  -H 'content-type: application/json' \
+  --data-raw '{"operationName":"deferVariation","variables":{},"query":"query deferVariation { allProducts { sku, name, ... on Product @defer { delivery { estimatedDelivery, fastestDelivery } }, ... on Product @defer { createdBy { email, name } } } }"}')
+echo "----------------------"
+printf "done.\n\n"
+sleep 2
+
+exit
+
+echo "====================="
 echo "Defer returns chunked responses without --compressed"
 echo "====================="
 ( set -x; curl -i -X POST http://localhost:4000/ \

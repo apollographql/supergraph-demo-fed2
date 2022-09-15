@@ -10,6 +10,7 @@ type Query {
 interface ProductItf implements SkuItf {
   id: ID!
   sku: String
+  name: String
   package: String
   variation: ProductVariation
   dimensions: ProductDimension
@@ -25,6 +26,7 @@ interface SkuItf {
 type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
   id: ID! @tag(name: "hi-from-products")
   sku: String
+  name: String
   package: String
   variation: ProductVariation
   dimensions: ProductDimension
