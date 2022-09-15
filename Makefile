@@ -114,7 +114,7 @@ docker-up-subgraphs-localhost:
 
 .PHONY: up-router-main
 up-router-main:
-	./router/custom-main/localhost/acme_router -c router/custom-main/localhost/router.yaml -s router/custom-main/localhost/supergraph.graphql
+	./router/custom-main/localhost/acme_router --dev -c router/custom-main/localhost/router.yaml -s router/custom-main/localhost/supergraph.graphql
 
 .PHONY: up-router-main-managed
 up-router-main-managed:
@@ -122,7 +122,7 @@ up-router-main-managed:
 
 .PHONY: up-router-plugin
 up-router-plugin:
-	./router/custom-plugin/localhost/acme_router -c router/custom-plugin/localhost/router.yaml -s router/custom-plugin/localhost/supergraph.graphql
+	./router/custom-plugin/localhost/acme_router --dev -c router/custom-plugin/localhost/router.yaml -s router/custom-plugin/localhost/supergraph.graphql
 
 .PHONY: docker-build
 docker-build:
