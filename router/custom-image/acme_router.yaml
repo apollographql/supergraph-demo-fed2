@@ -3,8 +3,6 @@ cors:
 supergraph:
   listen: 0.0.0.0:4000
   introspection: true
-sandbox: # temporary workaround until RC1 is released
-  listen: 0.0.0.0:4000
 telemetry:
   apollo:
     # The percentage of requests will include HTTP request and response headers in traces sent to Apollo Studio.
