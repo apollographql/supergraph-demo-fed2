@@ -7,7 +7,7 @@ services:
       - "3000:3000"
   apollo-router:
     container_name: apollo-router
-    image: ghcr.io/apollographql/router:v1.0.0-rc.1
+    image: ghcr.io/apollographql/router:v1.0.0-rc.2
     volumes:
       - ./supergraph.graphql:/dist/schema/supergraph.graphql
       - ./router.yaml:/dist/config/router.yaml
