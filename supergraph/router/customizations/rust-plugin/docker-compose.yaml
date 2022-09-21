@@ -1,0 +1,14 @@
+version: '3'
+services:
+  apollo-router-rust-plugin:
+    container_name: apollo-router-rust-plugin
+    build: ./supergraph/router/customizations/rust-plugin
+    volumes:
+      - ./supergraph/router/customizations/rust-plugin/router.yaml:/dist/config/router.yaml
+    command: [ "--dev", "-c", "config/router.yaml", "--log", "info" ]
+    env_file: # 'make up-supergraph-router-rust' saves APOLLO_KEY and APOLLO_GRAPH_REF
+      - ./graph-api.env
+    environment:
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+    ports:
+      - "4000:4000"

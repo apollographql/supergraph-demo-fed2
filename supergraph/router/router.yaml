@@ -1,0 +1,25 @@
+# see https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file
+
+cors:
+  allow_any_origin: true
+supergraph:
+  listen: 0.0.0.0:4000
+  introspection: true
+telemetry:
+  apollo:
+    # The percentage of requests will include HTTP request and response headers in traces sent to Apollo Studio.
+    # This is expensive and should be left at a low value.
+    # This cannot be higher than tracing->trace_config->sampler
+    field_level_instrumentation_sampler: 1 # (default)
+  tracing:
+    trace_config:
+      sampler: 1 # The percentage of requests that will generate traces (a rate or `always_on` or `always_off`)
+      service_name: "router"
+      service_namespace: "apollo"
+    otlp:
+      endpoint: http://${env.APOLLO_OTEL_EXPORTER_HOST:-localhost}:4317
+      protocol: grpc
+      timeout: 42s
+
+include_subgraph_errors:
+  all: true # Propagate errors from all subgraphs

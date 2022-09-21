@@ -1,0 +1,19 @@
+# extends supergraph-demo-fed2/docker-compose.yaml
+# https://docs.docker.com/compose/extends/#multiple-compose-files
+
+# use 'make up-supergraph-gateway-local-composition' to get started
+
+version: '3'
+services:
+  apollo-gateway:
+    container_name: apollo-gateway
+    build: ./supergraph/gateway
+    environment:
+      - APOLLO_SCHEMA_CONFIG_EMBEDDED=true
+      - APOLLO_OTEL_EXPORTER_TYPE=collector
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+      - APOLLO_OTEL_EXPORTER_PORT=4318
+    volumes:
+      - ./examples/composition/local/supergraph.dockerhost.graphql:/etc/config/supergraph.graphql
+    ports:
+      - "4000:4000"

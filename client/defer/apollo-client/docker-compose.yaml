@@ -1,0 +1,12 @@
+# extends supergraph-demo-fed2/docker-compose.yaml
+# https://docs.docker.com/compose/extends/#multiple-compose-files
+
+# use 'make up-supergraph-router-defer' to get started
+
+version: '3'
+services:
+  apollo-client-defer:
+    container_name: apollo-client-defer
+    build: ./client/defer/apollo-client
+    ports:
+      - "3000:3000"
