@@ -8,29 +8,35 @@ default: demo
 .PHONY: demo
 demo: deps run-supergraph
 
-# local router with subgraphs listening on localhost networking with otel
+# dependencies
+
+.PHONY: deps
+deps:
+	@curl -sSL https://rover.apollo.dev/nix/latest | sh
+	@curl -sSL https://router.apollo.dev/download/nix/latest | sh
+
+.PHONY: deps-windows
+deps-windows:
+	@iwr 'https://rover.apollo.dev/win/latest' | iex
+	@curl -sSL https://router.apollo.dev/download/nix/latest | sh
+
+# Local router with basic YAML config and Open Telemetry
+
 .PHONY: run-supergraph
 run-supergraph: up-subgraphs publish-subgraphs run-router
 
-.PHONY: run-supergraph-rhai
-run-supergraph-rhai: up-subgraphs publish-subgraphs run-router-rhai
-
-.PHONY: run-supergraph-rust-plugin
-run-supergraph-rust-plugin: up-subgraphs publish-subgraphs run-router-rust-plugin
-
 .PHONY: up-subgraphs
 up-subgraphs:
-	docker compose up -d --build
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
 
 .PHONY: publish-subgraphs
 publish-subgraphs:
 	.scripts/publish.sh
-
-.PHONY: unpublish-subgraphs
-unpublish:
-	.scripts/unpublish.sh
 
 .PHONY: run-router
 run-router:
@@ -47,12 +53,22 @@ smoke:
 down:
 	docker compose down --remove-orphans
 
+# Local router with Rhai scripting
+
+.PHONY: run-supergraph-rhai
+run-supergraph-rhai: up-subgraphs publish-subgraphs run-router-rhai
+
 .PHONY: run-router-rhai
 run-router-rhai:
 	@./router --version
 	@source "./.scripts/graph-api-env-export.sh" && \
 		set -x; \
 		./router --dev -c ./supergraph/router/customizations/rhai/router.yaml --log info
+
+# Local router with Rust plugin
+
+.PHONY: run-supergraph-rust-plugin
+run-supergraph-rust-plugin: up-subgraphs publish-subgraphs run-router-rust-plugin
 
 .PHONY: run-router-rust-plugin
 run-router-rust-plugin: build-router-rust-plugin
@@ -76,7 +92,7 @@ clean-cargo-cache:
 	rm -rf ~/.cargo/git
 	rm -rf ~/.cargo/registry
 
-# docker-compose router and gateway with up-* make commands
+# Apollo Router in a docker container
 
 .PHONY: up-supergraph-router
 up-supergraph-router: publish-subgraphs-docker-compose
@@ -127,6 +143,8 @@ up-supergraph-router-defer: publish-subgraphs-docker-compose
 	docker compose logs
 	docker compose logs apollo-router
 
+# gateway
+
 .PHONY: up-supergraph-gateway
 up-supergraph-gateway: publish-subgraphs-docker-compose
 	docker compose \
@@ -149,6 +167,8 @@ up-supergraph-gateway-local-composition: config compose
 	docker compose logs
 	docker compose logs apollo-gateway
 
+# local composition
+
 .PHONY: config
 config:
 	.scripts/config.sh "localhost" > ./examples/composition/local/supergraph.localhost.yaml 2>/dev/null
@@ -158,6 +178,12 @@ config:
 compose:
 	.scripts/compose.sh
 
+# utilities
+
+.PHONY: unpublish-subgraphs
+unpublish:
+	.scripts/unpublish.sh
+
 .PHONY: docker-prune
 docker-prune:
 	.scripts/docker-prune.sh
@@ -166,13 +192,3 @@ docker-prune:
 take-five:
 	@echo waiting for robots to finish work ...
 	@sleep 5
-
-.PHONY: deps
-deps:
-	@curl -sSL https://rover.apollo.dev/nix/latest | sh
-	@curl -sSL https://router.apollo.dev/download/nix/latest | sh
-
-.PHONY: deps-windows
-deps-windows:
-	@iwr 'https://rover.apollo.dev/win/latest' | iex
-	@curl -sSL https://router.apollo.dev/download/nix/latest | sh
