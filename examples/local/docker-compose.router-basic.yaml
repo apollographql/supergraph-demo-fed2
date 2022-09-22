@@ -1,0 +1,18 @@
+# extends supergraph-demo-fed2/docker-compose.yaml
+# https://docs.docker.com/compose/extends/#multiple-compose-files
+
+# use 'make up-supergraph-router-local' to get started
+
+version: '3.9'
+services:
+  apollo-router:
+    container_name: apollo-router
+    image: ghcr.io/apollographql/router:v1.0.0-rc.2
+    volumes:
+      - ./examples/local/supergraph/dockerhost.graphql:/dist/schema/supergraph.graphql
+      - ./supergraph/router.yaml:/dist/config/router.yaml
+    command: [ "--dev", "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
+    environment:
+      - APOLLO_OTEL_EXPORTER_HOST=collector
+    ports:
+      - "4000:4000"

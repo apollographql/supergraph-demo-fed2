@@ -1,4 +1,4 @@
-name: CI Gateway Managed Federation
+name: Studio Router
 on:
   push:
     branches: [ main ]
@@ -6,18 +6,14 @@ on:
     - cron: '30 7 * * *'
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   ci-docker-managed:
-    name: CI Gateway Managed Federation
+    name: CI Studio Router Basic
     runs-on: ubuntu-latest
     env:
       CI: "true"
       APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
-      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF_ROUTER }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -40,37 +36,45 @@ jobs:
           FILE=$BIN_DIR/docker-compose
           mkdir -p $BIN_DIR
           set -x
-          curl -L --fail https://github.com/docker/compose/releases/download/1.29.1/docker-compose-`uname -s`-`uname -m` -o $FILE
+          curl -L --fail https://github.com/docker/compose/releases/download/v2.11.1/docker-compose-`uname -s`-`uname -m` -o $FILE
           chmod +x $FILE
           echo "downloaded $($FILE --version)"
           echo "$BIN_DIR" >> ${GITHUB_PATH}
           set +x
           echo ---------------------------------------------------------------
-      -
-        name: check tools
+      - name: check tools
         run: |
-          echo ---------------------------------------------------------------
-          ( set -x; which rover )
-          echo "$(rover --version)"
-          echo ---------------------------------------------------------------
-          ( set -x; which docker-compose )
-          echo "$(docker-compose --version)"
-          echo ---------------------------------------------------------------
-      - name: unpublish
+          make deps-check || true
+      - name: make supergraph
         run: |
-          make unpublish
-      - name: publish
-        run: |
-          make publish
+          make config
+          make compose
+          cat examples/local/supergraph.docker.graphql
       - name: docker-compose build
         run: |
-          ( set -x; docker-compose build --no-cache --pull --parallel --progress plain )
-      - name: docker-compose -f docker-compose.managed.yml up -d
+          set -x
+          docker-compose \
+           -f docker-compose.yaml \
+           -f opentelemetry/docker-compose.otel.yaml \
+           -f examples/studio/docker-compose.router-basic.yaml \
+           build --parallel --progress plain
+      - name: docker-compose up -d
         run: |
-          ( set -x; docker-compose -f docker-compose.managed.yml up -d )
+          set -x
+          docker-compose \
+           -f docker-compose.yaml \
+           -f opentelemetry/docker-compose.otel.yaml \
+           -f examples/studio/docker-compose.router-basic.yaml \
+           up -d
+
           sleep 8
-          docker-compose logs
+
+          docker-compose \
+           -f docker-compose.yaml \
+           -f opentelemetry/docker-compose.otel.yaml \
+           -f examples/studio/docker-compose.router-basic.yaml \
+           logs
       - name: smoke test
-        run: .scripts/smoke.sh 4000 250
+        run: .scripts/smoke.sh 4000
       - name: docker-compose down
-        run: docker-compose down
+        run: docker-compose down --remove-orphans

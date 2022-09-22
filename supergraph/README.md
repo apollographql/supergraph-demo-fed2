@@ -12,13 +12,18 @@ As the Router has been rolled out into more environments we’ve learned about t
 
 Apollo ships a [standalone Router binary](https://www.apollographql.com/docs/router/quickstart) that can be configured using a [YAML config file](https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file) with a new stable v1 configuration schema for things like header forwarding and CORS configuration. Many new features are available like [traffic shaping](https://www.apollographql.com/docs/router/configuration/traffic-shaping/) with support for rate limiting, query deduplication, configurable timeouts and compression options. Router deployments can often be done with the stock Router binary and a minimal YAML config file.
 
-See [Basic YAML config example](./basic-yaml-config/)
+Run:
+```
+make run-supergraph
+```
+
+See [router.yaml](./router.yaml)
 
 ### Lightweight Rhai scripting
 
 New official support for [Rhai scripting](https://www.apollographql.com/docs/router/customizations/rhai) with a [stable v1 API](https://www.apollographql.com/docs/router/customizations/rhai-api/) offers a safe and sandboxed way to customize the Router’s request flow. Rhai is ideal for common scripting tasks like manipulating strings, processing headers, and mutating request context. Checkout the growing cookbook of [example scripts](https://github.com/apollographql/router/tree/main/examples) that can be used with the stock Router binary as a simple way of programmatically customizing the Router for your environment.
 
-See [Rhai scripting example](./custom-image/Dockerfile)
+See [Rhai scripting example](./rhai-scripting/)
 
 ### Native extensions
 

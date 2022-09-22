@@ -1,4 +1,4 @@
-name: CI Router Custom Image
+name: Local Router Rhai
 on:
   pull_request:
     branches: [ main ]
@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci-docker-local:
-    name: CI Router Custom Image
+    name: CI Local Router Rhai
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -32,35 +32,45 @@ jobs:
           FILE=$BIN_DIR/docker-compose
           mkdir -p $BIN_DIR
           set -x
-          curl -L --fail https://github.com/docker/compose/releases/download/1.29.1/docker-compose-`uname -s`-`uname -m` -o $FILE
+          curl -L --fail https://github.com/docker/compose/releases/download/v2.11.1/docker-compose-`uname -s`-`uname -m` -o $FILE
           chmod +x $FILE
           echo "downloaded $($FILE --version)"
           echo "$BIN_DIR" >> ${GITHUB_PATH}
           set +x
           echo ---------------------------------------------------------------
-      -
-        name: check tools
+      - name: check tools
         run: |
-          echo ---------------------------------------------------------------
-          ( set -x; which rover )
-          echo "$(rover --version)"
-          echo ---------------------------------------------------------------
-          ( set -x; which docker-compose )
-          echo "$(docker-compose --version)"
-          echo ---------------------------------------------------------------
+          make deps-check || true
       - name: make supergraph
         run: |
-          make supergraph
-          cat supergraph.graphql
+          make config
+          make compose
+          cat examples/local/supergraph/dockerhost.graphql
       - name: docker-compose build
         run: |
-          ( set -x; docker-compose -f docker-compose.router-custom-image.yml build --no-cache --pull --parallel --progress plain )
+          set -x
+          docker-compose \
+           -f docker-compose.yaml \
+           -f opentelemetry/docker-compose.otel.yaml \
+           -f examples/local/docker-compose.router-rhai.yaml \
+           build --parallel --progress plain
       - name: docker-compose up -d
         run: |
-          ( set -x; docker-compose -f docker-compose.router-custom-image.yml  up -d )
+          set -x
+          docker-compose \
+           -f docker-compose.yaml \
+           -f opentelemetry/docker-compose.otel.yaml \
+           -f examples/local/docker-compose.router-rhai.yaml \
+           up -d
+
           sleep 8
-          docker-compose -f docker-compose.router-custom-image.yml logs
+
+          docker-compose \
+           -f docker-compose.yaml \
+           -f opentelemetry/docker-compose.otel.yaml \
+           -f examples/local/docker-compose.router-rhai.yaml \
+           logs
       - name: smoke test
         run: .scripts/smoke.sh 4000
       - name: docker-compose down
-        run: docker-compose -f docker-compose.router-custom-image.yml down
+        run: docker-compose down --remove-orphans

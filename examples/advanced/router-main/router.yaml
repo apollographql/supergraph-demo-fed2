@@ -1,3 +1,5 @@
+# see https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file
+
 cors:
   allow_any_origin: true
 supergraph:
@@ -18,15 +20,6 @@ telemetry:
       endpoint: http://${env.APOLLO_OTEL_EXPORTER_HOST:-localhost}:4317
       protocol: grpc
       timeout: 42s
-rhai:
-  # Your rhai scripts are loaded from a relative directory
-  # (relative to the directory in which your router is executing)
-  # You can change this location by specifying scripts as below:
-  scripts: "./supergraph/router/customizations/rhai"
-
-  # You must have a "main" rhai file. By default this is "main.rhai"
-  # You can change this name by specifying main:
-  main: "test.rhai"
 
 include_subgraph_errors:
-  all: true # Propagate errors from all subraphs
+  all: true # Propagate errors from all subgraphs

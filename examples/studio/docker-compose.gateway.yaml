@@ -1,19 +1,18 @@
 # extends supergraph-demo-fed2/docker-compose.yaml
 # https://docs.docker.com/compose/extends/#multiple-compose-files
 
-# use 'make up-supergraph-gateway-local-composition-docker' to get started
+# use 'make up-supergraph-gateway' to get started
 
-version: '3'
+version: '3.9'
 services:
   apollo-gateway:
     container_name: apollo-gateway
     build: ./supergraph/gateway
+    env_file: # 'make up-supergraph-gateway' saves APOLLO_KEY and APOLLO_GRAPH_REF to connect to Studio
+      - ./graph-api.env
     environment:
-      - APOLLO_SCHEMA_CONFIG_EMBEDDED=true
       - APOLLO_OTEL_EXPORTER_TYPE=collector
       - APOLLO_OTEL_EXPORTER_HOST=collector
       - APOLLO_OTEL_EXPORTER_PORT=4318
-    volumes:
-      - ./examples/composition/local/supergraph.dockerhost.graphql:/etc/config/supergraph.graphql
     ports:
       - "4000:4000"

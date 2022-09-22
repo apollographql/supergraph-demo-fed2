@@ -3,15 +3,15 @@
 
 # use 'make up-supergraph-router-rhai' to get started
 
-version: '3'
+version: '3.9'
 services:
   apollo-router-rhai:
     container_name: apollo-router-rhai
-    build: ./supergraph/router/customizations/rhai
+    build: ./supergraph/router-rhai-script
     volumes:
-      - ./supergraph/router/customizations/rhai/router.yaml:/dist/config/router.yaml
+      - ./supergraph/router-rhai-script/router.yaml:/dist/config/router.yaml
     command: [ "--dev", "-c", "config/router.yaml", "--log", "info" ]
-    env_file: # 'make up-supergraph-router-rhai' saves APOLLO_KEY and APOLLO_GRAPH_REF
+    env_file: # 'make up-supergraph-router-rhai' saves APOLLO_KEY and APOLLO_GRAPH_REF to connect to Studio
       - ./graph-api.env
     environment:
       - APOLLO_OTEL_EXPORTER_HOST=collector

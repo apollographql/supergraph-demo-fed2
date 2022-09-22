@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /dist
 
-COPY ./test.rhai supergraph/router/customizations/rhai/test.rhai
+COPY ./test.rhai supergraph/router-rhai-script/test.rhai
 
 RUN curl -ssL https://router.apollo.dev/download/nix/latest | sh
 
