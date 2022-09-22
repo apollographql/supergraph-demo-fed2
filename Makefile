@@ -1,5 +1,5 @@
 export COMPOSE_PROJECT_NAME=supergraph-demo-fed2
-export SUBGRAPH_BOOT_TIME=4
+export SUBGRAPH_BOOT_TIME=2
 SHELL := /bin/bash
 
 .PHONY: default
@@ -40,10 +40,11 @@ publish-subgraphs:
 
 .PHONY: run-router
 run-router:
-	@./router --version
-	@source "./.scripts/graph-api-env-export.sh" && \
-		set -x; \
-		./router --dev -c ./supergraph/router/router.yaml --log info
+	@source "./.scripts/graph-api-env-export.sh" && set -x; \
+	 ./router --version && \
+	 ./router --dev \
+	  -c ./supergraph/router/router.yaml \
+	  --log info
 
 .PHONY: smoke
 smoke:
@@ -60,10 +61,11 @@ run-supergraph-rhai: up-subgraphs publish-subgraphs run-router-rhai
 
 .PHONY: run-router-rhai
 run-router-rhai:
-	@./router --version
-	@source "./.scripts/graph-api-env-export.sh" && \
-		set -x; \
-		./router --dev -c ./supergraph/router/customizations/rhai/router.yaml --log info
+	@source "./.scripts/graph-api-env-export.sh" && set -x; \
+	 ./router --version && \
+	 ./router --dev \
+	  -c ./supergraph/router/customizations/rhai/router.yaml \
+	  --log info
 
 # Local router with Rust plugin
 
@@ -72,11 +74,12 @@ run-supergraph-rust-plugin: up-subgraphs publish-subgraphs run-router-rust-plugi
 
 .PHONY: run-router-rust-plugin
 run-router-rust-plugin: build-router-rust-plugin
-	@./supergraph/router/customizations/rust-plugin/acme_router --version
-	@source "./.scripts/graph-api-env-export.sh" && \
-    cd supergraph/router/customizations/rust-plugin && \
-	set -x; \
-	./acme_router --dev -c ./router.yaml --log info
+	@source "./.scripts/graph-api-env-export.sh" && set -x; \
+	 cd supergraph/router/customizations/rust-plugin && \
+	 ./acme_router --version && \
+	 ./acme_router --dev \
+	  -c ./router.yaml \
+	  --log info
 
 .PHONY: build-router-rust-plugin
 build-router-rust-plugin:
@@ -156,16 +159,6 @@ up-supergraph-gateway: publish-subgraphs-docker-compose
 	docker compose logs
 	docker compose logs apollo-gateway
 
-.PHONY: up-supergraph-gateway-local-composition
-up-supergraph-gateway-local-composition: config compose
-	docker compose \
-	 -f docker-compose.yaml \
-	 -f opentelemetry/docker-compose.yaml \
-	 -f examples/composition/local/gateway-docker/docker-compose.yaml \
-	 up -d --build
-	@set -x; sleep $$SUBGRAPH_BOOT_TIME
-	docker compose logs
-	docker compose logs apollo-gateway
 
 # local composition
 
@@ -177,6 +170,99 @@ config:
 .PHONY: compose
 compose:
 	.scripts/compose.sh
+
+# local composition with standalone router
+
+.PHONY: run-supergraph-router-local-composition
+run-supergraph-router-local-composition: config compose
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	@set -x; \
+	 ./router --version && \
+	 ./router --dev \
+	  -c ./supergraph/router/router.yaml \
+	  -s ./examples/composition/local/supergraph.localhost.graphql \
+	  --log info
+
+.PHONY: run-supergraph-router-rhai-local-composition
+run-supergraph-router-rhai-local-composition: config compose
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	@set -x; \
+	 ./router --version && \
+	 ./router --dev \
+	  -c ./supergraph/router/customizations/rhai/router.yaml \
+	  -s ./examples/composition/local/supergraph.localhost.graphql \
+	  --log info
+
+.PHONY: run-supergraph-router-rust-plugin-local-composition
+run-supergraph-router-rust-plugin-local-composition: config compose build-router-rust-plugin
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	@cd supergraph/router/customizations/rust-plugin && set -x; \
+	 ./acme_router --version && \
+	 ./acme_router --dev \
+	  -c ./router.yaml \
+	  -s ../../../../examples/composition/local/supergraph.localhost.graphql \
+	  --log info
+
+# local composition with docker-compose
+
+.PHONY: up-supergraph-gateway-local-composition
+up-supergraph-gateway-local-composition-docker: config compose
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 -f examples/composition/local/gateway/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	docker compose logs apollo-gateway
+
+.PHONY: up-supergraph-router-local-composition-docker
+up-supergraph-router-local-composition-docker: config compose
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 -f examples/composition/local/router/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	docker compose logs apollo-router
+
+.PHONY: up-supergraph-router-rhai-local-composition-docker
+up-supergraph-router-rhai-local-composition-docker: config compose
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 -f examples/composition/local/router/customizations/rhai/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	docker compose logs apollo-router-rhai
+
+.PHONY: up-supergraph-router-rust-plugin-local-composition-docker
+up-supergraph-router-rust-plugin-local-composition-docker: config compose
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f opentelemetry/docker-compose.yaml \
+	 -f examples/composition/local/router/customizations/rust-plugin/docker-compose.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	docker compose logs apollo-router-rust-plugin
 
 # utilities
 
