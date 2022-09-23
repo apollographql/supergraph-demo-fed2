@@ -1,5 +1,8 @@
 # see https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file
 
+# note: `rover --dev` has most of these settings as defaults
+# and the router can hot reload this configuration
+
 cors:
   allow_any_origin: true
 supergraph:

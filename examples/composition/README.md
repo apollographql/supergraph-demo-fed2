@@ -2,7 +2,7 @@
 
 ## Contents
 
-- various examples of subgraphs with supergraph.yaml config that can be used with the `rover supergraph` subcommand. See the main [README.md](../README.md#prerequisites) for rover install instructions.
+- various examples of subgraphs with supergraph.yaml config that can be used with the `rover supergraph` subcommand. See the main [README.md](/README.md#prerequisites) for rover install instructions.
 
 ## Using the `rover` CLI with the examples
 

@@ -1,15 +1,19 @@
-name: Local Router
+name: CI Router Studio
 on:
-  pull_request:
+  push:
     branches: [ main ]
   schedule:
     - cron: '30 7 * * *'
   workflow_dispatch:
 
 jobs:
-  ci-docker-local:
-    name: CI Local Router Basic
+  ci-docker-managed:
+    name: CI Router Studio
     runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF_ROUTER }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -45,14 +49,14 @@ jobs:
         run: |
           make config
           make compose
-          cat examples/local/supergraph/dockerhost.graphql
+          cat examples/local/supergraph.docker.graphql
       - name: docker-compose build
         run: |
           set -x
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f examples/local/docker-compose.router-basic.yaml \
+           -f examples/studio/docker-compose.router-no-code.yaml \
            build --parallel --progress plain
       - name: docker-compose up -d
         run: |
@@ -60,7 +64,7 @@ jobs:
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f examples/local/docker-compose.router-basic.yaml \
+           -f examples/studio/docker-compose.router-no-code.yaml \
            up -d
 
           sleep 8
@@ -68,7 +72,7 @@ jobs:
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f examples/local/docker-compose.router-basic.yaml \
+           -f examples/studio/docker-compose.router-no-code.yaml \
            logs
       - name: smoke test
         run: .scripts/smoke.sh 4000

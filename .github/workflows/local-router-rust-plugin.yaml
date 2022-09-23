@@ -1,7 +1,5 @@
-name: Local Router Rust Plugin
+name: CI Router Rust Plugin
 on:
-  pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
   schedule:
@@ -10,7 +8,7 @@ on:
 
 jobs:
   ci-docker-local:
-    name: CI Local Router Rust Plugin
+    name: CI Router Rust Plugin
     runs-on: ubuntu-latest
     steps:
       - name: checkout

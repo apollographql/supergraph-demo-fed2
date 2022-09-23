@@ -4,7 +4,7 @@ The [Apollo Federation Docs](https://www.apollographql.com/docs/federation/) do 
 
 ## Composition Concepts
 
-The [composition section](./composition/) goes into additional details with composition examples.
+Several [composition examples](./composition/) go into additional details about Federation 2 composition.
 
 ## Composition in Apollo Studio
 

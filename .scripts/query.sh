@@ -6,10 +6,10 @@ read -r -d '' QUERY <<"EOF"
 {
   allProducts {
     id,
+    name,
     sku,
     createdBy {
-      email,
-      totalProductsCreated
+      email
     }
   }
 }
@@ -18,8 +18,8 @@ EOF
 QUERY=$(echo "${QUERY}" | awk -v ORS= -v OFS= '{$1=$1}1')
 
 echo -------------------------------------------------------------------------------------------
-ACT=$(set -x; curl -X POST -H 'Content-Type: application/json' --data '{ "query": "'"${QUERY}"'" }' http://localhost:$PORT/)
-echo ""
-echo "Result:"
-echo "$ACT"
+( set -x; curl -i -X POST http://localhost:$PORT \
+  -H 'Content-Type: application/json' \
+  --data-raw '{ "query": "'"${QUERY}"'" }' )
+echo
 echo -------------------------------------------------------------------------------------------

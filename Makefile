@@ -2,24 +2,30 @@ SHELL := /bin/bash
 export SUBGRAPH_BOOT_TIME=2
 
 .PHONY: default
-default: demo
-
-.PHONY: demo
-demo: deps run-supergraph 
+default: deps run-supergraph
 
 # dependencies
 
 .PHONY: deps
 deps:
-	@curl -sSL https://rover.apollo.dev/nix/latest | sh
-	@curl -sSL https://router.apollo.dev/download/nix/latest | sh
+	@echo --------------------------------------------
+	curl -sSL https://rover.apollo.dev/nix/latest | sh
+	@echo --------------------------------------------
+	curl -sSL https://router.apollo.dev/download/nix/latest | sh
+	@echo --------------------------------------------
 
 .PHONY: deps-windows
 deps-windows:
-	@iwr 'https://rover.apollo.dev/win/latest' | iex
-	@curl -sSL https://router.apollo.dev/download/nix/latest | sh
+	@echo --------------------------------------------
+	iwr 'https://rover.apollo.dev/win/latest' | iex
+	@echo --------------------------------------------
+	curl -sSL https://router.apollo.dev/download/nix/latest | sh
+	@echo --------------------------------------------
 
 # Standalone router with basic YAML config and Open Telemetry
+
+.PHONY: run-supergraph
+run-supergraph: up-subgraphs publish-subgraphs run-router
 
 .PHONY: up-subgraphs
 up-subgraphs:
@@ -34,26 +40,29 @@ up-subgraphs:
 publish-subgraphs:
 	.scripts/publish.sh
 
-.PHONY: run-supergraph
-run-supergraph: up-subgraphs publish-subgraphs
+.PHONY: run-router
+run-router:
 	@source "./.scripts/graph-api-env-export.sh" && set -x; \
 	 ./router --version && \
 	 ./router --dev \
 	  -c ./supergraph/router.yaml \
 	  --log info
 
+.PHONY: query
+query:
+	@.scripts/query.sh
+
 .PHONY: smoke
 smoke:
 	@.scripts/smoke.sh
 
-.PHONY: down
-down:
-	docker compose down --remove-orphans
-
 # Local router with Rhai script
 
 .PHONY: run-supergraph-rhai
-run-supergraph-rhai: up-subgraphs publish-subgraphs 
+run-supergraph-rhai: up-subgraphs publish-subgraphs run-router-rhai
+
+.PHONY: run-router-rhai
+run-router-rhai:
 	@source "./.scripts/graph-api-env-export.sh" && set -x; \
 	 ./router --version && \
 	 ./router --dev \
@@ -63,10 +72,10 @@ run-supergraph-rhai: up-subgraphs publish-subgraphs
 # Local router with Rust plugin
 
 .PHONY: run-supergraph-rust-plugin
-run-supergraph-rust-plugin: up-subgraphs run-rust-plugin
+run-supergraph-rust-plugin: up-subgraphs publish-subgraphs run-router-rust-plugin
 
-.PHONY: run-rust-plugin
-run-rust-plugin: publish-subgraphs build-rust-plugin
+.PHONY: run-router-rust-plugin
+run-router-rust-plugin: build-rust-plugin
 	@source "./.scripts/graph-api-env-export.sh" && set -x; \
 	 cd supergraph/router-rust-plugin && \
 	 ./acme_router --version && \
@@ -89,10 +98,10 @@ clean-cargo-cache:
 	rm -rf ~/.cargo/registry
 
 .PHONY: run-supergraph-router-main
-run-supergraph-router-main: up-subgraphs run-router-main
+run-supergraph-router-main: up-subgraphs publish-subgraphs run-router-main
 
 .PHONY: run-router-main
-run-router-main: publish-subgraphs build-router-main
+run-router-main: build-router-main
 	@source "./.scripts/graph-api-env-export.sh" && \
 	 cd examples/advanced/router-main && set -x; \
 	 ./acme_router --version && \
@@ -117,7 +126,7 @@ up-supergraph: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/studio/docker-compose.router-basic.yaml \
+	 -f examples/studio/docker-compose.router-no-code.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -154,7 +163,7 @@ up-supergraph-defer: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/studio/docker-compose.router-basic.yaml \
+	 -f examples/studio/docker-compose.router-no-code.yaml \
 	 -f client/defer/apollo-client/docker-compose.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
@@ -184,14 +193,17 @@ config:
 .PHONY: compose
 compose:
 	@set -x; cd examples/local/supergraph; \
-	  rover supergraph compose --config localhost.yaml > localhost.graphql
+	  rover supergraph compose --elv2-license=accept --config localhost.yaml > localhost.graphql
 	@set -x; cd examples/local/supergraph; \
-	  rover supergraph compose --config dockerhost.yaml > dockerhost.graphql
+	  rover supergraph compose --elv2-license=accept --config dockerhost.yaml > dockerhost.graphql
 
 # local composition with standalone router
 
 .PHONY: run-supergraph-local
-run-supergraph-local: up-subgraphs config compose
+run-supergraph-local: up-subgraphs config compose run-router-local
+
+.PHONY: run-router-local
+run-router-local:
 	@set -x; \
 	 ./router --version && \
 	 ./router --dev \
@@ -200,7 +212,10 @@ run-supergraph-local: up-subgraphs config compose
 	  --log info
 
 .PHONY: run-supergraph-rhai-local
-run-supergraph-rhai-local: up-subgraphs config compose
+run-supergraph-rhai-local: up-subgraphs config compose run-router-rhai-local
+
+.PHONY: run-router-rhai-local
+run-router-rhai-local:
 	@set -x; \
 	 ./router --version && \
 	 ./router --dev \
@@ -209,10 +224,10 @@ run-supergraph-rhai-local: up-subgraphs config compose
 	  --log info
 
 .PHONY: run-supergraph-rust-plugin-local
-run-supergraph-rust-plugin-local: up-subgraphs run-rust-plugin-local
+run-supergraph-rust-plugin-local: up-subgraphs config compose run-router-rust-plugin-local
 
-.PHONY: run-rust-plugin-local
-run-rust-plugin-local: config compose build-rust-plugin
+.PHONY: run-router-rust-plugin-local
+run-router-rust-plugin-local: build-rust-plugin
 	@cd supergraph/router-rust-plugin && set -x; \
 	 ./acme_router --version && \
 	 ./acme_router --dev \
@@ -221,10 +236,10 @@ run-rust-plugin-local: config compose build-rust-plugin
 	  --log info
 
 .PHONY: run-supergraph-router-main-local
-run-supergraph-router-main-local: up-subgraphs run-router-main-local
+run-supergraph-router-main-local: up-subgraphs config compose run-router-main-local
 
 .PHONY: run-router-main-local
-run-router-main-local: config compose build-router-main
+run-router-main-local: build-router-main
 	@cd examples/advanced/router-main && set -x; \
 	 ./acme_router --version && \
 	 ./acme_router --dev \
@@ -239,7 +254,7 @@ up-supergraph-local: config compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.router-basic.yaml \
+	 -f examples/local/docker-compose.router-no-code.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -289,11 +304,11 @@ ubuntu-latest=ubuntu-latest=catthehacker/ubuntu:act-latest
 # router
 
 .PHONY: ci
-ci: ci-local-router-basic ci-local-router-rhai ci-local-gateway
+ci: ci-local-router-no-code ci-local-router-rhai ci-local-gateway
 
-.PHONY: ci-local-router-basic
-ci-local-router-basic:
-	act -P $(ubuntu-latest) -W .github/workflows/local-router-basic.yaml --detect-event
+.PHONY: ci-local-router-no-code
+ci-local-router-no-code:
+	act -P $(ubuntu-latest) -W .github/workflows/local-router-no-code.yaml --detect-event
 
 .PHONY: ci-local-router-rhai
 ci-local-router-rhai:
@@ -311,9 +326,9 @@ ci-local-router-rust-main:
 ci-studio-router-main:
 	act -P $(ubuntu-latest) -W .github/workflows/studio-router-main.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_MAIN=supergraph-router-fed2@ci-router-main --detect-event
 
-.PHONY: ci-studio-router-basic
-ci-studio-router-basic:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-router-basic.yaml --secret-file graph-api.env --detect-event -j ci-docker-managed
+.PHONY: ci-studio-router-no-code
+ci-studio-router-no-code:
+	act -P $(ubuntu-latest) -W .github/workflows/studio-router-no-code.yaml --secret-file graph-api.env --detect-event -j ci-docker-managed
 
 # gateway
 
@@ -327,6 +342,26 @@ ci-studio-gateway:
 
 
 # utilities
+#
+.PHONY: load
+load: load-250
+
+.PHONY: load-10
+load-10:
+	@.scripts/smoke.sh 4000 10
+
+.PHONY: load-100
+load-100:
+	@.scripts/smoke.sh 4000 100
+
+.PHONY: load-250
+load-250:
+	@.scripts/smoke.sh 4000 250
+
+.PHONY: down
+down:
+	docker compose down --remove-orphans
+
 
 .PHONY: unpublish-subgraphs
 unpublish:

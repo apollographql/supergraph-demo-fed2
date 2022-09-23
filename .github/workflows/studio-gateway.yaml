@@ -1,4 +1,4 @@
-name: Studio Gateway
+name: CI Gateway Studio
 on:
   push:
     branches: [ main ]
@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   ci-docker-managed:
-    name: CI Studio Gateway
+    name: CI Gateway Studio
     runs-on: ubuntu-latest
     env:
       CI: "true"

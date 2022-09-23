@@ -1,7 +1,5 @@
-name: Local Router Main
+name: CI Router Main
 on:
-  pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
   schedule:
@@ -10,7 +8,7 @@ on:
 
 jobs:
   ci-docker-local:
-    name: CI Local Router Rust Main
+    name: CI Router Main
     runs-on: ubuntu-latest
     steps:
       - name: checkout

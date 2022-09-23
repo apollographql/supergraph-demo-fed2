@@ -12,11 +12,6 @@ As the Router has been rolled out into more environments we’ve learned about t
 
 Apollo ships a [standalone Router binary](https://www.apollographql.com/docs/router/quickstart) that can be configured using a [YAML config file](https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file) with a new stable v1 configuration schema for things like header forwarding and CORS configuration. Many new features are available like [traffic shaping](https://www.apollographql.com/docs/router/configuration/traffic-shaping/) with support for rate limiting, query deduplication, configurable timeouts and compression options. Router deployments can often be done with the stock Router binary and a minimal YAML config file.
 
-Run:
-```
-make run-supergraph
-```
-
 See [router.yaml](./router.yaml)
 
 ### Lightweight Rhai scripting
