@@ -16,7 +16,7 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Local Composition](#local-composition)
 * [Open Telemetry](#open-telemetry)
 * [Apollo Router - no code with YAML config](#apollo-router)
-* [Apollo Router - examples with pre-built Docker images](#apollo-router-pre-built-docker-images)
+* [Apollo Router - pre-built Docker images](#apollo-router-pre-built-docker-images)
 * [Apollo Router - Rhai scripting](#apollo-router-rhai-scripting)
 * [Apollo Router - native extensions in Rust](#apollo-router-rust-plugins)
 * [Apollo Gateway](#apollo-gateway)

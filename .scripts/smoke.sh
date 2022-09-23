@@ -63,6 +63,7 @@ TESTS=("${TESTS[@]}" "${DEPRECATED_TESTS[@]}")
 # --------------------------------------------------------------------
 DESCR_1="allProducts with delivery"
 OPNAME_1="allProdDelivery"
+ISSLOW_1="true"
 ACCEPT_1="application/json"
 read -r -d '' QUERY_1 <<"EOF"
 query allProdDelivery {
@@ -140,6 +141,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_4="exampleQuery with pandas"
 OPNAME_4="exampleQuery"
+ISSLOW_4="true"
 ACCEPT_4="application/json"
 read -r -d '' QUERY_4 <<"EOF"
 query exampleQuery {
