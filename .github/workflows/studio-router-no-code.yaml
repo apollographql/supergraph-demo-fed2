@@ -49,7 +49,7 @@ jobs:
         run: |
           make config
           make compose
-          cat examples/local/supergraph.docker.graphql
+          cat examples/local/supergraph/dockerhost.graphql
       - name: docker-compose build
         run: |
           set -x
