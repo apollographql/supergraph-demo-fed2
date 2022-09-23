@@ -4,7 +4,7 @@
 ![smoke test](https://github.com/apollographql/supergraph-demo-fed2/actions/workflows/local-gateway.yaml/badge.svg)
 [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 
-> looking for the old `supergraph-demo-fed2`? It's over [here](https://github.com/apollographql/supergraph-demo-fed2/tree/pre-summit-2022)!
+> looking for the old supergraph-demo-fed2? It's over [here](https://github.com/apollographql/supergraph-demo-fed2/tree/pre-summit-2022)!
 
 Federation 2 is an evolution of the original Apollo Federation with an improved shared ownership model, enhanced type merging, and cleaner syntax for a smoother developer experience. It’s backwards compatible, requiring no major changes to your subgraphs. Try the GA release today!
 
