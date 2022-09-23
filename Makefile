@@ -306,6 +306,19 @@ up-supergraph-local-gateway: config compose
 	docker compose logs
 	docker compose logs apollo-gateway
 
+# minimal local demo
+
+.PHONY: up-supergraph-no-otel-local
+up-supergraph-no-otel-local:
+	docker compose \
+	 -f docker-compose.yaml \
+	 -f examples/local/docker-compose.router-no-otel.yaml \
+	 up -d --build
+	@set -x; sleep $$SUBGRAPH_BOOT_TIME
+	docker compose logs
+	docker compose logs apollo-router
+
+
 # GitHub Actions Local Runners with ACT
 
 .PHONY: deps-act
