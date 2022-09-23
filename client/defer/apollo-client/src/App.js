@@ -29,46 +29,37 @@ const TEST_QUERY = gql`
 
 // a deferred query
 const DEFERRED_QUERY = gql`
-query deferVariation {
+query deferDeliveryExample {
   allProducts {
-    ...MyFragment @defer
-    sku,
     id
+    name
+    ...MyFragment @defer
   }
 }
 fragment MyFragment on Product {
-  variation { name }
+  delivery {
+    estimatedDelivery
+    fastestDelivery
+  }
 }
 `;
 
 // a non-deferred query
 const NON_DEFERRED_QUERY = gql`
-query deferVariation {
+query deferDeliveryExample {
   allProducts {
-    ...MyFragment
-    sku,
     id
+    name
+    ...MyFragment
   }
 }
 fragment MyFragment on Product {
-  variation { name }
+  delivery {
+    estimatedDelivery
+    fastestDelivery
+  }
 }
 `;
-
-function TestQuery() {
-  const { loading, error, data } = useQuery(TEST_QUERY);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-
-  return data.allProducts.map(({ id, delivery }) => (
-    <div key={id}>
-      <p>{id}</p>
-      <p>{delivery.estimatedDelivery}</p>
-      <p>{delivery.fastestDelivery}</p>
-    </div>
-  ));
-}
 
 function DeferredProducts() {
   console.log("DeferredProducts")
@@ -98,14 +89,16 @@ function Render(query) {
   return (
     <div>
 
-    {data.allProducts.map(({ id, variation }) => {
-      if(variation) {
+    {data.allProducts.map(({ id, name, delivery }) => {
+      if(delivery) {
         return <div key={id}>
-        <p>{id} : <b>{variation.name}</b></p>
+        <p className="Product-title">{id} : <b>{name}</b></p>
+        <p className="Delivery-text">Estimated Delivery : <b>{delivery.estimatedDelivery}</b></p>
+        <p className="Delivery-text">Fastest Delivery : <b>{delivery.fastestDelivery}</b></p>
         </div>
       } else {
         return <div key={id}>
-        <p>{id}</p>
+        <p>{id} : <b>{name}</b></p>
         </div>
       }
     })}
@@ -119,13 +112,9 @@ function App() {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>Testing @defer with Apollo Router.</p>
+          <p>Testing @defer with Apollo Client and Apollo Router.</p>
         </header>
         <div className="Grid-column">
-          <div>
-            <h2 className="Test-query">A test query 🧪 </h2>
-            <TestQuery />
-          </div>
           <div>
             <h2 className="Deferred-query">A deferred query 🚀</h2>
             <DeferredProducts />

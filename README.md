@@ -17,6 +17,8 @@ Federation 2 is an evolution of the original Apollo Federation with an improved 
 * [Open Telemetry](#open-telemetry)
 * [Apollo Router - no code with YAML config](#apollo-router)
 * [Apollo Router - pre-built Docker images](#apollo-router-pre-built-docker-images)
+* [Apollo Router - entity-based `@defer`](#apollo-router-entity-based-defer)
+* [Apollo Router - enhanced extensibility](#apollo-router---enhanced-extensibility)
 * [Apollo Router - Rhai scripting](#apollo-router-rhai-scripting)
 * [Apollo Router - native extensions in Rust](#apollo-router-rust-plugins)
 * [Apollo Gateway](#apollo-gateway)
@@ -94,6 +96,8 @@ make deps
 
 With the dependencies above installed and your supergraph's `APOLLO_KEY` and `APOLLO_GRAPH_REF` ready, you can deploy an entire supergraph with a single command:
 
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
+
 ```
 make run-supergraph
 ```
@@ -138,6 +142,8 @@ Publishing subgraphs schemas to the Apollo schema registry does:
 * supergraph CD - deploys supergraph schema to the Apollo Router
 
 ### Deploy your subgraphs first
+
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
 
 ```
 make up-subgraphs
@@ -191,8 +197,6 @@ Now we need to create a supergraph in the Apollo schema registry, so we can publ
 ### Publish subgraphs to Apollo Studio
 
 Once your subgraphs are running and a supergraph has been created in Apollo Studio, you can publish the [subgraph schemas](./subgraphs) to your supergraph in the Apollo Registry, where they will be composed into a supergraph schema.
-
-> Run the following `make` commands within the root project directory after you've cloned the repo.
 
 ```sh
 make publish-subgraphs
@@ -523,16 +527,18 @@ Stock Router binaries are available for Linux, Mac, and Windows. We also ship [p
 
 ### Example: using the pre-built docker images
 
+> `make` commands in this project starting with `up-` use `docker-compose up`
+
 There are `docker-compose` examples using the pre-built docker images:
 
 * [studio](/examples/studio/) - pulling supergraph schema from Apollo Studio
 * [local](/examples/local/) - using local supergraph schemas
 
-> `make` commands in this project starting with `up-` use `docker-compose up`
-
 For example:
 
 #### Start a supergraph
+
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
 
 ```
 make up-supergraph
@@ -558,7 +564,107 @@ Everything can now be shut down with:
 make down
 ```
 
-## Enhanced extensibility
+## Apollo Router Entity-Based `@defer`
+
+> Now in preview to gather community feedback before going GA!
+
+### Faster app performance with entity-based @defer
+
+Apps need to access essential data with as little latency as possible to improve performance benchmarks like first-content-paint (FCP), time-to-interactive (TTI), and total-blocking-time (TBT). Other less critical data can be returned slower and rendered incrementally while still keeping the user engaged.
+
+However, since multiple REST APIs are often used to fetch data for a single GraphQL query, a single slow REST endpoint can bring an entire query to a halt. Hand tuning individual REST APIs may be needed for critical situations but are often hard to justify for typical roadmap features — leaving you with a difficult choice: slow app performance or slow feature delivery.
+
+With Apollo Router v1.0, apps querying the supergraph can @defer the slow, non-essential parts of a request and have the most critical data returned immediately, with no backend changes to underlying services. The upgraded query planner in v1.0 uses [entities](https://www.apollographql.com/docs/federation/entities/) to fetch deferred fields from subgraphs and return them incrementally in a new multipart response format.
+
+The best part? Because entity-based @defer is powered by the Router rather than subgraph servers, teams can continue using the same [subgraph languages and frameworks](https://www.apollographql.com/docs/federation/supported-subgraphs) they’re comfortable with and @defer just works, even if the subgraph server itself doesn’t offer @defer support.
+
+Apollo Client and Sandbox support
+App developers can add @defer to queries issued from Apollo Client and Apollo Sandbox and both will now automatically handle the deferred responses. Additionally, when using Sandbox with Apollo Router running locally in --dev mode, it will now show query plans to visualize how deferred queries are fetched.
+
+### Examples: Entity-based @defer
+
+#### Start a supergraph
+
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
+
+```
+make up-supergraph-defer
+```
+
+or alternatively
+```
+make up-supergraph-defer-local
+```
+
+Issue some queries to verify all is well:
+
+```
+make smoke
+```
+
+which shows:
+
+```
+✅ Introspection Success!
+ - has @defer support
+
+Running smoke tests ... 🚀 🚀 🚀
+
+✅ ALL TESTS PASS!
+```
+
+#### Example: Apollo Sandbox with `@defer`
+
+Browse to http://localhost:4000 and issue the following query:
+
+```
+query deferDeliveryExample {
+  allProducts {
+    id
+    name
+    ...MyFragment @defer
+  }
+}
+fragment MyFragment on Product {
+    delivery {
+      estimatedDelivery
+      fastestDelivery
+    }
+  }
+}
+```
+
+this will display the non-deferred content immediately:
+
+![non-deferred content first](docs/media/sandbox/defer-immediate-response.png)
+
+and display the deferred query fragments ~ 2 seconds later:
+![deferred content second](docs/media/sandbox/deferred-response.png)
+
+you can now also view local query plans from Apollo Router in Sandbox:
+
+![local query plan preview](docs/media/router/query-plan-router-sandbox.png)
+
+#### Example: Apollo Sandbox with `@defer`
+
+Browse to http://localhost:3000 and watch the deferred query in action.
+
+Non-deferred query fields render immediately:
+
+![non-deferred content first](docs/media/apollo-client/defer-immediate-response.png)
+
+and display the deferred query fragments ~ 2 seconds later:
+
+![deferred content second](docs/media/apollo-client/deferred-response.png)
+
+#### Cleanup
+
+When done, shut everything down with:
+
+```
+make down
+```
+## Apollo Router - Enhanced Extensibility
 
 As the Router has been rolled out into more environments we’ve learned about the right integration points and customizations to make the Router work well:
 
@@ -595,6 +701,8 @@ fn process_request(request) {
 ### Example: Rhai Script
 
 #### Start a supergraph
+
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
 
 ```
 make run-supergraph-rhai
@@ -680,6 +788,8 @@ register_plugin!("example", "hello_world", HelloWorld);
 
 #### Run a supergraph
 
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
+
 ```
 make run-supergraph-rust-plugin
 ```
@@ -725,6 +835,8 @@ For example:
 
 #### Start a supergraph using Apollo Gateway
 
+> Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
+
 ```
 make up-supergraph-gateway
 ```
@@ -748,6 +860,39 @@ Everything can now be shut down with:
 ```
 make down
 ```
+
+## Troubleshooting
+
+### No space left on device
+
+If you get an error like `No space left on device`:
+
+```
+#0 33.67 FAILURE: Build failed with an exception.
+#0 33.67
+#0 33.67 * What went wrong:
+#0 33.67 A problem occurred configuring root project 'app'.
+#0 33.67 > Could not resolve all files for configuration ':classpath'.
+#0 33.68    > Could not download kotlin-compiler-embeddable-1.7.10.jar (org.jetbrains.kotlin:kotlin-compiler-embeddable:1.7.10)
+#0 33.68       > Could not get resource 'https://plugins.gradle.org/m2/org/jetbrains/kotlin/kotlin-compiler-embeddable/1.7.10/kotlin-compiler-embeddable-1.7.10.jar'.
+#0 33.68          > No space left on device
+#0 33.68
+```
+
+run `make docker-prune` to free up space:
+```
+make docker-prune
+```
+
+which does:
+```
+docker image prune -f
+docker kill $(docker ps -aq)
+docker rm $(docker ps -aq)
+docker volume rm $(docker volume ls -qf dangling=true)
+```
+
+then retry the command you were originally trying to execute.
 
 ## More on Federation 2
 

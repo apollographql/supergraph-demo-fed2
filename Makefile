@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+export COMPOSE_PROJECT_NAME=supergraph-demo-fed2
 export SUBGRAPH_BOOT_TIME=2
 
 .PHONY: default
@@ -26,6 +27,12 @@ deps-windows:
 
 .PHONY: run-supergraph
 run-supergraph: up-subgraphs publish-subgraphs run-router
+
+.PHONY: build-subgraphs-no-cache
+build-subgraphs-no-cache:
+	docker compose \
+	 -f docker-compose.yaml \
+	 build --no-cache
 
 .PHONY: up-subgraphs
 up-subgraphs:
@@ -157,6 +164,12 @@ up-supergraph-rust-plugin: publish-subgraphs-docker-compose
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
 	docker compose logs apollo-router-rust-plugin
+
+.PHONY: build-defer-apollo-client-no-cache
+build-defer-apollo-client-no-cache:
+	docker compose \
+	 -f client/defer/apollo-client/docker-compose.yaml \
+	 build --no-cache
 
 .PHONY: up-supergraph-defer
 up-supergraph-defer: publish-subgraphs-docker-compose

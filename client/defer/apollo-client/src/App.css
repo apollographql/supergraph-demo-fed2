@@ -20,7 +20,7 @@
 
 .Grid-column {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-gap: 8px;
 }
 
@@ -34,4 +34,12 @@
 
 .Nondeferred-query {
   background-color: #61dafb;
+}
+
+.Product-title {
+  font-size: calc(3px + 2vmin);
+}
+
+.Delivery-text {
+  font-size: calc(1px + 2vmin);
 }
