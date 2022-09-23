@@ -566,7 +566,7 @@ make down
 
 ## Apollo Router Entity-Based `@defer`
 
-> Now in preview to gather community feedback before going GA!
+> This feature is currently in [preview](https://www.apollographql.com/docs/resources/product-launch-stages#preview), available in Apollo Router v1.0 and later. Learn about entity-based `@defer` in [the Router docs](https://www.apollographql.com/docs/router/executing-operations/defer-support).
 
 ### Faster app performance with entity-based @defer
 
@@ -581,9 +581,9 @@ The best part? Because entity-based @defer is powered by the Router rather than 
 Apollo Client and Sandbox support
 App developers can add @defer to queries issued from Apollo Client and Apollo Sandbox and both will now automatically handle the deferred responses. Additionally, when using Sandbox with Apollo Router running locally in --dev mode, it will now show query plans to visualize how deferred queries are fetched.
 
-### Examples: Entity-based @defer
+Let's get started!
 
-#### Start a supergraph
+### Start a supergraph
 
 > Run the following `make` commands within the root project directory after you've cloned the repo and installed the [prerequisites](#prerequisites).
 
@@ -613,7 +613,7 @@ Running smoke tests ... 🚀 🚀 🚀
 ✅ ALL TESTS PASS!
 ```
 
-#### Example: Apollo Sandbox with `@defer`
+### Example: Apollo Sandbox with entity-based `@defer` in the Router
 
 Browse to http://localhost:4000 and issue the following query:
 
@@ -645,7 +645,9 @@ you can now also view local query plans from Apollo Router in Sandbox:
 
 ![local query plan preview](docs/media/router/query-plan-router-sandbox.png)
 
-#### Example: Apollo Sandbox with `@defer`
+### Example: Apollo Client with entity-based `@defer` in the Router
+
+> ⚠️ The @defer directive is currently at the [preview stage](https://www.apollographql.com/docs/resources/release-stages/#preview) in Apollo Client, and is available by installing @apollo/client@next. If you have feedback on it, please let us know via [GitHub issues](https://github.com/apollographql/apollo-client/issues/new?assignees=&labels=&template=bug.md).
 
 Browse to http://localhost:3000 and watch the deferred query in action.
 
@@ -657,13 +659,31 @@ and display the deferred query fragments ~ 2 seconds later:
 
 ![deferred content second](docs/media/apollo-client/deferred-response.png)
 
-#### Cleanup
+### Example: Apollo Kotlin with entity-based `@defer` in the Router
+
+> ⚠️ The @defer directive is currently [experimental](https://www.apollographql.com/docs/resources/release-stages/#experimental-features) in Apollo Kotlin and enabled for use by default. If you have feedback on it, please let us know via [GitHub issues](https://github.com/apollographql/apollo-android/issues/new?assignees=&labels=Type%3A+Bug&template=bug_report.md&title=%5BDefer%20Support%5D) or in the [Kotlin Slack community](https://slack.kotl.in/).
+
+Checkout this Apollo Kotlin `@defer` demo app:
+
+[https://github.com/BoD/DeferDemo](https://github.com/BoD/DeferDemo)
+
+![Apollo Kotlin Demo](docs/media/apollo-kotlin/apollo-kotlin-defer-demo.png)
+
+### Cleanup
 
 When done, shut everything down with:
 
 ```
 make down
 ```
+
+### Compatibility Test Suite for `@defer`
+
+Entity-based `@defer` integration tests:
+
+* [Apollo Client + Apollo Router e2e tests](https://github.com/apollographql/apollo-client/issues)
+* [Apollo Kotlin + Apollo Router e2e tests](https://github.com/apollographql/apollo-kotlin/blob/main/tests/defer/src/commonTest/kotlin/test/DeferWithRouterTest.kt)
+
 ## Apollo Router - Enhanced Extensibility
 
 As the Router has been rolled out into more environments we’ve learned about the right integration points and customizations to make the Router work well:
