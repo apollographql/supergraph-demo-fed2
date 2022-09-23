@@ -1,0 +1,47 @@
+# These are the subgraphs in this supergraph
+# They are deployed first, so they're running in the environment
+
+# When the subgraphs are ready to serve requests
+# we publish the subgraph schemas to the Apollo Registry
+
+# Apollo Registry then does:
+# - supergraph CI: composes the subgraphs into a supergraph schema
+# - supergraph CD: feeds new supergraph schema to the Apollo Router via Apollo Uplink polling every few seconds
+
+# Run 'make demo' to get started
+# then run 'make smoke' in separate window
+# or open http://localhost:4000 to use Apollo Sandbox to issue queries
+
+# Note this is the base docker-compose file for this project.
+# The paths in all other compose files are **relative to this file**, per:
+# https://docs.docker.com/compose/extends/#multiple-compose-files
+
+# see `./opentelemetry` `./examples/studio` and `./examples/local` for other compose files
+
+version: '3.9'
+services:
+  products:
+    container_name: products
+    build: ./subgraphs/products
+    ports:
+      - "4001:4000"
+  inventory:
+    container_name: inventory
+    build: ./subgraphs/inventory
+    ports:
+      - "4002:4000"
+  users:
+    container_name: users
+    build: ./subgraphs/users
+    ports:
+      - "4003:4000"
+  pandas:
+    container_name: pandas
+    build: ./subgraphs/pandas
+    ports:
+      - "4004:4000"
+  reviews:
+    container_name: reviews
+    build: ./subgraphs/reviews
+    ports:
+      - "4005:4000"

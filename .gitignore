@@ -9,7 +9,9 @@ lerna-debug.log*
 graph-api.env
 docker.secrets
 
-router/router
+bin
+router
+acme_router
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
