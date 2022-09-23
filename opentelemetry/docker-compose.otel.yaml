@@ -2,8 +2,7 @@
 # extends supergraph-demo-fed2/docker-compose.yaml with
 # https://docs.docker.com/compose/extends/#multiple-compose-files
 #
-# use 'make up-subgraphs' or just 'docker compose up'
-# and this override file will automatically be used
+# use 'make up-subgraphs' to get started
 version: "3"
 services:
   users:
