@@ -649,7 +649,9 @@ you can now also view local query plans from Apollo Router in Sandbox:
 
 > ⚠️ The @defer directive is currently at the [preview stage](https://www.apollographql.com/docs/resources/release-stages/#preview) in Apollo Client, and is available by installing @apollo/client@next. If you have feedback on it, please let us know via [GitHub issues](https://github.com/apollographql/apollo-client/issues/new?assignees=&labels=&template=bug.md).
 
-Browse to http://localhost:3000 and watch the deferred query in action.
+[The code](/client/defer/apollo-client/) for this example should already be running via this [docker-compose.yaml](/client/defer/apollo-client/docker-compose.yaml) as part of `make up-supergraph-defer`.
+
+http://localhost:3000 shows the deferred query in action.
 
 Non-deferred query fields render immediately:
 

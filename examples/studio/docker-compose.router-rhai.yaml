@@ -1,7 +1,7 @@
 # extends supergraph-demo-fed2/docker-compose.yaml
 # https://docs.docker.com/compose/extends/#multiple-compose-files
 
-# use 'make up-supergraph-router-rhai' to get started
+# use 'make up-supergraph-rhai' to get started
 
 version: '3.9'
 services:
