@@ -364,7 +364,7 @@ down:
 
 
 .PHONY: unpublish-subgraphs
-unpublish:
+unpublish-subgraphs:
 	.scripts/unpublish.sh
 
 .PHONY: docker-prune

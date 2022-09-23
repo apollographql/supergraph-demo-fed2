@@ -49,11 +49,12 @@ jobs:
       - name: check tools
         run: |
           make deps-check || true
-      - name: make supergraph
+      - name: unpublish-subgraphs
         run: |
-          make config
-          make compose
-          cat examples/local/supergraph/dockerhost.graphql
+          make unpublish-subgraphs
+      - name: publish-subgraphs
+        run: |
+          make publish-subgraphs-docker-compose
       - name: docker-compose build
         run: |
           set -x
@@ -79,6 +80,6 @@ jobs:
            -f examples/studio/docker-compose.gateway.yaml \
            logs
       - name: smoke test
-        run: .scripts/smoke.sh 4000
+        run: .scripts/smoke.sh 4000 250
       - name: docker-compose down
         run: docker-compose down --remove-orphans
