@@ -1,17 +1,17 @@
 # extends supergraph-demo-fed2/docker-compose.yaml
 # https://docs.docker.com/compose/extends/#multiple-compose-files
 
-# use 'make up-supergraph-router-main' to get started
+# use 'make up-supergraph-router-dev' to get started
 
 version: '3.9'
 services:
-  apollo-router-main:
-    container_name: apollo-router-main
-    build: ./examples/advanced/router-main
+  apollo-router-dev:
+    container_name: apollo-router-dev
+    build: ./examples/advanced/router-dev
     volumes:
       - ./supergraph/router.yaml:/dist/config/router.yaml
     command: [ "--dev", "-c", "config/router.yaml", "--log", "info" ]
-    env_file: # 'make up-supergraph-router-main' saves APOLLO_KEY and APOLLO_GRAPH_REF to connect to Studio
+    env_file: # 'make up-supergraph-router-dev' saves APOLLO_KEY and APOLLO_GRAPH_REF to connect to Studio
       - graph-api.env
     ports:
       - "4000:4000"

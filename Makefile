@@ -104,26 +104,26 @@ clean-cargo-cache:
 	rm -rf ~/.cargo/git
 	rm -rf ~/.cargo/registry
 
-.PHONY: run-supergraph-router-main
-run-supergraph-router-main: up-subgraphs publish-subgraphs run-router-main
+.PHONY: run-supergraph-router-dev
+run-supergraph-router-dev: up-subgraphs publish-subgraphs run-router-dev
 
-.PHONY: run-router-main
-run-router-main: build-router-main
+.PHONY: run-router-dev
+run-router-dev: build-router-dev
 	@source "./.scripts/graph-api-env-export.sh" && \
-	 cd examples/advanced/router-main && set -x; \
+	 cd examples/advanced/router-dev && set -x; \
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
 	  --log info
 
-.PHONY: build-router-main
-build-router-main:
-	cd examples/advanced/router-main && cargo update && cargo build --release
-	cd examples/advanced/router-main && cp ./target/release/acme_router .
+.PHONY: build-router-dev
+build-router-dev:
+	cd examples/advanced/router-dev && cargo update && cargo build --release
+	cd examples/advanced/router-dev && cp ./target/release/acme_router .
 
-.PHONY: clean-router-main
-clean-router-main:
-	rm -rf examples/advanced/router-main/target || true
+.PHONY: clean-router-dev
+clean-router-dev:
+	rm -rf examples/advanced/router-dev/target || true
 
 
 # Apollo Router in a docker container
@@ -248,12 +248,12 @@ run-router-rust-plugin-local: build-rust-plugin
 	  -s ../../examples/local/supergraph/localhost.graphql \
 	  --log info
 
-.PHONY: run-supergraph-router-main-local
-run-supergraph-router-main-local: up-subgraphs config compose run-router-main-local
+.PHONY: run-supergraph-router-dev-local
+run-supergraph-router-dev-local: up-subgraphs config compose run-router-dev-local
 
-.PHONY: run-router-main-local
-run-router-main-local: build-router-main
-	@cd examples/advanced/router-main && set -x; \
+.PHONY: run-router-dev-local
+run-router-dev-local: build-router-dev
+	@cd examples/advanced/router-dev && set -x; \
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
@@ -344,13 +344,13 @@ ci-local-router-rhai:
 ci-local-router-rust-plugin:
 	act -P $(ubuntu-latest) -W .github/workflows/local-router-rust-plugin.yaml --detect-event
 
-.PHONY: ci-local-router-rust-main
-ci-local-router-rust-main:
-	act -P $(ubuntu-latest) -W .github/workflows/local-router-rust-main.yaml --detect-event
+.PHONY: ci-local-router-rust-dev
+ci-local-router-rust-dev:
+	act -P $(ubuntu-latest) -W .github/workflows/local-router-rust-dev.yaml --detect-event
 
-.PHONY: ci-studio-router-main
-ci-studio-router-main:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-router-main.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_MAIN=supergraph-router-fed2@ci-router-main --detect-event
+.PHONY: ci-studio-router-dev
+ci-studio-router-dev:
+	act -P $(ubuntu-latest) -W .github/workflows/studio-router-dev.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_MAIN=supergraph-router-fed2@ci-router-dev --detect-event
 
 .PHONY: ci-studio-router-no-code
 ci-studio-router-no-code:
