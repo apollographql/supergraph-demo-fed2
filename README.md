@@ -645,6 +645,23 @@ you can now also view local query plans from Apollo Router in Sandbox:
 
 ![local query plan preview](docs/media/router/query-plan-router-sandbox.png)
 
+You can also use `@defer` with inline fragments:
+
+```
+query DeferDeliveryExampleInline {
+  allProducts {
+    ... on Product @defer {
+      delivery {
+        estimatedDelivery
+        fastestDelivery
+      }
+    }
+    sku
+    id
+  }
+}
+```
+
 ### Example: Apollo Client with entity-based `@defer` in the Router
 
 > ⚠️ The @defer directive is currently at the [preview stage](https://www.apollographql.com/docs/resources/release-stages/#preview) in Apollo Client, and is available by installing @apollo/client@next. If you have feedback on it, please let us know via [GitHub issues](https://github.com/apollographql/apollo-client/issues/new?assignees=&labels=&template=bug.md).
