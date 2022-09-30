@@ -63,7 +63,24 @@ query:
 smoke:
 	@.scripts/smoke.sh
 
-# Local router with Rhai script
+.PHONY: down
+down:
+	docker compose down --remove-orphans
+
+# Standalone router with no --dev flag
+
+.PHONY: run-supergraph-no-dev
+run-supergraph-no-dev: up-subgraphs publish-subgraphs run-router-no-dev
+
+.PHONY: run-router-no-dev
+run-router-no-dev:
+	@source "./.scripts/graph-api-env-export.sh" && set -x; \
+	 ./router --version && \
+	 ./router \
+	  -c ./supergraph/router.yaml \
+	  --log info
+
+# Standalone router with Rhai script
 
 .PHONY: run-supergraph-rhai
 run-supergraph-rhai: up-subgraphs publish-subgraphs run-router-rhai
@@ -76,7 +93,7 @@ run-router-rhai:
 	  -c ./supergraph/router-rhai-script/router.yaml \
 	  --log info
 
-# Local router with Rust plugin
+# Standalone router with Rust plugin
 
 .PHONY: run-supergraph-rust-plugin
 run-supergraph-rust-plugin: up-subgraphs publish-subgraphs run-router-rust-plugin
@@ -125,8 +142,7 @@ build-router-dev:
 clean-router-dev:
 	rm -rf examples/advanced/router-dev/target || true
 
-
-# Apollo Router in a docker container
+# router in docker
 
 .PHONY: up-supergraph
 up-supergraph: publish-subgraphs-docker-compose
@@ -210,7 +226,7 @@ compose:
 	@set -x; cd examples/local/supergraph; \
 	  rover supergraph compose --elv2-license=accept --config dockerhost.yaml > dockerhost.graphql
 
-# local composition with standalone router
+# standalone router with local composition
 
 .PHONY: run-supergraph-local
 run-supergraph-local: up-subgraphs config compose run-router-local
@@ -224,6 +240,22 @@ run-router-local:
 	  -s ./examples/local/supergraph/localhost.graphql \
 	  --log info
 
+# standalone router with local composition and no --dev flag
+
+.PHONY: run-supergraph-local-no-dev
+run-supergraph-local-no-dev: up-subgraphs config compose run-router-local-no-dev
+
+.PHONY: run-router-local-no-dev
+run-router-local-no-dev:
+	@set -x; \
+	 ./router --version && \
+	 ./router \
+	  -c ./supergraph/router.yaml \
+	  -s ./examples/local/supergraph/localhost.graphql \
+	  --log info
+
+# standalone router with local composition and rhai scripting
+
 .PHONY: run-supergraph-rhai-local
 run-supergraph-rhai-local: up-subgraphs config compose run-router-rhai-local
 
@@ -235,6 +267,8 @@ run-router-rhai-local:
 	  -c ./supergraph/router-rhai-script/router.yaml \
 	  -s ./examples/local/supergraph/localohst.graphql \
 	  --log info
+
+# standalone router with local composition and rust plugin
 
 .PHONY: run-supergraph-rust-plugin-local
 run-supergraph-rust-plugin-local: up-subgraphs config compose run-router-rust-plugin-local
@@ -248,6 +282,8 @@ run-router-rust-plugin-local: build-rust-plugin
 	  -s ../../examples/local/supergraph/localhost.graphql \
 	  --log info
 
+# standalone router with local composition and router dev build
+
 .PHONY: run-supergraph-router-dev-local
 run-supergraph-router-dev-local: up-subgraphs config compose run-router-dev-local
 
@@ -260,7 +296,7 @@ run-router-dev-local: build-router-dev
 	  -s ../../local/supergraph/localhost.graphql \
 	  --log info
 
-# local composition with docker-compose
+# router in docker and local composition
 
 .PHONY: up-supergraph-local
 up-supergraph-local: config compose
@@ -383,11 +419,6 @@ load-100:
 .PHONY: load-250
 load-250:
 	@.scripts/smoke.sh 4000 250
-
-.PHONY: down
-down:
-	docker compose down --remove-orphans
-
 
 .PHONY: unpublish-subgraphs
 unpublish-subgraphs:

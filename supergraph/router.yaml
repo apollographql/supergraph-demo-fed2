@@ -1,13 +1,9 @@
 # see https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file
 
-# note: `rover --dev` has most of these settings as defaults
-# and the router can hot reload this configuration
-
-cors:
-  allow_any_origin: true
 supergraph:
   listen: 0.0.0.0:4000
-  introspection: true
+cors:
+  allow_any_origin: true
 telemetry:
   apollo:
     # The percentage of requests will include HTTP request and response headers in traces sent to Apollo Studio.
@@ -24,5 +20,16 @@ telemetry:
       protocol: grpc
       timeout: 42s
 
-include_subgraph_errors:
-  all: true # Propagate errors from all subgraphs
+# --------------------
+# note: `router --dev` has these default settings and enables the --hot-reload flag
+# --------------------
+# supergraph:
+#   introspection: true
+# sandbox:
+#   enabled: true
+# homepage:
+#   enabled: false
+# include_subgraph_errors:
+#   all: true # Propagate errors from all subgraphs
+# plugins:
+#   experimental.expose_query_plan: true
