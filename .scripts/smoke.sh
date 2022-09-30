@@ -277,6 +277,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_8="deprecatedQuery"
 OPNAME_8="deprecatedQuery"
+ACCEPT_8="application/json"
 read -r -d '' QUERY_8 <<"EOF"
 query deprecatedQuery {
  allProducts {
@@ -298,6 +299,7 @@ EOF
 # --------------------------------------------------------------------
 DESCR_9="deprecatedIntrospectionQuery"
 OPNAME_9="deprecatedIntrospectionQuery"
+ACCEPT_9="application/json"
 read -r -d '' QUERY_9 <<"EOF"
 query deprecatedIntrospectionQuery {
   __type(name:\"ProductItf\"
