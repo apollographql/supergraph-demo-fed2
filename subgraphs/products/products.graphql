@@ -1,6 +1,13 @@
 extend schema
     @link(url: "https://specs.apollo.dev/federation/v2.0",
-       import: ["@key", "@shareable", "@tag", "@inaccessible"])
+       import: ["@key", "@shareable", "@tag", "@inaccessible", "@composeDirective"])
+    @link(url: "https://myspecs.dev/myDirective/v1.0", import: ["@myDirective", { name: "@anotherDirective", as: "@hello" }])
+    @composeDirective(name: "@myDirective")
+    @composeDirective(name: "@hello")
+
+directive @myDirective(a: String!) on FIELD_DEFINITION
+directive @hello on FIELD_DEFINITION
+
 
 type Query {
   allProducts: [ProductItf]
@@ -26,7 +33,7 @@ interface SkuItf {
 type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
   id: ID! @tag(name: "hi-from-products")
   sku: String
-  name: String
+  name: String @hello
   package: String
   variation: ProductVariation
   dimensions: ProductDimension

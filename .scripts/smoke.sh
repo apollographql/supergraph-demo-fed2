@@ -33,7 +33,7 @@ exec_curl() {
   return $EXIT_CODE
 }
 
-TESTS=(1 2 3 4 5)
+TESTS=(0 1 2 3 4 5)
 DEFER_TESTS=(6 7)
 DEPRECATED_TESTS=(8 9)
 
@@ -57,6 +57,28 @@ fi
 printf "\n"
 
 TESTS=("${TESTS[@]}" "${DEPRECATED_TESTS[@]}")
+
+# --------------------------------------------------------------------
+# TEST 0
+# --------------------------------------------------------------------
+DESCR_0="product subgraph only"
+OPNAME_0="allProd"
+ACCEPT_0="application/json"
+read -r -d '' QUERY_0 <<"EOF"
+query allProd {
+  allProducts {
+    id,
+    sku
+  }
+}
+EOF
+
+OP_0=equals
+
+read -r -d '' EXP_0 <<"EOF"
+{"data":{"allProducts":[{"id":"converse-1","sku":"converse-1"},{"id":"vans-1","sku":"vans-1"}]}}
+EOF
+
 
 # --------------------------------------------------------------------
 # TEST 1
