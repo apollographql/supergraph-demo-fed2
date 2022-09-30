@@ -1,4 +1,12 @@
-extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@external", "@requires", "@shareable"])
+extend schema
+    @link(url: "https://specs.apollo.dev/federation/v2.0",
+       import: ["@key", "@shareable", "@external", "@requires", "@composeDirective"])
+    @link(url: "https://myspecs.dev/myDirective/v1.0", import: ["@myDirective", { name: "@anotherDirective", as: "@hello" }])
+    @composeDirective(name: "@myDirective")
+    @composeDirective(name: "@hello")
+
+directive @myDirective(a: String!) on FIELD_DEFINITION
+directive @hello on FIELD_DEFINITION
 
 type Product implements ProductItf @key(fields: "id") {
   id: ID!
@@ -7,7 +15,7 @@ type Product implements ProductItf @key(fields: "id") {
 }
 
 type ProductDimension @shareable {
-  size: String
+  size: String @hello
   weight: Float
 }
 
