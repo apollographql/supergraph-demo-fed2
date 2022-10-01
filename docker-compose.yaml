@@ -16,7 +16,7 @@
 # The paths in all other compose files are **relative to this file**, per:
 # https://docs.docker.com/compose/extends/#multiple-compose-files
 
-# see `./opentelemetry` `./examples/studio` and `./examples/local` for other compose files
+# see `./opentelemetry` `./misc/studio` and `./misc/local` for other compose files
 
 version: '3.9'
 services:

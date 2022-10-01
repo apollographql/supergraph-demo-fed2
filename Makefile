@@ -216,15 +216,15 @@ up-supergraph-gateway: publish-subgraphs-docker-compose
 
 .PHONY: config
 config:
-	.scripts/config.sh "localhost" > ./examples/local/supergraph/localhost.yaml 2>/dev/null
-	.scripts/config.sh "docker-compose" > ./examples/local/supergraph/dockerhost.yaml 2>/dev/null
+	.scripts/config.sh "localhost" > ./supergraph/schema/local.yaml 2>/dev/null
+	.scripts/config.sh "docker-compose" > ./supergraph/schema/docker.yaml 2>/dev/null
 
 .PHONY: compose
 compose:
-	@set -x; cd examples/local/supergraph; \
-	  rover supergraph compose --elv2-license=accept --config localhost.yaml > localhost.graphql
-	@set -x; cd examples/local/supergraph; \
-	  rover supergraph compose --elv2-license=accept --config dockerhost.yaml > dockerhost.graphql
+	@set -x; cd supergraph/schema; \
+	  rover supergraph compose --elv2-license=accept --config local.yaml > local.graphql
+	@set -x; cd supergraph/schema; \
+	  rover supergraph compose --elv2-license=accept --config docker.yaml > docker.graphql
 
 # standalone router with local composition
 
@@ -237,7 +237,7 @@ run-router-local:
 	 ./router --version && \
 	 ./router --dev \
 	  -c ./supergraph/router.yaml \
-	  -s ./examples/local/supergraph/localhost.graphql \
+	  -s ./supergraph/schema/local.graphql \
 	  --log info
 
 # standalone router with local composition and no --dev flag
@@ -251,7 +251,7 @@ run-router-local-no-dev:
 	 ./router --version && \
 	 ./router \
 	  -c ./supergraph/router.yaml \
-	  -s ./examples/local/supergraph/localhost.graphql \
+	  -s ./supergraph/schema/local.graphql \
 	  --log info
 
 # standalone router with local composition and rhai scripting
@@ -279,7 +279,7 @@ run-router-rust-plugin-local: build-rust-plugin
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
-	  -s ../../examples/local/supergraph/localhost.graphql \
+	  -s ../../supergraph/schema/local.graphql \
 	  --log info
 
 # standalone router with local composition and router dev build
@@ -363,10 +363,25 @@ deps-act:
 
 ubuntu-latest=ubuntu-latest=catthehacker/ubuntu:act-latest
 
-# router
-
 .PHONY: ci
-ci: ci-local-router-no-code ci-local-router-rhai ci-local-gateway
+ci: ci-local
+
+.PHONY: ci-all
+ci-all: ci-local ci-studio
+
+.PHONY: ci-local
+ci-local: ci-local-router-no-code ci-local-router-rhai ci-local-gateway
+
+.PHONY: ci-local-rust
+ci-local-rust: ci-local-router-rust-plugin ci-local-router-rust-dev
+
+.PHONY: ci-local-all
+ci-local-all: ci-local ci-local-rust
+
+.PHONY: ci-studio
+ci-studio: ci-studio-router-no-code ci-studio-gateway
+
+# router
 
 .PHONY: ci-local-router-no-code
 ci-local-router-no-code:
@@ -386,11 +401,11 @@ ci-local-router-rust-dev:
 
 .PHONY: ci-studio-router-dev
 ci-studio-router-dev:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-router-dev.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_MAIN=supergraph-router-fed2@ci-router-dev --detect-event
+	act -P $(ubuntu-latest) -W .github/workflows/studio-router-dev.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_DEV=supergraph-router-fed2@ci-router-dev --detect-event
 
 .PHONY: ci-studio-router-no-code
 ci-studio-router-no-code:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-router-no-code.yaml --secret-file graph-api.env --detect-event -j ci-docker-managed
+	act -P $(ubuntu-latest) -W .github/workflows/studio-router-no-code.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER=supergraph-router-fed2@ci-router --detect-event -j ci-docker-managed
 
 # gateway
 
@@ -400,7 +415,7 @@ ci-local-gateway:
 
 .PHONY: ci-studio-gateway
 ci-studio-gateway:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-gateway.yaml --secret-file graph-api.env --detect-event -j ci-docker-managed
+	act -P $(ubuntu-latest) -W .github/workflows/studio-gateway.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF=supergraph-router-fed2@ci-gateway --detect-event -j ci-docker-managed
 
 
 # utilities

@@ -9,7 +9,7 @@ services:
     container_name: apollo-router-rhai
     build: ./supergraph/router-rhai-script
     volumes:
-      - ./examples/local/supergraph/dockerhost.graphql:/dist/schema/supergraph.graphql
+      - ./supergraph/schema/docker.graphql:/dist/schema/supergraph.graphql
       - ./supergraph/router-rhai-script/router.yaml:/dist/config/router.yaml
     command: [ "--dev", "-c", "config/router.yaml", "-s", "schema/supergraph.graphql", "--log", "info" ]
     environment:

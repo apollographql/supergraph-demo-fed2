@@ -45,14 +45,14 @@ jobs:
         run: |
           make config
           make compose
-          cat examples/local/supergraph/dockerhost.graphql
+          cat supergraph/schema/docker.graphql
       - name: docker-compose build
         run: |
           set -x
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f examples/local/docker-compose.router-rust-dev.yaml \
+           -f misc/local/docker-compose.router-rust-dev.yaml \
            build --parallel --progress plain
       - name: docker-compose up -d
         run: |
@@ -60,7 +60,7 @@ jobs:
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f examples/local/docker-compose.router-rust-dev.yaml \
+           -f misc/local/docker-compose.router-rust-dev.yaml \
            up -d
 
           sleep 8
@@ -68,7 +68,7 @@ jobs:
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f examples/local/docker-compose.router-rust-dev.yaml \
+           -f misc/local/docker-compose.router-rust-dev.yaml \
            logs
       - name: smoke test
         run: .scripts/smoke.sh 4000

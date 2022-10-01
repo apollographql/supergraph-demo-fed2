@@ -364,7 +364,7 @@ make run-supergraph-local
 
 * `make up-subgraphs` - deploys [subgraphs](/docker-compose.yaml) with `docker-compose`
 * `make config` - creates [supergraph.yaml](/examples/local/supergraph/localhost.yaml)
-* `make compose` - composes a local [supergraph.graphql](/examples/local/supergraph/localhost.graphql)
+* `make compose` - composes a local [supergraph.graphql](/supergraph/schema/local.graphql)
 * `make run-router-local` - runs Apollo Router with local supergraph
 
 ![make run-router-local](docs/media/router/make_run-router-local.png)

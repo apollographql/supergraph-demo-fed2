@@ -14,6 +14,6 @@ services:
       - APOLLO_OTEL_EXPORTER_HOST=collector
       - APOLLO_OTEL_EXPORTER_PORT=4318
     volumes:
-      - ./examples/local/supergraph/dockerhost.graphql:/etc/config/supergraph.graphql
+      - ./supergraph/schema/docker.graphql:/etc/config/supergraph.graphql
     ports:
       - "4000:4000"
