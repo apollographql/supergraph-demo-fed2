@@ -10,5 +10,5 @@ for subgraph in ${subgraphs[@]}; do
   echo "  ${subgraph}:"
   echo "    routing_url: ${!url}"
   echo "    schema:"
-  echo "      file: ../../../${!schema}"
+  echo "      file: ../../${!schema}"
 done

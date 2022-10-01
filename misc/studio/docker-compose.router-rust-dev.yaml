@@ -7,7 +7,7 @@ version: '3.9'
 services:
   apollo-router-dev:
     container_name: apollo-router-dev
-    build: ./examples/advanced/router-dev
+    build: ./misc/advanced/router-dev
     volumes:
       - ./supergraph/router.yaml:/dist/config/router.yaml
     command: [ "--dev", "-c", "config/router.yaml", "--log", "info" ]

@@ -9,7 +9,7 @@ services:
     container_name: apollo-router
     image: ghcr.io/apollographql/router:v1.0.0
     volumes:
-      - ./examples/local/supergraph/dockerhost.graphql:/dist/schema/supergraph.graphql
+      - ./supergraph/schema/docker.graphql:/dist/schema/supergraph.graphql
     command: [ "--dev", "-s", "schema/supergraph.graphql", "--log", "info" ]
     environment:
       - APOLLO_OTEL_EXPORTER_HOST=collector

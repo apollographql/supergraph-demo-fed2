@@ -3,20 +3,20 @@ subgraphs:
   products:
     routing_url: http://localhost:4001/graphql
     schema:
-      file: ../../../subgraphs/products/products.graphql
+      file: ../../subgraphs/products/products.graphql
   inventory:
     routing_url: http://localhost:4002/graphql
     schema:
-      file: ../../../subgraphs/inventory/app/src/main/resources/graphql/inventory.graphqls
+      file: ../../subgraphs/inventory/app/src/main/resources/graphql/inventory.graphqls
   users:
     routing_url: http://localhost:4003/graphql
     schema:
-      file: ../../../subgraphs/users/users.graphql
+      file: ../../subgraphs/users/users.graphql
   pandas:
     routing_url: http://localhost:4004/graphql
     schema:
-      file: ../../../subgraphs/pandas/pandas.graphql
+      file: ../../subgraphs/pandas/pandas.graphql
   reviews:
     routing_url: http://localhost:4005/graphql
     schema:
-      file: ../../../subgraphs/reviews/reviews.graphql
+      file: ../../subgraphs/reviews/reviews.graphql
