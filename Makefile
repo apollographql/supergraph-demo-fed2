@@ -127,7 +127,7 @@ run-supergraph-router-dev: up-subgraphs publish-subgraphs run-router-dev
 .PHONY: run-router-dev
 run-router-dev: build-router-dev
 	@source "./.scripts/graph-api-env-export.sh" && \
-	 cd examples/advanced/router-dev && set -x; \
+	 cd misc/advanced/router-dev && set -x; \
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
@@ -135,12 +135,12 @@ run-router-dev: build-router-dev
 
 .PHONY: build-router-dev
 build-router-dev:
-	cd examples/advanced/router-dev && cargo update && cargo build --release
-	cd examples/advanced/router-dev && cp ./target/release/acme_router .
+	cd misc/advanced/router-dev && cargo update && cargo build --release
+	cd misc/advanced/router-dev && cp ./target/release/acme_router .
 
 .PHONY: clean-router-dev
 clean-router-dev:
-	rm -rf examples/advanced/router-dev/target || true
+	rm -rf misc/advanced/router-dev/target || true
 
 # router in docker
 
@@ -149,7 +149,7 @@ up-supergraph: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/studio/docker-compose.router-no-code.yaml \
+	 -f misc/studio/docker-compose.router-no-code.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -164,7 +164,7 @@ up-supergraph-rhai: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.router-rhai.yaml \
+	 -f misc/local/docker-compose.router-rhai.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -175,7 +175,7 @@ up-supergraph-rust-plugin: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.router-rust-plugin.yaml \
+	 -f misc/local/docker-compose.router-rust-plugin.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -192,7 +192,7 @@ up-supergraph-defer: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/studio/docker-compose.router-no-code.yaml \
+	 -f misc/studio/docker-compose.router-no-code.yaml \
 	 -f client/defer/apollo-client/docker-compose.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
@@ -206,7 +206,7 @@ up-supergraph-gateway: publish-subgraphs-docker-compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/studio/docker-compose.gateway.yaml \
+	 -f misc/studio/docker-compose.gateway.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -265,7 +265,7 @@ run-router-rhai-local:
 	 ./router --version && \
 	 ./router --dev \
 	  -c ./supergraph/router-rhai-script/router.yaml \
-	  -s ./examples/local/supergraph/localohst.graphql \
+	  -s ./supergraph/schema/local.graphql \
 	  --log info
 
 # standalone router with local composition and rust plugin
@@ -279,7 +279,7 @@ run-router-rust-plugin-local: build-rust-plugin
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
-	  -s ../../supergraph/schema/local.graphql \
+	  -s ../schema/local.graphql \
 	  --log info
 
 # standalone router with local composition and router dev build
@@ -289,11 +289,11 @@ run-supergraph-router-dev-local: up-subgraphs config compose run-router-dev-loca
 
 .PHONY: run-router-dev-local
 run-router-dev-local: build-router-dev
-	@cd examples/advanced/router-dev && set -x; \
+	@cd misc/advanced/router-dev && set -x; \
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
-	  -s ../../local/supergraph/localhost.graphql \
+	  -s ../schema/local.graphql \
 	  --log info
 
 # router in docker and local composition
@@ -303,7 +303,7 @@ up-supergraph-local: config compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.router-no-code.yaml \
+	 -f misc/local/docker-compose.router-no-code.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -314,7 +314,7 @@ up-supergraph-rhai-local: config compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.router-rhai.yaml \
+	 -f misc/local/docker-compose.router-rhai.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -325,7 +325,7 @@ up-supergraph-rust-plugin-local: config compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.router-rust-plugin.yaml \
+	 -f misc/local/docker-compose.router-rust-plugin.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -336,7 +336,7 @@ up-supergraph-local-gateway: config compose
 	docker compose \
 	 -f docker-compose.yaml \
 	 -f opentelemetry/docker-compose.otel.yaml \
-	 -f examples/local/docker-compose.gateway.yaml \
+	 -f misc/local/docker-compose.gateway.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -348,7 +348,7 @@ up-supergraph-local-gateway: config compose
 up-supergraph-no-otel-local:
 	docker compose \
 	 -f docker-compose.yaml \
-	 -f examples/local/docker-compose.router-no-otel.yaml \
+	 -f misc/local/docker-compose.router-no-otel.yaml \
 	 up -d --build
 	@set -x; sleep $$SUBGRAPH_BOOT_TIME
 	docker compose logs
@@ -385,38 +385,61 @@ ci-studio: ci-studio-router-no-code ci-studio-gateway
 
 .PHONY: ci-local-router-no-code
 ci-local-router-no-code:
-	act -P $(ubuntu-latest) -W .github/workflows/local-router-no-code.yaml --detect-event
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/local-router-no-code.yaml \
+	--detect-event
 
 .PHONY: ci-local-router-rhai
 ci-local-router-rhai:
-	act -P $(ubuntu-latest) -W .github/workflows/local-router-rhai.yaml --detect-event
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/local-router-rhai.yaml \
+	--detect-event
 
 .PHONY: ci-local-router-rust-plugin
 ci-local-router-rust-plugin:
-	act -P $(ubuntu-latest) -W .github/workflows/local-router-rust-plugin.yaml --detect-event
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/local-router-rust-plugin.yaml \
+	--detect-event
 
 .PHONY: ci-local-router-rust-dev
 ci-local-router-rust-dev:
-	act -P $(ubuntu-latest) -W .github/workflows/local-router-rust-dev.yaml --detect-event
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/local-router-rust-dev.yaml \
+	--detect-event
 
 .PHONY: ci-studio-router-dev
 ci-studio-router-dev:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-router-dev.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER_DEV=supergraph-router-fed2@ci-router-dev --detect-event
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/studio-router-dev.yaml \
+	--secret-file graph-api.env \
+	-s APOLLO_GRAPH_REF_ROUTER_DEV=supergraph-router-fed2@ci-router-dev \
+	--detect-event
 
 .PHONY: ci-studio-router-no-code
 ci-studio-router-no-code:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-router-no-code.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF_ROUTER=supergraph-router-fed2@ci-router --detect-event -j ci-docker-managed
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/studio-router-no-code.yaml \
+	--secret-file graph-api.env \
+	-s APOLLO_GRAPH_REF_ROUTER=supergraph-router-fed2@ci-router \
+	--detect-event \
+	-j ci-docker-managed
 
 # gateway
 
 .PHONY: ci-local-gateway
 ci-local-gateway:
-	act -P $(ubuntu-latest) -W .github/workflows/local-gateway.yaml --detect-event
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/local-gateway.yaml \
+	--detect-event
 
 .PHONY: ci-studio-gateway
 ci-studio-gateway:
-	act -P $(ubuntu-latest) -W .github/workflows/studio-gateway.yaml --secret-file graph-api.env -s APOLLO_GRAPH_REF=supergraph-router-fed2@ci-gateway --detect-event -j ci-docker-managed
-
+	act -P $(ubuntu-latest) \
+	-W .github/workflows/studio-gateway.yaml \
+	--secret-file graph-api.env \
+	-s APOLLO_GRAPH_REF=supergraph-router-fed2@ci-gateway \
+	--detect-event \
+	-j ci-docker-managed
 
 # utilities
 #
