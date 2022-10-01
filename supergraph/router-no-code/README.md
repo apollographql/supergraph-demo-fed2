@@ -12,9 +12,8 @@
 
 *Extensive [built-in YAML configuration options](https://www.apollographql.com/docs/router/configuration/overview#yaml-config-file)*
 
-
 ## Download Router
-    
+
 ```
 curl -sSL https://router.apollo.dev/download/nix/latest | sh
 ```
