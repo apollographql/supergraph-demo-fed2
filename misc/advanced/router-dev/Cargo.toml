@@ -8,7 +8,7 @@ edition = "2021"
 anyhow = "1.0.66"
 apollo-router = { git = "https://github.com/apollographql/router", branch = "dev" }
 async-trait = "0.1.58"
-futures = "0.3.24"
+futures = "0.3.25"
 http = "0.2.8"
 schemars = "0.8.11"
 serde = "1.0.144"
