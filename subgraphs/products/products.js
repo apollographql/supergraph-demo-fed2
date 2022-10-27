@@ -14,8 +14,9 @@ if (process.env.APOLLO_OTEL_EXPORTER_TYPE) {
 }
 
 const { ApolloServer, gql } = require('apollo-server');
-const { buildSubgraphSchema } = require('@apollo/subgraph');
+const { buildSubgraphSchema, printSubgraphSchema } = require('@apollo/subgraph');
 const { readFileSync } = require('fs');
+const { printSchema } = require('graphql');
 
 const port = process.env.APOLLO_PORT || 4000;
 
@@ -80,7 +81,19 @@ const resolvers = {
         }
     }
 }
-const server = new ApolloServer({ schema: buildSubgraphSchema({ typeDefs, resolvers }) });
+const schema = buildSubgraphSchema({ typeDefs, resolvers });
+
+// console.log(`---------------------------------------`);
+// console.log(`🚀  subgraph-js::printSubgraphSchema 🚀`);
+// console.log(`---------------------------------------`);
+// console.log(printSubgraphSchema(schema));
+// 
+// console.log(`---------------------------------------`);
+// console.log(`🚀  graphql::printSchema 🚀`);
+// console.log(`---------------------------------------`);
+// console.log(printSchema(schema));
+
+const server = new ApolloServer({ schema: schema });
 server.listen( {port: port} ).then(({ url }) => {
   console.log(`🚀 Products subgraph ready at ${url}`);
 }).catch(err => {console.error(err)});
