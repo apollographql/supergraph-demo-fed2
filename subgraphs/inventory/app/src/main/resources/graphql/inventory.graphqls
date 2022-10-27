@@ -5,7 +5,6 @@ extend schema
     @composeDirective(name: "@myDirective")
     @composeDirective(name: "@hello")
 
-directive @composeDirective(name: String!) repeatable on SCHEMA
 directive @myDirective(a: String!) on FIELD_DEFINITION
 directive @hello on FIELD_DEFINITION
 

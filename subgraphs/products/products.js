@@ -83,15 +83,15 @@ const resolvers = {
 }
 const schema = buildSubgraphSchema({ typeDefs, resolvers });
 
-console.log(`---------------------------------------`);
-console.log(`🚀  subgraph-js::printSubgraphSchema 🚀`);
-console.log(`---------------------------------------`);
-console.log(printSubgraphSchema(schema));
-
-console.log(`---------------------------------------`);
-console.log(`🚀  graphql::printSchema 🚀`);
-console.log(`---------------------------------------`);
-console.log(printSchema(schema));
+// console.log(`---------------------------------------`);
+// console.log(`🚀  subgraph-js::printSubgraphSchema 🚀`);
+// console.log(`---------------------------------------`);
+// console.log(printSubgraphSchema(schema));
+// 
+// console.log(`---------------------------------------`);
+// console.log(`🚀  graphql::printSchema 🚀`);
+// console.log(`---------------------------------------`);
+// console.log(printSchema(schema));
 
 const server = new ApolloServer({ schema: schema });
 server.listen( {port: port} ).then(({ url }) => {
