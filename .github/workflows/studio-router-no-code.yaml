@@ -47,7 +47,7 @@ jobs:
           make deps-check || true
       - name: unpublish-subgraphs
         run: |
-          make unpublish-subgraphs i|| true
+          make unpublish-subgraphs || true
       - name: publish-subgraphs
         run: |
           make publish-subgraphs-docker-compose
