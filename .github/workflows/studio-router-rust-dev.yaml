@@ -45,7 +45,7 @@ jobs:
       - name: check tools
         run: |
           make deps-check || true
-      - name: unpublish-subgraphs
+      - name: unpublish-subgraphs || true
         run: |
           make unpublish-subgraphs
       - name: publish-subgraphs
