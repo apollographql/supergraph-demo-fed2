@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.66"
 apollo-router = "1.4.0"
-async-trait = "0.1.58"
+async-trait = "0.1.59"
 futures = "0.3.25"
 http = "0.2.8"
 schemars = "0.8.11"
