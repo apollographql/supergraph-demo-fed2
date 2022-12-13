@@ -12,7 +12,7 @@ RUN rustup component add rustfmt
 # copy over your manifests
 COPY ./Cargo.toml ./Cargo.toml
 
-# add protobul dep
+# add protobuf dep
 RUN apt-get update && apt-get install -y protobuf-compiler
 
 # this build step will cache your dependencies
