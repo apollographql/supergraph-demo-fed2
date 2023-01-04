@@ -57,7 +57,6 @@ jobs:
           docker-compose \
            -f docker-compose.yaml \
            -f opentelemetry/docker-compose.otel.yaml \
-           -f opentelemetry/docker-compose.otel.yaml \
            -f misc/studio/docker-compose.router-rust-dev.yaml \
            build --parallel --progress plain
       - name: docker-compose up -d

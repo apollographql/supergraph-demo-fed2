@@ -410,7 +410,7 @@ ci-local-router-rust-dev:
 .PHONY: ci-studio-router-dev
 ci-studio-router-dev:
 	act -P $(ubuntu-latest) \
-	-W .github/workflows/studio-router-dev.yaml \
+	-W .github/workflows/studio-router-rust-dev.yaml \
 	--secret-file graph-api.env \
 	-s APOLLO_GRAPH_REF_ROUTER_DEV=supergraph-router-fed2@ci-router-dev \
 	--detect-event
