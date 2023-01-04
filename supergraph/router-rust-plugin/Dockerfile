@@ -7,13 +7,15 @@ RUN USER=root cargo new --bin acme_router
 
 WORKDIR /acme_router
 
+# Update our build image and install required packages
+RUN apt-get update
+RUN apt-get -y install \
+    protobuf-compiler
+
 RUN rustup component add rustfmt
 
 # copy over your manifests
 COPY ./Cargo.toml ./Cargo.toml
-
-# add protobuf dep
-RUN apt-get update && apt-get install -y protobuf-compiler
 
 # this build step will cache your dependencies
 RUN cargo build --release
@@ -32,7 +34,7 @@ RUN mkdir -p /dist/config && mkdir -p /dist/schema
 #FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
 
 # if you want bin/sh you'll want a distro that includes it instead
-FROM --platform=linux/amd64 debian:bullseye
+FROM --platform=linux/amd64 debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
