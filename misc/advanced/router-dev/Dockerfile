@@ -7,6 +7,11 @@ RUN USER=root cargo new --bin acme_router
 
 WORKDIR /acme_router
 
+# Update our build image and install required packages
+RUN apt-get update
+RUN apt-get -y install \
+    protobuf-compiler
+
 RUN rustup component add rustfmt
 
 # copy over your manifests
