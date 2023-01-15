@@ -20,3 +20,7 @@ subgraphs:
     routing_url: http://localhost:4005/graphql
     schema:
       file: ../../subgraphs/reviews/reviews.graphql
+  hotels:
+    routing_url: http://hotels:4006/graphql
+    schema:
+      file: ../../subgraphs/hotels/hotels.graphql

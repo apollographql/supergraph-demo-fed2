@@ -33,9 +33,17 @@ type DeliveryEstimates
   fastestDelivery: String
 }
 
+type Hotel
+  @join__type(graph: HOTELS)
+{
+  id: ID!
+  name: String
+}
+
 scalar join__FieldSet
 
 enum join__Graph {
+  HOTELS @join__graph(name: "hotels", url: "http://hotels:4006/graphql")
   INVENTORY @join__graph(name: "inventory", url: "http://localhost:4002/graphql")
   PANDAS @join__graph(name: "pandas", url: "http://localhost:4004/graphql")
   PRODUCTS @join__graph(name: "products", url: "http://localhost:4001/graphql")
@@ -127,12 +135,15 @@ type ProductVariation
 }
 
 type Query
+  @join__type(graph: HOTELS)
   @join__type(graph: INVENTORY)
   @join__type(graph: PANDAS)
   @join__type(graph: PRODUCTS)
   @join__type(graph: REVIEWS)
   @join__type(graph: USERS)
 {
+  allHotels: [Hotel] @join__field(graph: HOTELS)
+  fetchHotels(ids: [ID]): [Hotel] @join__field(graph: HOTELS)
   allPandas: [Panda] @join__field(graph: PANDAS)
   panda(name: ID!): Panda @join__field(graph: PANDAS)
   allProducts: [ProductItf] @join__field(graph: PRODUCTS)

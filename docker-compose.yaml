@@ -45,3 +45,8 @@ services:
     build: ./subgraphs/reviews
     ports:
       - "4005:4000"
+  hotels:
+    container_name: hotels
+    build: ./subgraphs/hotels
+    ports:
+      - "4006:4000"

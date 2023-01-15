@@ -20,3 +20,7 @@ subgraphs:
     routing_url: http://reviews:4000/graphql
     schema:
       file: ../../subgraphs/reviews/reviews.graphql
+  hotels:
+    routing_url: http://hotels:4000/graphql
+    schema:
+      file: ../../subgraphs/hotels/hotels.graphql
