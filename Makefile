@@ -293,7 +293,7 @@ run-router-dev-local: build-router-dev
 	 ./acme_router --version && \
 	 ./acme_router --dev \
 	  -c ./router.yaml \
-	  -s ../schema/local.graphql \
+	  -s ../../../supergraph/schema/local.graphql \
 	  --log info
 
 # router in docker and local composition
