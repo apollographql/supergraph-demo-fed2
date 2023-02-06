@@ -82,7 +82,7 @@ You'll need:
 * [docker](https://docs.docker.com/get-docker/) - builds subgraph images
 * [docker-compose](https://docs.docker.com/compose/install/) - runs subgraphs locally
 * [rover](https://www.apollographql.com/docs/rover/getting-started) - publishes subgraph schemas to your supergraph in the registry
-* [router](https://www.apollographql.com/docs/router/getting-started) - pulls supergraph schemas from the registry
+* [router](https://www.apollographql.com/docs/router/quickstart) - pulls supergraph schemas from the registry
 
 Install `rover` and `router`:
 
