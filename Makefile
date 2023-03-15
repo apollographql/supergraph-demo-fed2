@@ -53,7 +53,7 @@ run-router:
 	 ./router --version && \
 	 ./router --dev \
 	  -c ./supergraph/router.yaml \
-	  --log info
+	  --log "info,apollo_router::uplink=debug"
 
 .PHONY: query
 query:

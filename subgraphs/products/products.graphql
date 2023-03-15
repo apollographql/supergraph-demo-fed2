@@ -1,5 +1,5 @@
 extend schema
-    @link(url: "https://specs.apollo.dev/federation/v2.1",
+    @link(url: "https://specs.apollo.dev/federation/v2.3",
        import: ["@key", "@shareable", "@tag", "@inaccessible", "@composeDirective"])
     @link(url: "https://myspecs.dev/myDirective/v1.0", import: ["@myDirective", { name: "@anotherDirective", as: "@hello" }])
     @composeDirective(name: "@myDirective")
@@ -30,7 +30,13 @@ interface SkuItf {
   sku: String
 }
 
-type Product implements ProductItf & SkuItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
+interface Prod @key(fields: "id"){
+  id: ID!
+  sku: String
+  name: String
+}
+
+type Product implements Prod & ProductItf & SkuItf @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }"){
   id: ID! @tag(name: "hi-from-products")
   sku: String
   name: String @hello
