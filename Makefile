@@ -240,6 +240,20 @@ run-router-local:
 	  -s ./supergraph/schema/local.graphql \
 	  --log info
 
+# standalone router with local composition and uplink entitlement
+
+.PHONY: run-supergraph-local-entitled
+run-supergraph-local-entitled: up-subgraphs config compose run-router-local-entitled
+
+.PHONY: run-router-local-entitled
+run-router-local-entitled:
+	@source "./.scripts/graph-api-env-export.sh" && set -x; \
+	 ./router --version && \
+	 ./router --dev \
+	  -c ./supergraph/router.yaml \
+	  -s ./supergraph/schema/local.graphql \
+	  --log "info,apollo_router::uplink=debug"
+
 # standalone router with local composition and no --dev flag
 
 .PHONY: run-supergraph-local-no-dev
