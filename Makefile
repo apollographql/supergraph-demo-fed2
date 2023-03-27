@@ -247,7 +247,7 @@ run-supergraph-local-entitled: up-subgraphs config compose run-router-local-enti
 
 .PHONY: run-router-local-entitled
 run-router-local-entitled:
-	@source "./.scripts/graph-api-env-export.sh" && set -x; \
+	@source "./.scripts/graph-api-env.sh" && set -x; \
 	 ./router --version && \
 	 ./router --dev \
 	  -c ./supergraph/router.yaml \
