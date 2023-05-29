@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.11
 
 # install PDM
 RUN pip install -U pip setuptools wheel
