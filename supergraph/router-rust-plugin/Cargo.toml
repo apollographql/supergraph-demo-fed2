@@ -11,7 +11,7 @@ futures = "0.3.28"
 http = "0.2.9"
 schemars = "0.8.12"
 serde = "1.0.171"
-serde_json = "1.0.102"
+serde_json = "1.0.103"
 tokio = "1.29.1"
 tower = { version = "0.4.13", features = ["full"] }
 tracing = "0.1"
