@@ -12,7 +12,7 @@ dependencies = [
     "opentelemetry-instrumentation-starlette>=0.30b1",
     "opentelemetry-exporter-otlp>=1.11.1",
     "protobuf==3.20.3",
-    "grpcio==1.56.0",
+    "grpcio==1.56.2",
 ]
 description = ""
 license = {text = "MIT"}
