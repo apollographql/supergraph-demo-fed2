@@ -13,7 +13,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 dependencies {
   implementation(platform("org.springframework.boot:spring-boot-dependencies:3.0.6"))
-  implementation("com.apollographql.federation:federation-graphql-java-support:2.3.1")
+  implementation("com.apollographql.federation:federation-graphql-java-support:4.1.1")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("org.springframework.boot:spring-boot-starter-graphql")
