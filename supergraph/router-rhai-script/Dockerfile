@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 debian:bullseye-slim
+FROM --platform=linux/amd64 debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \

@@ -17,7 +17,7 @@ RUN gradle clean build --no-daemon --parallel
 
 
 # Create a new layer with the build output to run the app
-FROM openjdk:20-slim-bullseye
+FROM openjdk:22-slim-bookworm
 ENV ARTIFACT_NAME=app.jar
 
 WORKDIR /usr/src/app

@@ -8,9 +8,10 @@ RUN USER=root cargo new --bin acme_router
 WORKDIR /acme_router
 
 # Update our build image and install required packages
-RUN apt-get update
-RUN apt-get -y install \
-    protobuf-compiler
+RUN apt-get update -y \
+    && apt-get install -y \
+    protobuf-compiler \
+    cmake
 
 RUN rustup component add rustfmt
 
@@ -34,9 +35,10 @@ RUN mkdir -p /dist/config && mkdir -p /dist/schema
 #FROM --platform=linux/amd64 gcr.io/distroless/cc-debian11
 
 # if you want bin/sh you'll want a distro that includes it instead
-FROM --platform=linux/amd64 debian:bullseye-slim
+FROM --platform=linux/amd64 debian:bookworm-slim
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -y \
+    && apt-get install -y \
     ca-certificates \
     curl
 
