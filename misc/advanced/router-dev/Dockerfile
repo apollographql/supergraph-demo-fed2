@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 rust:1.73 as build
+FROM --platform=linux/amd64 rust:1.74 as build
 
 ENV RUST_BACKTRACE=full
 
