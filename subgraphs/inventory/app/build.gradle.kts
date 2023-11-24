@@ -1,5 +1,5 @@
 plugins {
-  id("org.springframework.boot") version "3.1.5"
+  id("org.springframework.boot") version "3.2.0"
   id("org.jetbrains.kotlin.jvm") version "1.9.21"
   id("org.jetbrains.kotlin.plugin.spring") version "1.9.20"
 }
@@ -12,7 +12,7 @@ repositories {
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-  implementation(platform("org.springframework.boot:spring-boot-dependencies:3.1.5"))
+  implementation(platform("org.springframework.boot:spring-boot-dependencies:3.2.0"))
   implementation("com.apollographql.federation:federation-graphql-java-support:4.2.0")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
