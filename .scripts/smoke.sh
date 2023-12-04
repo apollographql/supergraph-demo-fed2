@@ -155,7 +155,7 @@ EOF
 OP_3=contains
 
 read -r -d '' EXP_3 <<"EOF"
-Cannot query field \"hidden\" on type \"ProductItf\".
+no field `hidden` in type `ProductItf`
 EOF
 
 # --------------------------------------------------------------------
