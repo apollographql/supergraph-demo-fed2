@@ -51,7 +51,7 @@ services:
 
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:v2.48.0
+    image: prom/prometheus:v2.48.1
     volumes:
       - ./opentelemetry/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
