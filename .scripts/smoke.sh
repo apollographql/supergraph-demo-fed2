@@ -154,8 +154,9 @@ EOF
 
 OP_3=contains
 
+# note: error message varies across Gateway and Router
 read -r -d '' EXP_3 <<"EOF"
-Cannot query field \"hidden\" on type \"ProductItf\".
+{"errors":[{"message":
 EOF
 
 # --------------------------------------------------------------------
