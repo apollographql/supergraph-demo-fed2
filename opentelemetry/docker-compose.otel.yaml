@@ -45,7 +45,7 @@ services:
 
   zipkin:
     container_name: zipkin
-    image: openzipkin/zipkin:2.27.0
+    image: openzipkin/zipkin:2.27.1
     ports:
       - "9411:9411"
 
