@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.79"
-apollo-router = "1.37.0"
+apollo-router = "1.38.0"
 async-trait = "0.1.77"
 futures = "0.3.30"
 http = "0.2.11"
