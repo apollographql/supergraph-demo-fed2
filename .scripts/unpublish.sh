@@ -17,6 +17,10 @@ if grep -Eq 'error:(.+) Graph has no implementing services' unpublish.log; then
   echo "Success, all subgraphs removed!"
   rm unpublish.log
   exit 0
+elif grep -Eq 'error:(.+) invalid input syntax for uuid: ""' unpublish.log; then
+  echo "Success, no subgraphs found!"
+  rm unpublish.log
+  exit 0
 else
   cat unpublish.log
   rm unpublish.log
