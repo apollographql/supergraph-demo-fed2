@@ -7,7 +7,7 @@ version: '3.9'
 services:
   apollo-router:
     container_name: apollo-router
-    image: ghcr.io/apollographql/router:v1.49.0
+    image: ghcr.io/apollographql/router:v1.49.1
     volumes:
       - ./supergraph/schema/docker.graphql:/dist/schema/supergraph.graphql
     command: [ "--dev", "-s", "schema/supergraph.graphql", "--log", "info" ]
