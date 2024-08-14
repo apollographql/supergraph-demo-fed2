@@ -14,4 +14,4 @@ schemars = "0.8.17"
 serde = "1.0.200"
 serde_json = "1.0.116"
 tokio = "1.37.0"
-tower = { version = "0.4.13", features = ["full"] }
+tower = { version = "0.5.0", features = ["full"] }
