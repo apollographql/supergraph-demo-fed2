@@ -10,7 +10,7 @@
     "@apollo/server": "4.11.2",
     "@apollo/gateway": "2.9.3",
     "supergraph-demo-opentelemetry": "0.2.4",
-    "graphql": "16.9.0"
+    "graphql": "16.10.0"
   },
   "keywords": [],
   "author": ""
