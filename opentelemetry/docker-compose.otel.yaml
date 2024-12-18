@@ -31,7 +31,7 @@ services:
 
   collector:
     container_name: collector
-    image: otel/opentelemetry-collector-contrib:0.115.1
+    image: otel/opentelemetry-collector-contrib:0.116.1
     command: ["--config=/conf/collector-config.yml"]
     volumes:
       - ./opentelemetry/collector-config.yml:/conf/collector-config.yml
