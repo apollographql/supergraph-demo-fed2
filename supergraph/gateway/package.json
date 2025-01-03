@@ -7,7 +7,7 @@
     "start": "node gateway.js"
   },
   "dependencies": {
-    "@apollo/server": "4.11.2",
+    "@apollo/server": "4.11.3",
     "@apollo/gateway": "2.9.3",
     "supergraph-demo-opentelemetry": "0.2.4",
     "graphql": "16.10.0"
