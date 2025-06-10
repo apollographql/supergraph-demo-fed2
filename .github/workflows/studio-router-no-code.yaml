@@ -16,7 +16,7 @@ jobs:
       APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_REF_ROUTER }}
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       -
         name: install rover
         run: |
