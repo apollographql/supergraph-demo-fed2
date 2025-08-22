@@ -15,7 +15,7 @@ const resolvers = {
             return pandas;
         },
         panda: (_, args, context) => {
-            return pandas.find(p => p.id == args.id);
+            return pandas.find(p => p.name == args.name);
         }
     },
 }
