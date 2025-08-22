@@ -20,6 +20,15 @@ telemetry:
       protocol: grpc
       batch_processor:
         max_export_timeout: 42s
+authentication:
+ jwt:
+   jwks: # This key is required.
+     - url: https://dev-zzp5enui.us.auth0.com/.well-known/jwks.json
+       issuer: auth0
+
+   # These keys are optional. Default values are shown.
+   header_name: Authorization
+   header_value_prefix: Bearer
 
 # --------------------
 # note: `router --dev` has these default settings and enables the --hot-reload flag

@@ -68,8 +68,17 @@ type Panda
   favoriteFood: String @tag(name: "nom-nom-nom")
 }
 
-type Product implements ProductItf & SkuItf
+interface Prod
+  @join__type(graph: PRODUCTS, key: "id")
+{
+  id: ID!
+  sku: String
+  name: String
+}
+
+type Product implements ProductItf & Prod & SkuItf
   @join__implements(graph: INVENTORY, interface: "ProductItf")
+  @join__implements(graph: PRODUCTS, interface: "Prod")
   @join__implements(graph: PRODUCTS, interface: "ProductItf")
   @join__implements(graph: PRODUCTS, interface: "SkuItf")
   @join__implements(graph: REVIEWS, interface: "ProductItf")
